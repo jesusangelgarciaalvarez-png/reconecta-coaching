@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d4af37", // Professional Gold
+                        "background-deep": "#040b1a",
+                        "navy-900": "#0a192f",
+                        "accent-lavender": "#b5a8eb",
+                        "accent-gold": "#f2b90d",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">:root {
+    --deep-navy: #040b1a;
+    --soft-gold: #d4af37;
+    --soft-lavender: #b5a8eb
+    }
+body {
+    font-family: "Manrope", sans-serif;
+    background-color: var(--deep-navy)
+    }
+.bg-gradient-navy {
+    background: radial-gradient(circle at top right, #0a1e3d 0%, #040b1a 100%)
+    }
+.abstract-texture {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBShVIWvV8nvQ2ufryorDFY-BpvOuJUtdwgQVvIdGQM8D1awqBUX2CuDBcBC3uyu-OVWlDbRgUrQKdwKVXR0fpOyzzFQCld47p6f79NtV5T4yQwH2Lky-rXILCjJH_cfr3DdjSdvThfOCu-STg3e-an3XNiBq5BJ8ZtKNRJaLhygMXBXZqJGPhiMJCgyMUqQdLzgDUOK8v1YWJuAMytPEH6hqKBl3NTOkpCBreRhO9mpWrrwA0EVavJCYmesaBZXR2Prvf0v2O6qFw);
+    opacity: 0.05
+    }
+.serene-overlay {
+    background: linear-gradient(to bottom, transparent, #040b1a)
+    }
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(181, 168, 235, 0.1)
+    }
+.custom-scrollbar::-webkit-scrollbar {
+    display: none
+    }
+.calendar-grid button:disabled {
+    opacity: 0.3
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-deep text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-gradient-navy">
+<div class="fixed inset-0 abstract-texture pointer-events-none"></div>
+<div class="absolute top-0 left-0 w-full h-[300px] opacity-20 pointer-events-none">
+<img alt="" class="w-full h-full object-cover grayscale brightness-50 contrast-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApy6R2RY97cufKfCKV6mRBsVN3SlBufb5UVWbcTBsK2iCHENSD6RfgYOtQqfSv0NGwbr3sQw-ClYkHM8mSK60WLM0JAkCJJEgSH3h3j06AGJVlt50v2FgfCRVBBN8_qHJfl0facMjchTWWNGcthkD9aieEjUr11XpgEGzDi3Md_CHupfP5_pwXeOJeDV0nkBU4QRTsQfk0lZQIu9j02C4Ef6cvcZGJANrbgjZ8o4Z5ZTMCk-o6N8Bmj4vsn3HgfohfdJ9-LJBG164"/>
+<div class="absolute inset-0 serene-overlay"></div>
+</div>
+<header class="flex items-center p-4 pb-2 justify-between sticky top-0 z-50 backdrop-blur-md bg-background-deep/40">
+<div class="text-white flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined cursor-pointer text-accent-lavender">arrow_back_ios</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">Reserva tu Sesión</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex items-center justify-center rounded-lg h-12 text-accent-lavender">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</header>
+<main class="relative flex-1 px-5 pb-32">
+<div class="py-8 text-center">
+<h1 class="text-accent-gold tracking-tight text-3xl font-extrabold leading-tight pb-2">Tu Espacio de Sanación</h1>
+<p class="text-slate-300 text-base font-normal leading-relaxed max-w-xs mx-auto opacity-90">
+                    Un viaje de reconstrucción y amor propio en un entorno seguro y profesional.
+                </p>
+</div>
+<div class="mb-10">
+<h3 class="text-white text-sm uppercase tracking-widest font-bold mb-4 flex items-center gap-2 opacity-80">
+<span class="material-symbols-outlined text-accent-lavender text-xl">psychology</span>
+                    Modalidad
+                </h3>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-accent-gold bg-accent-gold/10 transition-all shadow-lg shadow-accent-gold/5">
+<span class="material-symbols-outlined text-3xl mb-2 text-accent-gold">videocam</span>
+<span class="font-bold text-sm text-white">Online</span>
+<span class="text-[10px] text-accent-gold font-medium uppercase tracking-tighter">Zoom / Meet</span>
+</button>
+<button class="flex flex-col items-center justify-center p-5 rounded-2xl border border-white/10 glass-card transition-all">
+<span class="material-symbols-outlined text-3xl mb-2 text-accent-lavender">home_pin</span>
+<span class="font-bold text-sm text-slate-300">Presencial</span>
+<span class="text-[10px] text-accent-lavender/70 font-medium uppercase tracking-tighter">En Despacho</span>
+</button>
+</div>
+</div>
+<div class="mb-10">
+<div class="flex items-center justify-between mb-4 px-1">
+<h3 class="text-white text-sm uppercase tracking-widest font-bold flex items-center gap-2 opacity-80">
+<span class="material-symbols-outlined text-accent-lavender text-xl">calendar_today</span>
+                        Calendario
+                    </h3>
+<div class="flex items-center gap-2">
+<span class="text-accent-gold text-xs font-bold uppercase">Noviembre 2024</span>
+</div>
+</div>
+<div class="glass-card rounded-2xl p-5 border border-white/5">
+<div class="grid grid-cols-7 gap-1 text-center mb-4">
+<span class="text-[10px] font-bold text-accent-lavender uppercase">Lu</span>
+<span class="text-[10px] font-bold text-accent-lavender uppercase">Ma</span>
+<span class="text-[10px] font-bold text-accent-lavender uppercase">Mi</span>
+<span class="text-[10px] font-bold text-accent-lavender uppercase">Ju</span>
+<span class="text-[10px] font-bold text-accent-lavender uppercase">Vi</span>
+<span class="text-[10px] font-bold text-accent-gold/60 uppercase">Sa</span>
+<span class="text-[10px] font-bold text-accent-gold/60 uppercase">Do</span>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center calendar-grid">
+<button class="h-10 w-full flex items-center justify-center rounded-xl text-slate-600 text-sm" disabled="">30</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl text-slate-600 text-sm" disabled="">31</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl bg-accent-gold text-background-deep font-bold text-sm shadow-xl shadow-accent-gold/30">1</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">2</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">3</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">4</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">5</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">6</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl bg-accent-lavender/20 border border-accent-lavender/30 text-accent-lavender text-sm font-semibold">7</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">8</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">9</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">10</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">11</button>
+<button class="h-10 w-full flex items-center justify-center rounded-xl hover:bg-white/5 text-slate-300 text-sm">12</button>
+</div>
+</div>
+</div>
+<div class="mb-10">
+<h3 class="text-white text-sm uppercase tracking-widest font-bold mb-4 flex items-center gap-2 opacity-80">
+<span class="material-symbols-outlined text-accent-lavender text-xl">schedule</span>
+                    Horarios Disponibles
+                </h3>
+<div class="flex gap-3 overflow-x-auto pb-4 custom-scrollbar">
+<button class="shrink-0 px-6 py-3 rounded-xl border-2 border-accent-gold bg-accent-gold/10 font-bold text-sm text-accent-gold">09:00</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-white/10 glass-card font-medium text-sm text-slate-300">10:30</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-white/10 glass-card font-medium text-sm text-slate-300">13:00</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-white/10 glass-card font-medium text-sm text-slate-300">16:30</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-white/10 glass-card font-medium text-sm text-slate-300">18:00</button>
+</div>
+</div>
+<div class="fixed bottom-24 left-0 right-0 px-5 z-40">
+<button class="w-full py-5 bg-gradient-to-r from-accent-gold to-yellow-600 text-background-deep font-extrabold text-lg rounded-2xl shadow-[0_10px_30px_rgba(212,175,55,0.3)] flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    Confirmar Cita
+                    <span class="material-symbols-outlined font-bold">arrow_forward</span>
+</button>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex gap-2 border-t border-white/5 bg-background-deep/90 backdrop-blur-xl px-4 pb-8 pt-3">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Inicio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-accent-gold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">calendar_month</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Sesiones</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Diario</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Perfil</p>
+</a>
+</nav>
+</div>
+
+</body></html>

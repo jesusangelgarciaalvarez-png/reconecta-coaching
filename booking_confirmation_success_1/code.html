@@ -1,0 +1,144 @@
+<html class="dark"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#f2b90d",
+            "background-light": "#f8f8f5",
+            "background-dark": "#0f172a", // Navy blue for a professional coaching feel
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #f2b90d 0%, #d9a306 100%);
+    }
+    .navy-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(242, 185, 13, 0.2);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<div class="flex-1 flex flex-col items-center px-6 pt-12 pb-8 overflow-y-auto max-w-md mx-auto w-full">
+<div class="mb-8 relative">
+<div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+<div class="relative flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 border-2 border-primary">
+<span class="material-symbols-outlined text-primary text-5xl">favorite</span>
+</div>
+</div>
+<div class="text-center mb-8">
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">¡Sesión Confirmada!</h1>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+        Tu camino hacia la reconstrucción del autoestima ha comenzado. Estamos contigo en cada paso de este proceso.
+      </p>
+</div>
+<div class="w-full navy-card rounded-xl p-6 mb-8 backdrop-blur-sm">
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Fecha</p>
+<p class="text-lg font-medium text-slate-900 dark:text-white">Jueves, 24 de Octubre</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">schedule</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Hora</p>
+<p class="text-lg font-medium text-slate-900 dark:text-white">17:00 - 18:00 (GMT-5)</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">location_on</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Modalidad</p>
+<div class="flex flex-col">
+<p class="text-lg font-medium text-slate-900 dark:text-white">Sesión Presencial</p>
+<span class="text-sm text-primary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-xs">chat</span>
+                Te contactaremos vía WhatsApp
+              </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full space-y-4 mt-auto">
+<button class="w-full gold-gradient py-4 rounded-xl text-background-dark font-bold text-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined">event_available</span>
+        Añadir a Google Calendar
+      </button>
+<a class="w-full py-4 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-center block active:scale-[0.98] transition-transform" href="#">
+        Volver al Inicio
+      </a>
+</div>
+<div class="mt-8 flex items-center gap-2 opacity-60">
+<div class="h-px w-12 bg-slate-400"></div>
+<p class="text-xs font-medium text-slate-400 uppercase tracking-widest">Coaching &amp; Soporte</p>
+<div class="h-px w-12 bg-slate-400"></div>
+</div>
+</div>
+<div class="relative flex h-auto w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden border-t border-slate-200 dark:border-slate-800">
+<div class="flex gap-2 bg-background-light dark:bg-slate-900/50 px-4 pb-6 pt-3">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Inicio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">calendar_month</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Sesiones</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Recursos</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Perfil</p>
+</a>
+</div>
+</div>
+
+```</body></html>

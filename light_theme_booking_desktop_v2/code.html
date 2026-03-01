@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "accent-lavender": "#e0e7ff",
+                        "deep-navy": "#0f172a",
+                        "gold-accent": "#eab308",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Booking Confirmation - Emotional Support</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden max-w-[430px] mx-auto shadow-2xl border-x border-slate-200 dark:border-slate-800">
+<header class="flex items-center bg-white dark:bg-slate-900 p-4 border-b border-slate-100 dark:border-slate-800 justify-between sticky top-0 z-10">
+<div class="text-deep-navy dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-deep-navy dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Reserva tu Sesión</h2>
+</header>
+<main class="flex-1 overflow-y-auto">
+<div class="flex flex-col gap-3 p-6">
+<div class="flex gap-6 justify-between items-center">
+<p class="text-deep-navy dark:text-slate-100 text-sm font-semibold uppercase tracking-wider">Paso Final: Confirmación</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">4 de 4</p>
+</div>
+<div class="rounded-full bg-slate-200 dark:bg-slate-700 h-2 overflow-hidden">
+<div class="h-full rounded-full bg-primary" style="width: 100%;"></div>
+</div>
+</div>
+<div class="px-6 py-4 flex flex-col items-center text-center">
+<div class="size-20 bg-gold-accent/10 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-gold-accent text-5xl font-bold">check_circle</span>
+</div>
+<h1 class="text-deep-navy dark:text-slate-100 text-3xl font-bold tracking-tight mb-2">¡Sesión Confirmada!</h1>
+<p class="text-slate-600 dark:text-slate-400 text-base">Un nuevo comienzo te espera. Hemos enviado los detalles a tu correo electrónico.</p>
+</div>
+<div class="m-6 p-6 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-start gap-4 mb-6">
+<div class="size-12 rounded-lg bg-accent-lavender dark:bg-primary/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-tighter">Fecha y Hora</p>
+<p class="text-deep-navy dark:text-slate-100 text-base font-semibold">Jueves, 5 de Octubre</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm">16:00 - 17:00 (Hora local)</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="size-12 rounded-lg bg-accent-lavender dark:bg-primary/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-tighter">Coach</p>
+<p class="text-deep-navy dark:text-slate-100 text-base font-semibold">Dra. Elena Martínez</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Sesión de acompañamiento emocional</p>
+</div>
+</div>
+</div>
+<div class="px-6 pb-12 flex flex-col gap-3">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">event</span>
+                    Añadir a Google Calendar
+                </button>
+<button class="w-full flex items-center justify-center gap-2 bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">chat</span>
+                    Contactar por WhatsApp
+                </button>
+<button class="w-full text-slate-500 dark:text-slate-400 text-sm font-semibold py-4 hover:text-deep-navy dark:hover:text-slate-100 transition-colors">
+                    Volver al Inicio
+                </button>
+</div>
+</main>
+<nav class="mt-auto flex gap-2 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pb-8 pt-3">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-xs font-medium leading-normal">Inicio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">calendar_month</span>
+<p class="text-xs font-medium leading-normal">Sesiones</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<p class="text-xs font-medium leading-normal">Recursos</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-xs font-medium leading-normal">Perfil</p>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Noto+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c025", // Gold accent
+                        "background-light": "#f8f8f5", // Cream background
+                        "background-dark": "#221e10",
+                        "navy-accent": "#1a2a3a", // Elegant navy for serif text
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "sans": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            min-height: max(884px, 100dvh);
+        }
+        .serif-font {
+            font-family: 'Noto Serif', serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<header class="sticky top-0 z-50 bg-background-light/80 backdrop-blur-md border-b border-primary/20 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">self_care</span>
+<span class="serif-font font-bold text-navy-accent dark:text-primary text-xl tracking-tight">Lumina Coaching</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-navy-accent dark:text-slate-100">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 text-navy-accent dark:text-slate-100">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 py-12">
+<div class="mb-10 text-center md:text-left">
+<nav class="flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold mb-4 justify-center md:justify-start">
+<span>Inicio</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-slate-400">FAQ</span>
+</nav>
+<h1 class="serif-font text-4xl md:text-5xl font-bold text-navy-accent dark:text-slate-100 leading-tight">
+                Preguntas Frecuentes
+            </h1>
+<p class="mt-4 text-slate-600 dark:text-slate-400 max-w-xl text-lg">
+                Encuentra respuestas a las dudas más comunes sobre nuestro proceso de acompañamiento emocional y reconstrucción de autoestima.
+            </p>
+</div>
+<div class="space-y-4">
+<details class="group bg-white dark:bg-background-dark/50 border border-primary/10 rounded-xl overflow-hidden shadow-sm" open="">
+<summary class="flex cursor-pointer items-center justify-between p-6 list-none">
+<h3 class="text-lg font-semibold text-navy-accent dark:text-slate-100 pr-4">
+                        ¿Cómo sé si el coaching es para mí?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-6 pb-6 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-primary/5 pt-4">
+<p>
+                        El coaching es ideal si buscas herramientas prácticas para mejorar tu autoestima y gestión emocional en el presente. A diferencia de otros enfoques, nos centramos en objetivos concretos y en potenciar tus fortalezas actuales para construir el futuro que deseas. Si sientes que es momento de tomar acción y transformar tu diálogo interno, este espacio es para ti.
+                    </p>
+</div>
+</details>
+<details class="group bg-white dark:bg-background-dark/50 border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+<summary class="flex cursor-pointer items-center justify-between p-6 list-none">
+<h3 class="text-lg font-semibold text-navy-accent dark:text-slate-100 pr-4">
+                        ¿Qué diferencia hay con la terapia?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-6 pb-6 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-primary/5 pt-4">
+<p>
+                        Mientras que la terapia tradicional a menudo se enfoca en sanar traumas del pasado o tratar patologías clínicas, el coaching se orienta hacia el <strong>"aquí y el ahora"</strong> y hacia la acción futura. Trabajamos en el desarrollo de habilidades, cambio de creencias limitantes y empoderamiento personal sin entrar en diagnósticos clínicos.
+                    </p>
+</div>
+</details>
+<details class="group bg-white dark:bg-background-dark/50 border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+<summary class="flex cursor-pointer items-center justify-between p-6 list-none">
+<h3 class="text-lg font-semibold text-navy-accent dark:text-slate-100 pr-4">
+                        ¿Cómo funcionan las sesiones por Zoom?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-6 pb-6 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-primary/5 pt-4">
+<p>
+                        Las sesiones virtuales ofrecen la misma calidez y profundidad que las presenciales, con la comodidad de estar en tu propio espacio seguro. Tras agendar, recibirás un enlace único de Zoom. Solo necesitas una conexión a internet estable, una cámara y un lugar tranquilo donde puedas expresarte libremente durante 60 minutos.
+                    </p>
+</div>
+</details>
+<details class="group bg-white dark:bg-background-dark/50 border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+<summary class="flex cursor-pointer items-center justify-between p-6 list-none">
+<h3 class="text-lg font-semibold text-navy-accent dark:text-slate-100 pr-4">
+                        ¿Puedo cancelar o reprogramar?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-6 pb-6 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-primary/5 pt-4">
+<p>
+                        Entiendo que la vida puede ser impredecible. Puedes reprogramar o cancelar tu sesión con un mínimo de 24 horas de antelación sin cargo alguno. Esto permite que ese espacio pueda ser aprovechado por otra persona que lo necesite. Las cancelaciones con menos de 24 horas de aviso se cobrarán en su totalidad.
+                    </p>
+</div>
+</details>
+<div class="mt-8 p-6 md:p-8 bg-white dark:bg-background-dark/40 border-2 border-primary/30 rounded-2xl shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">event_busy</span>
+</div>
+<h2 class="serif-font text-2xl md:text-3xl font-bold text-navy-accent dark:text-primary mb-4 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary hidden md:block">info</span>
+                    Política de Cancelación y Reprogramación
+                </h2>
+<div class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
+<p>
+                        Para garantizar la calidad del servicio y el respeto al tiempo de todos los consultantes, Lumina Coaching aplica los siguientes términos:
+                    </p>
+<ul class="space-y-3 list-none">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-xl flex-shrink-0">check_circle</span>
+<span><strong>Aviso previo:</strong> Las sesiones pueden reprogramarse o cancelarse sin coste adicional con un mínimo de <strong>24 horas de antelación</strong>.</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-xl flex-shrink-0">warning</span>
+<span><strong>Cancelaciones tardías:</strong> Las cancelaciones realizadas con menos de 24 horas de aviso o la no asistencia a la sesión conllevarán el cargo del 100% del valor de la misma.</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-xl flex-shrink-0">payments</span>
+<span><strong>Reembolsos:</strong> No se realizan reembolsos de sesiones individuales ya abonadas, pero el importe podrá ser acreditado para una futura sesión si se cumple el plazo de preaviso.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<section class="mt-16 p-8 bg-primary/10 rounded-2xl text-center border border-primary/20">
+<h3 class="serif-font text-2xl font-bold text-navy-accent dark:text-slate-100 mb-4">
+                ¿Aún tienes dudas?
+            </h3>
+<p class="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
+                Si no encontraste la respuesta que buscabas, estoy aquí para escucharte y resolver cualquier inquietud personal.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<a class="inline-flex items-center justify-center px-8 py-3 bg-primary text-navy-accent font-bold rounded-full hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20" href="#">
+                    Contactar por WhatsApp
+                </a>
+<a class="inline-flex items-center justify-center px-8 py-3 bg-white dark:bg-navy-accent text-navy-accent dark:text-slate-100 font-bold border border-primary/30 rounded-full hover:bg-primary/5 transition-colors" href="#">
+                    Enviar un Email
+                </a>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-background-dark/90 backdrop-blur-lg border-t border-primary/10 flex justify-around items-center px-4 pb-6 pt-3 z-50">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Inicio</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Sesiones</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">help</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">FAQ</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Perfil</span>
+</a>
+</nav>
+<div class="h-24"></div>
+
+</body></html>

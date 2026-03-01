@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #ecb613;
+  /* Muted Gold */
+  --color-teal-soft: #2d6a6d;
+  --color-teal-deep: #1a3a3c;
+  --color-glass: rgba(255, 255, 255, 0.1);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+
+  --font-display: "Newsreader", serif;
+  --font-sans: "Manrope", sans-serif;
+}
+
+body {
+  @apply bg-[#0a1f1f] text-slate-200 font-sans antialiased;
+  background: radial-gradient(circle at top right, #1a3a3c, #0a1f1f);
+  min-height: 100vh;
+}
+
+.glass-panel {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .glass-panel {
+    @apply backdrop-blur-lg;
+  }
+}
+
+.time-slot-active {
+  background-color: #ecb613 !important;
+  color: #0a1f1f !important;
+  box-shadow: 0 0 20px rgba(236, 182, 19, 0.4);
+  transform: scale(1.05);
+}
+
+.faded-bg {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* Navigation Menu Styles */
+#nav-menu {
+  @apply fixed inset-0 z-[100] transition-all duration-500 ease-in-out;
+  clip-path: circle(0% at 100% 0%);
+  pointer-events: none;
+}
+
+#nav-menu.active {
+  clip-path: circle(150% at 100% 0%);
+  pointer-events: auto;
+}
+
+.menu-link {
+  @apply text-4xl md:text-6xl font-display italic text-white/40 hover:text-primary transition-all duration-300 hover:pl-4;
+}
+
+.menu-link.active {
+  @apply text-primary opacity-100;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

@@ -1,0 +1,157 @@
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#e85e30",
+            "terracotta": "#b45231",
+            "cream": "#fdfaf6",
+            "sage": "#8a9a5b",
+            "background-light": "#fdfaf6",
+            "background-dark": "#211511",
+          },
+          fontFamily: {
+            "display": ["Epilogue", "sans-serif"],
+            "serif": ["Fraunces", "serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .organic-shape-1 {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    .organic-shape-2 {
+      border-radius: 30% 70% 70% 30% / 50% 60% 40% 50%;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center bg-background-light/80 backdrop-blur-md sticky top-0 z-50 p-4 justify-between border-b border-primary/10">
+<div class="text-primary flex size-10 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-3xl">filter_vintage</span>
+</div>
+<h2 class="text-terracotta font-serif text-2xl font-bold leading-tight tracking-tight flex-1 text-center italic">Reconecta</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Hero Section -->
+<main class="flex flex-col gap-8 pb-24">
+<section class="px-4 pt-8">
+<div class="relative flex flex-col gap-8 @container">
+<div class="relative aspect-[4/5] w-full overflow-hidden organic-shape-1 bg-primary/5">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Artistic portrait of an empowered woman looking forward" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAiDdt7PQPuDwNXWyKbqYa-9deEVZTeNVYj_-DTrQW2owd_T8QXBJrYiGnD6iNWygBjLnBtAPCIUZF8l7xWZ1Yxc-hwO9393gauny1VUuiuKbUZ833BsyVMR3r9mvpfD_hAju06_bGkm3pKym0rEcvRV3Vkg3BeH7pnYPB-KXXs7QW8dNAJFMO_-i318cT0BBiZYVfDYQg5pYR3Q_gGjrADEUiOwhGZ64VoO7MKxog7pFkqp140FD2cpThy89BgShMADBaNqHGw1eI');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-terracotta/40 to-transparent"></div>
+</div>
+<div class="flex flex-col gap-4 -mt-16 relative z-10 px-2">
+<div class="bg-background-light/90 backdrop-blur-sm p-6 rounded-xl border border-primary/5 shadow-sm">
+<h1 class="text-terracotta font-serif text-5xl font-bold leading-[1.1] tracking-tight italic mb-4">
+                Reconecta <br/><span class="text-primary not-italic">contigo</span>
+</h1>
+<p class="text-slate-700 dark:text-slate-300 text-lg font-normal leading-relaxed mb-6">
+                Un viaje artístico para reconstruir tu autoestima y redescubrir tu esencia emocional.
+              </p>
+<button class="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-8 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+<span>Comienza tu viaje</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Organic Philosophy Section -->
+<section class="px-4 py-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="h-px flex-1 bg-primary/20"></span>
+<h2 class="text-terracotta font-serif text-xl italic font-bold">Nuestra Esencia</h2>
+<span class="h-px flex-1 bg-primary/20"></span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-3 p-4 bg-sage/10 rounded-2xl border border-sage/20">
+<span class="material-symbols-outlined text-sage text-3xl">eco</span>
+<h3 class="font-serif font-bold text-slate-800 italic">Orgánico</h3>
+<p class="text-sm text-slate-600">Procesos naturales de sanación emocional.</p>
+</div>
+<div class="flex flex-col gap-3 p-4 bg-primary/10 rounded-2xl border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl">palette</span>
+<h3 class="font-serif font-bold text-slate-800 italic">Creativo</h3>
+<p class="text-sm text-slate-600">Expresión artística como puente al alma.</p>
+</div>
+</div>
+</section>
+<!-- Featured Session Card -->
+<section class="px-4">
+<div class="relative overflow-hidden rounded-3xl bg-terracotta text-white p-8">
+<div class="absolute top-0 right-0 w-32 h-32 bg-white/10 organic-shape-2 -mr-16 -mt-16"></div>
+<div class="relative z-10">
+<h2 class="font-serif text-2xl italic mb-2">Taller de Barro y Alma</h2>
+<p class="text-white/80 mb-6 text-sm">Moldea tu realidad a través del tacto y la presencia plena.</p>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">Próxima sesión: 12 Oct</span>
+<button class="bg-white text-terracotta px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">Reservar</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Overlapping Nature Element -->
+<section class="px-4 py-8 overflow-hidden">
+<div class="flex gap-4 items-center">
+<div class="w-1/2 aspect-square organic-shape-2 bg-cover bg-center border-4 border-white shadow-xl rotate-3" data-alt="Macro photo of green leaves and nature" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACrkq9yrj_46eB8zPFiT_56Tx4wTZy6B6fSsDFzLxV-5FC5jHfr-a6C_KZUyFKzmYwboAJ24DxrYBOVuhOr6fxsmLY5Wxtdw1Q7cF45R8UJCmu8A7CVjMBod1OGlkxwZQZZ1l9k7MXDPiS0w4K60WUvzSZskJ6vICwwpthdJ9BCW6G7B2StBUjCOaY_nJWrruqXaQKVUlEgHVKxa7SHvx2sBkR-Z5Tcc5ymryjwC5mS_jz0bkOZ9VTrghwFn6aWQujfY7h4OkgOt0');"></div>
+<div class="w-1/2">
+<h3 class="font-serif text-2xl italic text-terracotta mb-2 leading-tight">Sanar entre la naturaleza</h3>
+<p class="text-xs text-slate-600 leading-relaxed italic">"En cada pétalo hay un reflejo de nuestra propia resiliencia."</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-primary/10 bg-background-light/95 backdrop-blur-md px-4 pb-6 pt-3">
+<div class="flex gap-2 max-w-md mx-auto">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-1">home</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Inicio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Sesiones</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">gallery_thumbnail</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Galería</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">face_3</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Perfil</p>
+</a>
+</div>
+</nav>
+</div>
+
+```</body></html>

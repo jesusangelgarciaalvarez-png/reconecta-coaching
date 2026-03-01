@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Desktop Booking and Confirmation V2</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1a1a1a",
+                        "navy-deep": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-dot {
+            @apply bg-primary;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<nav class="border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-navy-deep/50 backdrop-blur-md sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-navy-deep">auto_awesome</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-primary">Serena Coaching</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Inicio</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Sesiones</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Recursos</a>
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-6 py-12">
+<div class="mb-10">
+<h1 class="text-3xl font-bold mb-2">Reserva tu Sesión de Acompañamiento</h1>
+<p class="text-slate-500 dark:text-slate-400">Paso 2 de 3: Selección de horario y modalidad</p>
+<div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 mt-4 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-2/3"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<div class="lg:col-span-7 bg-white dark:bg-navy-deep border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<h2 class="text-xl font-bold uppercase tracking-widest">Octubre 2023</h2>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-2 mb-4">
+<div class="text-center text-xs font-bold text-slate-400 pb-4">LUN</div>
+<div class="text-center text-xs font-bold text-slate-400 pb-4">MAR</div>
+<div class="text-center text-xs font-bold text-slate-400 pb-4">MIÉ</div>
+<div class="text-center text-xs font-bold text-slate-400 pb-4">JUE</div>
+<div class="text-center text-xs font-bold text-slate-400 pb-4">VIE</div>
+<div class="text-center text-xs font-bold text-slate-400 pb-4 text-primary">SÁB</div>
+<div class="text-center text-xs font-bold text-slate-400 pb-4 text-primary">DOM</div>
+<div class="aspect-square flex items-center justify-center text-slate-300 dark:text-slate-600">25</div>
+<div class="aspect-square flex items-center justify-center text-slate-300 dark:text-slate-600">26</div>
+<div class="aspect-square flex items-center justify-center text-slate-300 dark:text-slate-600">27</div>
+<div class="aspect-square flex items-center justify-center text-slate-300 dark:text-slate-600">28</div>
+<div class="aspect-square flex items-center justify-center text-slate-300 dark:text-slate-600">29</div>
+<div class="aspect-square flex items-center justify-center text-slate-300 dark:text-slate-600">30</div>
+<div class="aspect-square flex items-center justify-center">1</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">2</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">3</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">4</div>
+<div class="aspect-square flex items-center justify-center bg-primary text-navy-deep font-bold rounded-lg shadow-lg shadow-primary/20">5</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">6</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">7</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">8</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">9</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">10</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">11</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">12</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">13</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">14</div>
+<div class="aspect-square flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer transition-all">15</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+<h3 class="font-semibold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span> Horarios Disponibles (Jueves 5)
+                    </h3>
+<div class="grid grid-cols-4 gap-3">
+<button class="py-3 px-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors text-sm font-medium">09:00 AM</button>
+<button class="py-3 px-4 rounded-lg bg-primary/10 border border-primary text-primary text-sm font-bold">10:30 AM</button>
+<button class="py-3 px-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors text-sm font-medium">12:00 PM</button>
+<button class="py-3 px-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors text-sm font-medium">04:30 PM</button>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 flex flex-col gap-6">
+<div class="bg-white dark:bg-navy-deep border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
+<h3 class="text-lg font-bold mb-6">Tipo de Encuentro</h3>
+<div class="space-y-4">
+<label class="relative flex items-center p-4 rounded-xl border-2 border-primary bg-primary/5 cursor-pointer">
+<input checked="" class="hidden" name="modality" type="radio"/>
+<div class="flex items-center gap-4 flex-1">
+<div class="size-12 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-navy-deep">videocam</span>
+</div>
+<div>
+<p class="font-bold">Sesión Online (Zoom)</p>
+<p class="text-sm text-slate-500">Desde la comodidad de tu espacio</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</label>
+<label class="relative flex items-center p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-all">
+<input class="hidden" name="modality" type="radio"/>
+<div class="flex items-center gap-4 flex-1">
+<div class="size-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">location_on</span>
+</div>
+<div>
+<p class="font-bold">Presencial (Estudio)</p>
+<p class="text-sm text-slate-500">Cerca de Plaza de Mayo, CABA</p>
+</div>
+</div>
+<div class="size-5 rounded-full border-2 border-slate-300 dark:border-slate-700"></div>
+</label>
+</div>
+</div>
+<div class="bg-white dark:bg-navy-deep border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
+<h3 class="text-lg font-bold mb-4">Resumen de Sesión</h3>
+<div class="space-y-4 mb-6">
+<div class="flex justify-between items-center text-sm py-2 border-b border-slate-100 dark:border-slate-800">
+<span class="text-slate-500">Servicio</span>
+<span class="font-medium">Coaching Emocional 1:1</span>
+</div>
+<div class="flex justify-between items-center text-sm py-2 border-b border-slate-100 dark:border-slate-800">
+<span class="text-slate-500">Fecha y Hora</span>
+<span class="font-medium">5 Octubre, 10:30 AM</span>
+</div>
+<div class="flex justify-between items-center text-sm py-2">
+<span class="text-slate-500">Inversión</span>
+<span class="font-bold text-lg text-primary">$4.500 ARS</span>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-navy-deep font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                        Confirmar y Reservar
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-navy-deep/90 backdrop-blur-sm p-6 hidden">
+<div class="bg-white dark:bg-navy-deep rounded-2xl max-w-xl w-full p-10 text-center shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-2 bg-primary"></div>
+<div class="size-24 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-primary text-5xl">task_alt</span>
+</div>
+<h2 class="text-3xl font-bold mb-2">¡Sesión Confirmada!</h2>
+<p class="text-slate-500 dark:text-slate-400 mb-8 max-w-sm mx-auto">Tu espacio ha sido reservado con éxito. Te hemos enviado un correo con los detalles y el enlace de acceso.</p>
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 mb-10 text-left border border-slate-100 dark:border-slate-800">
+<div class="flex items-start gap-4 mb-4">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+<div>
+<p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Fecha y Hora</p>
+<p class="font-medium">Jueves, 5 de Octubre • 10:30 AM (ART)</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary">videocam</span>
+<div>
+<p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Enlace de Zoom</p>
+<p class="font-medium text-primary underline truncate">zoom.us/j/823912039123</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-4 px-6 rounded-xl border-2 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold">
+<img alt="Google Calendar" class="size-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzm7K2dgM7N0kPbt4PjwqvQO0BZApLzMauzi56z2UhfWmQBiLrqZ78N2-H-B4vd5j7nz55B36CArtiR0Ab6T2fczjaLqom2ZnqJICpbdDntj8Vb7MUji2iKFMaa1xcwMGXwkYMwiRuDpGB3_LDVCbof2h3NYAyqZq65poCXJbboO7gogIIk9z1wCubIb70lw1Sbzzw6hGFu8ymqG2Zge5Taork4_x6ZyVQmPh4uSk09f1sivvbnk1smpY7tJex543pNgAbEAMntG0"/>
+                        Google Calendar
+                    </button>
+<button class="flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-[#25D366] hover:bg-[#128C7E] text-white transition-all font-bold">
+<svg class="size-5" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg>
+                        WhatsApp
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-0 w-full md:hidden bg-navy-deep border-t border-slate-800 px-6 py-4 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-medium uppercase tracking-wider">Inicio</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-[10px] font-medium uppercase tracking-wider">Sesiones</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<p class="text-[10px] font-medium uppercase tracking-wider">Recursos</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-medium uppercase tracking-wider">Perfil</p>
+</a>
+</div>
+</body></html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación | Reconecta</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="overflow-x-hidden">
+    <div id="app">
+        <div class="relative min-h-screen flex flex-col items-center justify-center px-6 text-center">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&q=80&w=2560"
+                    class="w-full h-full object-cover opacity-20 faded-bg" alt="Nature background">
+            </div>
+
+            <main class="relative z-10 max-w-xl mx-auto w-full pt-10 pb-20 px-4">
+                <div class="glass-panel rounded-[2rem] p-6 md:p-12 text-center">
+                    <div
+                        class="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-slow">
+                        <span class="material-symbols-outlined text-primary text-4xl">check_circle</span>
+                    </div>
+                    <h1 class="font-display italic text-3xl md:text-5xl text-white mb-4">¡Reserva Confirmada!</h1>
+                    <p class="text-slate-300 text-base md:text-lg mb-8">Hemos enviado los detalles a tu correo
+                        electrónico. Te enviaremos un **recordatorio por WhatsApp y correo 1 hora antes** de la sesión.
+                    </p>
+
+                    <div class="bg-white/5 rounded-2xl p-6 border border-white/10 mb-8 text-left">
+                        <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+                            <div>
+                                <p class="text-[10px] text-primary uppercase font-bold tracking-widest mb-1">ID de Cita
+                                    (Clave Meet)</p>
+                                <p id="display-id" class="text-2xl font-black text-white tracking-widest">------</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Estado
+                                </p>
+                                <span
+                                    class="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded-md border border-green-500/30">Confirmada</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 mb-6">
+                            <div class="flex items-start gap-4">
+                                <span class="material-symbols-outlined text-primary text-sm mt-1">mail</span>
+                                <p class="text-[11px] text-slate-300 leading-tight">El enlace de acceso también ha sido
+                                    enviado a tu bandeja de entrada.</p>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="material-symbols-outlined text-primary text-xl mt-1">person</span>
+                                <div>
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Consultante</p>
+                                    <p id="display-name" class="text-white font-semibold">Cargando...</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="material-symbols-outlined text-primary text-xl mt-1">calendar_today</span>
+                                <div>
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Fecha y Hora</p>
+                                    <p id="display-datetime" class="text-white font-semibold">Cargando...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a id="calendar-link" href="#" target="_blank"
+                            class="flex items-center justify-center gap-3 w-full bg-[#4285f4] hover:bg-[#3367d6] text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/10 no-underline text-sm mb-3">
+                            <span class="material-symbols-outlined">calendar_add_on</span>
+                            Agendar en Google Calendar
+                        </a>
+
+                        <a id="meet-link" href="#" target="_blank"
+                            class="flex items-center justify-center gap-3 w-full bg-white/5 hover:bg-white/10 text-white py-4 rounded-xl font-bold transition-all border border-white/10 no-underline text-sm shadow-xl">
+                            <span class="material-symbols-outlined text-primary text-xl">video_call</span>
+                            Ver enlace en mi correo
+                        </a>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mb-8">¿Necesitas hacer cambios? <a href="/cancel.html"
+                            class="text-primary hover:underline">Gestionar mi reserva</a></p>
+
+                    <a href="/"
+                        class="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
+                        <span>Volver al inicio</span>
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = JSON.parse(sessionStorage.getItem('lastBooking'));
+
+            if (data) {
+                document.getElementById('display-id').textContent = data.id;
+                document.getElementById('display-name').textContent = data.name;
+
+                const bookingDate = new Date(data.timestamp);
+                const dateString = bookingDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('display-datetime').textContent = `${dateString} • ${data.time}`;
+                document.getElementById('meet-link').href = data.meetLink;
+
+                // Google Calendar Link Generation with proper dates
+                const adminEmail = 'contacto@reconecta.com';
+                const userEmail = data.email;
+                const title = encodeURIComponent(`Sesión Reconecta: ${data.name} - ${data.id}`);
+                const details = encodeURIComponent(`Invitado: ${data.name}\n\nEsta es tu sesión de coaching confirmada.\nID de Cita (Clave Meet): ${data.id}\nLink Google Meet: ${data.meetLink}\n\nTe recordamos que la sesión inicia puntualmente.`);
+
+                // Construct YYYYMMDDTHHMMSSZ
+                const year = bookingDate.getFullYear();
+                const month = (bookingDate.getMonth() + 1).toString().padStart(2, '0');
+                const day = bookingDate.getDate().toString().padStart(2, '0');
+
+                // data.time format is "HH:00"
+                const hour = data.time.split(':')[0];
+                const start = `${year}${month}${day}T${hour}0000`;
+                const endHour = (parseInt(hour) + 1).toString().padStart(2, '0');
+                const end = `${year}${month}${day}T${endHour}0000`;
+
+                const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&add=${adminEmail},${userEmail}`;
+                document.getElementById('calendar-link').href = calendarUrl;
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function () {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                // since particles fall down, start a bit higher than random
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+            }, 250);
+        });
+    </script>
+</body>
+
+</html>

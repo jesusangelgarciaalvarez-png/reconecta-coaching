@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Noto+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d4af37", // Professional Gold
+                        "navy-deep": "#0a192f", // Deep Navy Base
+                        "navy-light": "#112240", // Navy Lighter for cards
+                        "gold-muted": "#b8860b",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "sans": ["Noto Sans", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">@layer base {
+    body {
+        @apply font-sans antialiased; background: radial-gradient(circle at center, #112240 0%, #0a192f 100%);
+        } . serif-font {
+        font-family: "Noto Serif", serif;
+        }
+    }
+.bg-abstract-overlay {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBGIJucgHHkqW4KcBwfzwN3WpmgXPT9EpG_P9GZlEhpRRD2c6DjRTKycPN5uyNE8aH9HAs2Z49j8gmEegcXTEdQQqkqHGsB1Wc5xDCxsBg6HLv2derwKmR4t9AxdjPrSZzFeaSPMBvExAx7iO4zKEeEEyrSJc-kUklIiJ6bAYqo5Fb5IKJ4mRrlbL_HBg8gYQ1A_cmRyaaZ8Peb-YP7KWbOtC5QfrWC_uOEwyDaiO7F6qbI5Yx_wYKJk_WQJ9u6KEvKkxrnTo9GCKI);
+    opacity: 0.03;
+    pointer-events: none
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-slate-100 min-h-screen relative">
+<div class="fixed inset-0 bg-abstract-overlay z-0"></div>
+<header class="sticky top-0 z-50 bg-navy-deep/80 backdrop-blur-md border-b border-primary/20 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">self_care</span>
+<span class="serif-font font-bold text-primary text-xl tracking-tight">Lumina Coaching</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="relative z-10 max-w-4xl mx-auto px-4 py-10">
+<div class="mb-10 text-center">
+<nav class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-primary/70 font-semibold mb-4 justify-center">
+<span>Inicio</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-white">FAQ</span>
+</nav>
+<h1 class="serif-font text-4xl font-bold text-white leading-tight">
+                Preguntas Frecuentes
+            </h1>
+<div class="w-12 h-0.5 bg-primary mx-auto mt-4 mb-4"></div>
+<p class="text-slate-300 max-w-xl mx-auto text-base leading-relaxed">
+                Acompañamiento emocional y reconstrucción de autoestima con un enfoque profesional y humano.
+            </p>
+</div>
+<div class="space-y-4">
+<details class="group bg-navy-light/40 border border-primary/30 rounded-xl overflow-hidden backdrop-blur-sm" open="">
+<summary class="flex cursor-pointer items-center justify-between p-5 list-none">
+<h3 class="text-base font-semibold text-primary pr-4">
+                        ¿Cómo sé si el coaching es para mí?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 text-slate-300 leading-relaxed border-t border-primary/10 pt-4 text-sm">
+<p>
+                        El coaching es ideal si buscas herramientas prácticas para mejorar tu autoestima y gestión emocional en el presente. Nos centramos en objetivos concretos y en potenciar tus fortalezas actuales para construir el futuro que deseas.
+                    </p>
+</div>
+</details>
+<details class="group bg-navy-light/40 border border-primary/30 rounded-xl overflow-hidden backdrop-blur-sm">
+<summary class="flex cursor-pointer items-center justify-between p-5 list-none">
+<h3 class="text-base font-semibold text-primary pr-4">
+                        ¿Qué diferencia hay con la terapia?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 text-slate-300 leading-relaxed border-t border-primary/10 pt-4 text-sm">
+<p>
+                        Mientras la terapia tradicional a menudo se enfoca en sanar traumas del pasado, el coaching se orienta hacia el <strong>"aquí y el ahora"</strong>. Trabajamos en el desarrollo de habilidades y empoderamiento personal.
+                    </p>
+</div>
+</details>
+<details class="group bg-navy-light/40 border border-primary/30 rounded-xl overflow-hidden backdrop-blur-sm">
+<summary class="flex cursor-pointer items-center justify-between p-5 list-none">
+<h3 class="text-base font-semibold text-primary pr-4">
+                        ¿Cómo funcionan las sesiones virtuales?
+                    </h3>
+<div class="text-primary transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-2xl">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 text-slate-300 leading-relaxed border-t border-primary/10 pt-4 text-sm">
+<p>
+                        Las sesiones se realizan por Zoom, ofreciendo comodidad y privacidad. Solo necesitas una conexión estable y un lugar tranquilo donde puedas expresarte libremente durante 60 minutos.
+                    </p>
+</div>
+</details>
+<div class="mt-12 p-6 bg-gradient-to-br from-navy-light to-navy-deep border border-primary/40 rounded-2xl shadow-2xl relative overflow-hidden">
+<div class="absolute -top-4 -right-4 opacity-5">
+<span class="material-symbols-outlined text-9xl text-primary">gavel</span>
+</div>
+<h2 class="serif-font text-xl font-bold text-primary mb-5 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+                    Política de Cancelación y Reprogramación
+                </h2>
+<div class="space-y-4 text-slate-300 text-sm leading-relaxed font-sans">
+<p class="italic text-primary/80">
+                        Para garantizar la calidad del servicio, aplicamos los siguientes términos:
+                    </p>
+<ul class="space-y-4 list-none">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-lg flex-shrink-0">event_available</span>
+<span><strong>Aviso previo:</strong> Sesiones reprogramables sin coste con un mínimo de <strong>24 horas de antelación</strong>.</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary/60 text-lg flex-shrink-0">event_busy</span>
+<span><strong>Cancelaciones tardías:</strong> Menos de 24 horas de aviso conlleva el cargo del 100% del valor de la sesión.</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-primary/60 text-lg flex-shrink-0">account_balance_wallet</span>
+<span><strong>Reembolsos:</strong> No se realizan reembolsos, pero el importe puede acreditarse para futuras fechas bajo preaviso.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<section class="mt-16 p-8 bg-white/5 rounded-2xl text-center border border-white/10 backdrop-blur-sm">
+<h3 class="serif-font text-xl font-bold text-white mb-3">
+                ¿Necesitas atención personalizada?
+            </h3>
+<p class="text-slate-400 mb-8 text-sm max-w-xs mx-auto">
+                Si tienes dudas específicas sobre el proceso, no dudes en contactarme directamente.
+            </p>
+<div class="flex flex-col gap-4">
+<a class="inline-flex items-center justify-center px-8 py-3 bg-primary text-navy-deep font-bold rounded-lg hover:brightness-110 transition-all shadow-lg" href="#">
+                    WhatsApp Directo
+                </a>
+<a class="inline-flex items-center justify-center px-8 py-3 border border-primary/40 text-primary font-bold rounded-lg hover:bg-primary/5 transition-all" href="#">
+                    Enviar un Email
+                </a>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 bg-navy-deep/95 backdrop-blur-xl border-t border-primary/20 flex justify-around items-center px-4 pb-6 pt-3 z-50">
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[9px] font-medium uppercase tracking-wider">Inicio</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[9px] font-medium uppercase tracking-wider">Sesiones</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">help</span>
+<span class="text-[9px] font-bold uppercase tracking-wider">FAQ</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[9px] font-medium uppercase tracking-wider">Perfil</span>
+</a>
+</nav>
+<div class="h-28"></div>
+
+</body></html>

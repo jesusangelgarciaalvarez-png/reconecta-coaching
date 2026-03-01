@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Serene Coaching Landing Page V2</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b2bee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101022",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .soft-gradient-bg {
+            background: radial-gradient(circle at top right, rgba(43, 43, 238, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(43, 43, 238, 0.05), transparent);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<!-- Top Navigation -->
+<nav class="flex items-center justify-between p-6 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">spa</span>
+<span class="text-xl font-bold tracking-tight">Serene</span>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<!-- Hero Section -->
+<header class="relative px-6 pt-12 pb-20 overflow-hidden soft-gradient-bg">
+<div class="relative z-10 max-w-md mx-auto text-center">
+<span class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">Acompañamiento Empático</span>
+<h1 class="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight mb-6">
+                Reconstruye tu <span class="text-primary italic font-serif">autoestima</span> con calma
+            </h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed mb-10">
+                Un espacio seguro diseñado para sanar y reencontrar tu poder personal a través del coaching profesional.
+            </p>
+<div class="flex flex-col gap-4">
+<button class="w-full py-4 px-8 bg-primary text-white rounded-xl font-bold text-lg shadow-lg shadow-primary/30 active:scale-[0.98] transition-transform">
+                    Reserva tu sesión gratuita
+                </button>
+<p class="text-sm text-slate-500">Primer encuentro de 20 min sin costo.</p>
+</div>
+</div>
+<!-- Subtle Abstract Shape -->
+<div class="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="absolute -top-20 -left-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+</header>
+<!-- Problemas Section -->
+<section class="px-6 py-16 bg-slate-50 dark:bg-slate-900/50">
+<div class="max-w-md mx-auto">
+<h2 class="text-2xl font-bold mb-8 text-center">¿En qué podemos trabajar?</h2>
+<div class="grid gap-4">
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<div class="flex-shrink-0 size-6 flex items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="text-base font-medium">Dependencia emocional</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<div class="flex-shrink-0 size-6 flex items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="text-base font-medium">Baja autoestima y autocrítica</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<div class="flex-shrink-0 size-6 flex items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="text-base font-medium">Dificultad para poner límites</span>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<div class="flex-shrink-0 size-6 flex items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="text-base font-medium">Ansiedad por el futuro</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3 Pilares - Journey Section -->
+<section class="px-6 py-20 bg-background-light dark:bg-background-dark">
+<div class="max-w-md mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold mb-4">Mi Metodología</h2>
+<p class="text-slate-600 dark:text-slate-400">Un camino diseñado para tu transformación gradual y sólida.</p>
+</div>
+<div class="relative space-y-12">
+<!-- Vertical Line -->
+<div class="absolute left-6 top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
+<!-- Step 1 -->
+<div class="relative flex gap-6">
+<div class="z-10 flex-shrink-0 size-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20">
+                        1
+                    </div>
+<div class="pt-1">
+<h3 class="text-xl font-bold mb-2">Autoconocimiento</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Identificamos los patrones y creencias que te limitan hoy, explorando tu historia con compasión.
+                        </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative flex gap-6">
+<div class="z-10 flex-shrink-0 size-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20">
+                        2
+                    </div>
+<div class="pt-1">
+<h3 class="text-xl font-bold mb-2">Reconstrucción</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Diseñamos nuevas herramientas para fortalecer tu seguridad y aprender a priorizar tus necesidades.
+                        </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative flex gap-6">
+<div class="z-10 flex-shrink-0 size-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20">
+                        3
+                    </div>
+<div class="pt-1">
+<h3 class="text-xl font-bold mb-2">Empoderamiento</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Consolidamos tus límites y tu nueva identidad para que camines con total libertad y confianza.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonial / Social Proof -->
+<section class="px-6 py-12 mb-12">
+<div class="max-w-md mx-auto p-8 rounded-3xl bg-primary/5 border border-primary/10 relative">
+<span class="material-symbols-outlined text-primary/20 text-6xl absolute top-4 right-6 select-none">format_quote</span>
+<p class="text-lg italic text-slate-700 dark:text-slate-300 mb-6 relative z-10">
+                "Este proceso cambió la forma en que me hablo a mí misma. Ahora entiendo que poner límites no es egoísmo, es autocuidado."
+            </p>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-slate-300 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a smiling woman outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcAtFI6yyZoFYLQ3ClNbIGLAVchFNSOJv3AB68y2jbV_hWo3ooC7hwmXXTje02Pnbng7kOUayuW6UgJbaRSvVV3MHO8gAB1zGhe78O31lz0d8cxmycW2q4eokzSoodfxr-B2T9h_UN-Nc-8s3OiG7r4-mnLizmyYwcuFUpuWxzBf2QEAL1djFiTmyOcjIjw8BfOE4W2wPl1s8CU1Rsd5LYegs3MdPwG3f0s2q3WqMCwvzsnEVhmwlB6yDnCzsR9dUMSkjv5RqGy0w"/>
+</div>
+<div>
+<p class="font-bold">Lucía M.</p>
+<p class="text-xs text-slate-500">Cliente de Coaching</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<footer class="px-6 py-16 bg-slate-900 text-white rounded-t-[2.5rem]">
+<div class="max-w-md mx-auto text-center">
+<h2 class="text-3xl font-bold mb-6">¿Lista para empezar tu viaje?</h2>
+<p class="text-slate-400 mb-10">Agenda una sesión de claridad y descubre cómo puedo acompañarte en tu proceso.</p>
+<button class="w-full py-5 px-8 bg-primary text-white rounded-xl font-bold text-xl shadow-xl shadow-primary/20 mb-12">
+                Agendar sesión ahora
+            </button>
+<div class="flex justify-center gap-6 mb-12 text-slate-400">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">brand_awareness</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">chat_bubble</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">mail</span>
+</div>
+<div class="text-xs text-slate-500 border-t border-slate-800 pt-8">
+<p>© 2024 Serene Coaching. Todos los derechos reservados.</p>
+<div class="flex justify-center gap-4 mt-4">
+<a class="hover:underline" href="#">Privacidad</a>
+<a class="hover:underline" href="#">Términos</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

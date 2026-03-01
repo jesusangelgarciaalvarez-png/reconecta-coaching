@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a192f", // Deep navy for "Serene Blue" theme
+                        "accent-lavender": "#9d8df1",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(242, 185, 13, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-50">
+<div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined cursor-pointer">arrow_back_ios</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Book Your Session</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex items-center justify-center rounded-lg h-12 bg-transparent text-slate-900 dark:text-slate-100">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</div>
+<main class="flex-1 px-4 pb-24">
+<!-- Hero Text -->
+<div class="py-6 text-center">
+<h1 class="text-primary tracking-tight text-3xl font-extrabold leading-tight pb-2">Empowerment in Serene Blue</h1>
+<p class="text-slate-600 dark:text-slate-300 text-base font-normal leading-relaxed max-w-xs mx-auto">
+                    Take the first step towards your self-esteem reconstruction with professional guidance.
+                </p>
+</div>
+<!-- Session Type Selector -->
+<div class="mb-8">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">psychology</span>
+                    Choose Session Type
+                </h3>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-primary bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-3xl mb-2 text-primary">videocam</span>
+<span class="font-bold text-sm">Sesión Online</span>
+<span class="text-[10px] opacity-70">via Zoom</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-transparent transition-all">
+<span class="material-symbols-outlined text-3xl mb-2 text-accent-lavender">location_on</span>
+<span class="font-bold text-sm">Sesión Presencial</span>
+<span class="text-[10px] opacity-70">Face-to-face</span>
+</button>
+</div>
+</div>
+<!-- Calendar Widget -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+                        Select a Date
+                    </h3>
+<span class="text-primary text-sm font-semibold">November 2024</span>
+</div>
+<div class="glass-card rounded-xl p-4">
+<div class="grid grid-cols-7 gap-2 text-center mb-2">
+<span class="text-xs font-medium text-slate-400">Mo</span>
+<span class="text-xs font-medium text-slate-400">Tu</span>
+<span class="text-xs font-medium text-slate-400">We</span>
+<span class="text-xs font-medium text-slate-400">Th</span>
+<span class="text-xs font-medium text-slate-400">Fr</span>
+<span class="text-xs font-medium text-slate-400 text-primary/50">Sa</span>
+<span class="text-xs font-medium text-slate-400 text-primary/50">Su</span>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center">
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-slate-500 text-sm">28</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-slate-500 text-sm">29</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-slate-500 text-sm">30</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-slate-500 text-sm">31</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg bg-primary text-background-dark font-bold text-sm shadow-lg shadow-primary/20">1</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">2</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">3</button>
+<!-- Sample row -->
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">4</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">5</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">6</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">7</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">8</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">9</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg hover:bg-slate-800 text-sm">10</button>
+</div>
+</div>
+</div>
+<!-- Time Selector -->
+<div class="mb-8">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+                    Available Times
+                </h3>
+<div class="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+<button class="shrink-0 px-6 py-3 rounded-xl border border-primary bg-primary/10 font-bold text-sm text-primary">09:00 AM</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-slate-700 font-medium text-sm">10:30 AM</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-slate-700 font-medium text-sm">01:00 PM</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-slate-700 font-medium text-sm">04:30 PM</button>
+<button class="shrink-0 px-6 py-3 rounded-xl border border-slate-700 font-medium text-sm">06:00 PM</button>
+</div>
+</div>
+<!-- Contact Input (Hidden unless Presencial selected - shown here for design) -->
+<div class="mb-8">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">chat</span>
+                    WhatsApp Contact
+                </h3>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="text-slate-400 font-medium">+34</span>
+</div>
+<input class="w-full pl-14 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="600 000 000" type="tel"/>
+</div>
+<p class="mt-2 text-xs text-slate-400 italic">We'll send the location details and confirmation via WhatsApp.</p>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-4 bg-primary text-background-dark font-extrabold text-lg rounded-xl shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-95 transition-transform mb-6">
+                Confirm Booking
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</main>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex gap-2 border-t border-slate-800 bg-background-dark/90 backdrop-blur-lg px-4 pb-6 pt-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-xs font-medium">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">calendar_month</span>
+<p class="text-xs font-medium">Booking</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<p class="text-xs font-medium">Journal</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-xs font-medium">Profile</p>
+</a>
+</div>
+</div>
+</body></html>

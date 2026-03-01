@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b2bee",
+                        "terracotta": "#E2725B",
+                        "sage": "#87A96B",
+                        "cream": "#F5F5DC",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101022",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .serif-text { font-family: 'Playfair Display', serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header Nav -->
+<nav class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-slate-200 dark:border-slate-800">
+<div class="text-primary flex size-10 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-3xl">filter_vintage</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold font-display flex-1 text-center">Creative Coaching</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="@container">
+<div class="p-0">
+<div class="relative flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-end pb-12 px-6 text-center" data-alt="Empowered woman looking confidently at the horizon during sunset" style='background-image: linear-gradient(rgba(16, 16, 34, 0.2) 0%, rgba(16, 16, 34, 0.9) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuChXbIs4qpSIb9By6BebewFeTJlYefO5MTBL1LcRHKn-c6OrjAdO3YGkE3UH0CxIm8-wlq6magaq2y35aN6L50hluzXUYCYMvP1xgEcW1q7phpyB2kleC10Dst92mAqGQ7rUvZ0VLs1zGDy7iNLl1a6eKYxRwkwbn484w_va_w8_Z4Of76EL8c2fg_rfTkXt7M_AZeUMHEbJ9G3mJvK6EsJGIiXYjoNyoUsAb83z_k7fz9hk5qpgMm5MYRNpJE0bJhuvjUAfYUdoAk");'>
+<div class="flex flex-col gap-3">
+<span class="text-terracotta font-bold tracking-widest text-xs uppercase">Transformación Personal</span>
+<h1 class="text-white text-4xl font-serif italic leading-tight @[480px]:text-5xl">
+                            Reconecta contigo y <span class="text-terracotta not-italic font-display font-black">florece</span>
+</h1>
+<p class="text-slate-200 text-base font-normal max-w-md mx-auto">
+                            Acompañamiento creativo y profesional para la reconstrucción de tu autoestima y poder personal.
+                        </p>
+</div>
+<button class="mt-4 flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary text-white text-base font-bold shadow-lg shadow-primary/30">
+<span>Agenda tu sesión</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Value Proposition -->
+<section class="px-6 py-12 bg-white dark:bg-slate-900/50">
+<div class="text-center mb-10">
+<h2 class="text-terracotta text-sm font-bold tracking-[0.2em] uppercase mb-2">Propósito</h2>
+<h3 class="text-slate-900 dark:text-white text-3xl font-serif">Reconecta contigo</h3>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-lg font-light leading-relaxed text-center italic">
+                "Un espacio seguro diseñado para mujeres que buscan sanar, crecer y redescubrir su luz propia a través del arte y el apoyo emocional consciente."
+            </p>
+</section>
+<!-- Who I Help (Soft Cards) -->
+<section class="px-6 py-12 bg-background-light dark:bg-background-dark">
+<h2 class="text-slate-900 dark:text-white text-2xl font-bold font-display mb-8">¿A quién ayudo?</h2>
+<div class="grid gap-4">
+<div class="bg-sage/10 dark:bg-sage/20 p-6 rounded-xl border border-sage/20">
+<span class="material-symbols-outlined text-sage mb-3">favorite</span>
+<h4 class="text-slate-900 dark:text-white font-bold mb-2">Autoestima herida</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Mujeres que buscan reconstruir su valor personal y dejar atrás la autocrítica constante.</p>
+</div>
+<div class="bg-terracotta/10 dark:bg-terracotta/20 p-6 rounded-xl border border-terracotta/20">
+<span class="material-symbols-outlined text-terracotta mb-3">auto_awesome</span>
+<h4 class="text-slate-900 dark:text-white font-bold mb-2">Bloqueo Creativo</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Quienes sienten que han perdido su chispa y necesitan nuevas herramientas de expresión.</p>
+</div>
+<div class="bg-primary/10 dark:bg-primary/20 p-6 rounded-xl border border-primary/20">
+<span class="material-symbols-outlined text-primary mb-3">psychology</span>
+<h4 class="text-slate-900 dark:text-white font-bold mb-2">Transiciones de vida</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Mujeres atravesando cambios profundos que requieren un guía emocional experto.</p>
+</div>
+</div>
+</section>
+<!-- Method Pillars -->
+<section class="px-6 py-16 bg-white dark:bg-slate-900/30">
+<div class="text-center mb-12">
+<h2 class="text-slate-900 dark:text-white text-3xl font-serif mb-4">Método de Trabajo</h2>
+<div class="w-16 h-1 bg-terracotta mx-auto rounded-full"></div>
+</div>
+<div class="flex flex-col gap-12 relative">
+<!-- Line joining points -->
+<div class="absolute left-6 top-8 bottom-8 w-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
+<div class="relative z-10 flex gap-6">
+<div class="flex-shrink-0 size-12 rounded-full bg-cream dark:bg-slate-800 border-2 border-terracotta flex items-center justify-center">
+<span class="material-symbols-outlined text-terracotta">draw</span>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold text-lg mb-1">Expresión Creativa</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Usamos el arte como puente para acceder a emociones que las palabras no alcanzan a nombrar.</p>
+</div>
+</div>
+<div class="relative z-10 flex gap-6">
+<div class="flex-shrink-0 size-12 rounded-full bg-cream dark:bg-slate-800 border-2 border-sage flex items-center justify-center">
+<span class="material-symbols-outlined text-sage">self_improvement</span>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold text-lg mb-1">Presencia Plena</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Técnicas de mindfulness para habitar el presente con amabilidad y sin juicios.</p>
+</div>
+</div>
+<div class="relative z-10 flex gap-6">
+<div class="flex-shrink-0 size-12 rounded-full bg-cream dark:bg-slate-800 border-2 border-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">diversity_1</span>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold text-lg mb-1">Escucha Empática</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Un diálogo profesional y compasivo para integrar tus descubrimientos y avanzar.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="px-6 py-16 text-center">
+<div class="bg-primary/5 dark:bg-primary/10 rounded-3xl p-8 border border-primary/20">
+<h2 class="text-2xl font-serif text-slate-900 dark:text-white mb-4">¿Lista para comenzar tu viaje?</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-8">La primera sesión exploratoria es el primer paso hacia tu nueva versión.</p>
+<button class="w-full flex items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white font-bold text-lg shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined">calendar_today</span>
+                    Reservar Cita
+                </button>
+</div>
+</section>
+<!-- Footer Space -->
+<footer class="pb-24 pt-8 px-6 text-center border-t border-slate-200 dark:border-slate-800">
+<p class="text-slate-400 text-xs">© 2024 Creative Coaching por Elena M. • Madrid</p>
+</footer>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex gap-2 border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-lg px-4 pb-6 pt-3">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-1">home</span>
+</div>
+<p class="text-[10px] font-bold leading-normal tracking-wide uppercase">Inicio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-wide uppercase">Método</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-wide uppercase">Sesiones</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-wide uppercase">Perfil</p>
+</a>
+</div>
+</div>
+</body></html>

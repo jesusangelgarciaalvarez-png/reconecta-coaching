@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reserva tu Sesión | Coaching Emocional</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b2bee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101022",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+<!-- Main Container (Phone Form Factor) -->
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-slate-200 dark:border-slate-800">
+<button class="text-slate-900 dark:text-slate-100 flex size-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center">Reserva tu Sesión</h2>
+<div class="size-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content -->
+<main class="flex flex-col p-4 gap-6">
+<!-- Intro Section -->
+<section>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Paso 1: Elige tu momento</h1>
+<p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Selecciona la fecha y hora que mejor se adapte a tu proceso de sanación.</p>
+</section>
+<!-- Calendar Widget -->
+<section class="bg-white dark:bg-slate-900/50 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<button class="text-primary p-1">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<p class="text-slate-900 dark:text-slate-100 font-bold">Octubre 2023</p>
+<button class="text-primary p-1">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-1 mb-2">
+<p class="text-slate-400 text-[11px] font-bold text-center">LU</p>
+<p class="text-slate-400 text-[11px] font-bold text-center">MA</p>
+<p class="text-slate-400 text-[11px] font-bold text-center">MI</p>
+<p class="text-slate-400 text-[11px] font-bold text-center">JU</p>
+<p class="text-slate-400 text-[11px] font-bold text-center">VI</p>
+<p class="text-slate-400 text-[11px] font-bold text-center">SA</p>
+<p class="text-slate-400 text-[11px] font-bold text-center">DO</p>
+</div>
+<div class="grid grid-cols-7 gap-1">
+<!-- Placeholder days -->
+<div class="h-10 w-full"></div>
+<div class="h-10 w-full"></div>
+<div class="h-10 w-full"></div>
+<div class="h-10 w-full"></div>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium text-slate-400 cursor-not-allowed">1</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium text-slate-400 cursor-not-allowed">2</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium text-slate-400 cursor-not-allowed">3</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">4</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium bg-primary text-white shadow-lg shadow-primary/20">5</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">6</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">7</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">8</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">9</button>
+<button class="h-10 w-full flex items-center justify-center rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">10</button>
+<!-- Row continues... simplified for display -->
+</div>
+</section>
+<!-- Time Slots -->
+<section>
+<h3 class="text-slate-900 dark:text-slate-100 font-bold mb-3">Horarios disponibles</h3>
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+<button class="shrink-0 px-5 py-2.5 rounded-xl border border-primary bg-primary/10 text-primary font-semibold text-sm">09:00 AM</button>
+<button class="shrink-0 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm">11:30 AM</button>
+<button class="shrink-0 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm">03:00 PM</button>
+<button class="shrink-0 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm">05:30 PM</button>
+</div>
+</section>
+<!-- Session Type Selection -->
+<section class="space-y-4">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold">Tipo de Sesión</h3>
+<div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-sm font-bold text-slate-900 dark:text-slate-100">
+<span class="material-symbols-outlined text-primary text-xl">videocam</span>
+                        Online (Zoom)
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-slate-500 dark:text-slate-400 text-sm font-bold">
+<span class="material-symbols-outlined text-xl">location_on</span>
+                        Presencial
+                    </button>
+</div>
+</section>
+<!-- Presencial Coordination (Visible when Presencial is active, simulated here) -->
+<section class="space-y-3 p-4 rounded-xl bg-primary/5 border border-primary/20">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-lg">info</span>
+<span class="text-sm font-bold uppercase tracking-wider">Coordinación Presencial</span>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-semibold text-slate-600 dark:text-slate-400">Número de WhatsApp (Obligatorio)</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400 text-lg">call</span>
+</div>
+<input class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="+34 000 000 000" type="tel"/>
+</div>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed italic">
+                    * Al seleccionar sesión presencial, nos pondremos en contacto contigo por WhatsApp para coordinar la ubicación física exacta y detalles de acceso.
+                </p>
+</section>
+<!-- Confirm Button -->
+<section class="mt-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2">
+                    Confirmar Reserva
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-center text-xs text-slate-500 mt-4 px-8">
+                    Recibirás un correo electrónico de confirmación con los detalles de tu sesión.
+                </p>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 pb-6 pt-3">
+<div class="flex gap-2 max-w-md mx-auto">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase">Inicio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase">Sesiones</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">article</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase">Blog</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase">Perfil</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | Reconecta</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="overflow-x-hidden">
+    <div id="app">
+        <div class="relative min-h-screen flex flex-col pt-20 px-6">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=2560"
+                    class="w-full h-full object-cover opacity-20 faded-bg" alt="Nature background">
+            </div>
+
+            <header
+                class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+                <a href="/" class="flex items-center gap-2 text-white">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="font-display italic text-xl">Volver</span>
+                </a>
+                <button id="menu-btn"
+                    class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-white">menu</span>
+                </button>
+            </header>
+
+            <!-- Navigation Menu Overlay -->
+            <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560"
+                        class="w-full h-full object-cover opacity-10" alt="Background">
+                </div>
+                <div class="relative z-10 h-full flex flex-col p-8">
+                    <header class="flex justify-between items-center mb-16">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-3xl">eco</span>
+                            <span
+                                class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
+                        </div>
+                        <button id="close-menu"
+                            class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                            <span class="material-symbols-outlined text-white">close</span>
+                        </button>
+                    </header>
+                    <nav class="flex flex-col gap-6">
+                        <a href="/" class="menu-link animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
+                        <a href="/services.html" class="menu-link active animate-fade-in"
+                            style="animation-delay: 0.2s;">Servicios</a>
+                        <a href="/metodo.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.3s;">Método</a>
+                        <a href="/faq.html" class="menu-link animate-fade-in" style="animation-delay: 0.4s;">Preguntas
+                            Frecuentes</a>
+                        <a href="/booking.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.5s;">Reservar Sesión</a>
+                        <a href="/cancel.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.6s;">Gestionar mi Cita</a>
+                    </nav>
+                </div>
+            </div>
+
+            <main class="relative z-10 max-w-4xl mx-auto w-full pt-10 pb-20">
+                <div class="text-center mb-10 md:mb-16">
+                    <h1 class="font-display italic text-4xl md:text-5xl lg:text-6xl text-white mb-4 md:mb-6">
+                        Acompañamiento <span class="not-italic text-primary">Integral</span></h1>
+                    <p class="text-slate-300 text-base md:text-lg max-w-2xl mx-auto px-4 md:px-0">Selecciona el espacio
+                        que mejor se adapte a tu
+                        momento actual. Cada sesión es un paso hacia tu bienestar.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-2 sm:px-0">
+                    <!-- Individual Coaching -->
+                    <div class="glass-panel p-6 md:p-8 rounded-[2rem] hover:border-primary/30 transition-all group">
+                        <div
+                            class="w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                            <span class="material-symbols-outlined text-primary text-2xl md:text-3xl">person</span>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-4">Coaching Individual</h3>
+                        <p class="text-slate-400 mb-6 leading-relaxed">Sesiones personalizadas de 60 minutos enfocadas
+                            en desbloquear patrones limitantes y fortalecer tu autoestima.</p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Enfoque en objetivos personales
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Herramientas de gestión emocional
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Seguimiento personalizado
+                            </li>
+                        </ul>
+                        <a href="/booking.html"
+                            class="block text-center bg-white/5 hover:bg-white/10 border border-white/10 py-4 rounded-xl font-bold transition-all text-white">Agendar
+                            ahora</a>
+                    </div>
+
+                    <!-- Workshop/Group Coaching -->
+                    <div class="glass-panel p-6 md:p-8 rounded-[2rem] hover:border-primary/30 transition-all group">
+                        <div
+                            class="w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                            <span class="material-symbols-outlined text-primary text-2xl md:text-3xl">groups</span>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-4">Talleres Grupales</h3>
+                        <p class="text-slate-400 mb-6 leading-relaxed">Espacios de crecimiento compartido donde
+                            exploramos temas de reconexión y plenitud en comunidad.</p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Dinámicas interactivas
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Apoyo mutuo y red de contención
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Material de trabajo incluido
+                            </li>
+                        </ul>
+                        <button
+                            class="w-full text-center bg-white/5 cursor-not-allowed border border-white/10 py-4 rounded-xl font-bold opacity-50 text-white">Próximamente</button>
+                    </div>
+
+                    <!-- Mindfulness Sessions -->
+                    <div class="glass-panel p-6 md:p-8 rounded-[2rem] hover:border-primary/30 transition-all group">
+                        <div
+                            class="w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                            <span
+                                class="material-symbols-outlined text-primary text-2xl md:text-3xl">self_improvement</span>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-4">Guía de Mindfulness</h3>
+                        <p class="text-slate-400 mb-6 leading-relaxed">Prácticas de atención plena para reducir el
+                            estrés y habitar el presente con mayor serenidad.</p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Técnicas de respiración
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Meditaciones guiadas
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Reducción de ansiedad
+                            </li>
+                        </ul>
+                        <a href="/booking.html"
+                            class="block text-center bg-white/5 hover:bg-white/10 border border-white/10 py-4 rounded-xl font-bold transition-all text-white">Agendar
+                            ahora</a>
+                    </div>
+
+                    <!-- Mentorship -->
+                    <div class="glass-panel p-6 md:p-8 rounded-[2rem] hover:border-primary/30 transition-all group">
+                        <div
+                            class="w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                            <span
+                                class="material-symbols-outlined text-primary text-2xl md:text-3xl">auto_awesome</span>
+                        </div>
+                        <h3 class="font-display text-2xl text-white mb-4">Plan "Reconecta"</h3>
+                        <p class="text-slate-400 mb-6 leading-relaxed">Un programa intensivo de 12 semanas para una
+                            transformación profunda y duradera en tu vida.</p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                12 sesiones individuales
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Acceso a contenido exclusivo
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Soporte vía WhatsApp
+                            </li>
+                        </ul>
+                        <a href="/booking.html"
+                            class="block text-center bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] py-4 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 no-underline">Saber
+                            más</a>
+                    </div>
+                </div>
+
+                <div class="mt-12 md:mt-20 glass-panel p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] text-center">
+                    <h2 class="font-display italic text-2xl md:text-3xl text-white mb-4">¿No sabes por dónde empezar?
+                    </h2>
+                    <p class="text-slate-400 text-sm md:text-base mb-8 max-w-lg mx-auto">Ofrecemos una sesión de
+                        descubrimiento de 15 minutos
+                        sin costo para conocer tu caso y recomendarte el mejor camino.</p>
+                    <a href="/booking.html"
+                        class="inline-block bg-white/5 hover:bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full font-bold transition-all">Solicitar
+                        Sesión Gratuita</a>
+                </div>
+            </main>
+
+            <footer class="relative z-10 py-10 border-t border-white/10 text-center">
+                <p class="text-slate-500 text-xs tracking-widest uppercase">© 2026 Reconecta Coaching • Tu camino a la
+                    esencia</p>
+            </footer>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

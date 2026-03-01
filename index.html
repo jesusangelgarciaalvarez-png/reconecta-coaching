@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconecta | Coaching Personal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="overflow-x-hidden">
+    <div id="app">
+        <!-- Hero Section with Faded Background -->
+        <div class="relative min-h-screen flex flex-col pt-20">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560"
+                    class="w-full h-full object-cover opacity-30 faded-bg" alt="Nature background">
+            </div>
+
+            <header
+                class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-3xl">eco</span>
+                    <span class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
+                </div>
+                <button id="menu-btn"
+                    class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-white">menu</span>
+                </button>
+            </header>
+
+            <!-- Navigation Menu Overlay -->
+            <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560"
+                        class="w-full h-full object-cover opacity-10" alt="Background">
+                </div>
+                <div class="relative z-10 h-full flex flex-col p-8">
+                    <header class="flex justify-between items-center mb-16">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-3xl">eco</span>
+                            <span
+                                class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
+                        </div>
+                        <button id="close-menu"
+                            class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                            <span class="material-symbols-outlined text-white">close</span>
+                        </button>
+                    </header>
+                    <nav class="flex flex-col gap-6">
+                        <a href="/" class="menu-link active animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
+                        <a href="/services.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.2s;">Servicios</a>
+                        <a href="/metodo.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.3s;">Método</a>
+                        <a href="/faq.html" class="menu-link animate-fade-in" style="animation-delay: 0.4s;">Preguntas
+                            Frecuentes</a>
+                        <a href="/booking.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.5s;">Reservar Sesión</a>
+                        <a href="/cancel.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.6s;">Gestionar mi Cita</a>
+                    </nav>
+                    <footer class="mt-auto py-10 border-t border-white/10">
+                        <p class="text-slate-500 text-xs tracking-widest uppercase">© 2026 Reconecta Coaching</p>
+                    </footer>
+                </div>
+            </div>
+
+            <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pb-20">
+                <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-20 md:pt-32 pb-16 md:pb-24 text-center">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase mb-6 md:mb-8">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        Tu espacio de transformación
+                    </div>
+                    <h1
+                        class="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.1] md:leading-tight">
+                        Encuentra tu centro,<br>
+                        <span class="not-italic text-primary">conecta contigo.</span>
+                    </h1>
+                    <p
+                        class="text-slate-300 text-base md:text-xl font-light leading-relaxed mb-8 md:mb-10 max-w-lg mx-auto px-2">
+                        Acompañamiento personalizado para reconstruir tu autoestima con serenidad y claridad emocional.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mt-12">
+                        <a href="/booking.html"
+                            class="glass-panel group p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.05] active:scale-95 no-underline flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-[#0a1f1f] transition-all duration-500 shadow-lg shadow-primary/5">
+                                <span class="material-symbols-outlined">event</span>
+                            </div>
+                            <span class="text-white font-bold text-sm tracking-wide">Reserva tu Sesión</span>
+                        </a>
+
+                        <a href="/services.html"
+                            class="glass-panel group p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.05] active:scale-95 no-underline flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-[#0a1f1f] transition-all duration-500 border border-white/10">
+                                <span class="material-symbols-outlined text-white group-hover:text-[#0a1f1f]">hub</span>
+                            </div>
+                            <span class="text-white font-bold text-sm tracking-wide">Nuestros Servicios</span>
+                        </a>
+
+                        <a href="/metodo.html"
+                            class="glass-panel group p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.05] active:scale-95 no-underline flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-[#0a1f1f] transition-all duration-500 border border-white/10">
+                                <span class="material-symbols-outlined text-white group-hover:text-[#0a1f1f]">spa</span>
+                            </div>
+                            <span class="text-white font-bold text-sm tracking-wide">Nuestro Método</span>
+                        </a>
+
+                        <a href="/cancel.html"
+                            class="glass-panel group p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.05] active:scale-95 no-underline flex flex-col items-center text-center">
+                            <div
+                                class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-400/80 group-hover:text-white transition-all duration-500 border border-white/10">
+                                <span class="material-symbols-outlined text-white">event_busy</span>
+                            </div>
+                            <span class="text-white font-bold text-sm tracking-wide">Gestionar Cita</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature Images Section -->
+                <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl">
+                    <div class="aspect-square rounded-2xl overflow-hidden glass-panel p-1">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700"
+                            alt="Coaching session">
+                    </div>
+                    <div class="aspect-square rounded-2xl overflow-hidden glass-panel p-1 translate-y-8">
+                        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700"
+                            alt="Meditation">
+                    </div>
+                    <div class="aspect-square rounded-2xl overflow-hidden glass-panel p-1">
+                        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700"
+                            alt="Connection">
+                    </div>
+                    <div class="aspect-square rounded-2xl overflow-hidden glass-panel p-1 translate-y-8">
+                        <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&q=80&w=800"
+                            class="w-full h-full object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700"
+                            alt="Forest path">
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <!-- Feature 1 -->
+            <div class="glass-panel p-6 md:p-8 rounded-[2rem] group hover:bg-white/5 transition-all">
+                <div class="w-full h-40 md:h-48 rounded-2xl overflow-hidden mb-6">
+                    <img src="https://images.unsplash.com/photo-1518199266791-739d6ff24dfb?auto=format&fit=crop&q=80&w=800"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        alt="Resilio">
+                </div>
+                <h3 class="font-display text-xl md:text-2xl text-white mb-3">Resiliencia</h3>
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed">Herramientas prácticas para navegar los
+                    desafíos diarios con fortaleza interna y calma.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="glass-panel p-6 md:p-8 rounded-[2rem] group hover:bg-white/5 transition-all md:translate-y-12">
+                <div class="w-full h-40 md:h-48 rounded-2xl overflow-hidden mb-6">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        alt="Mindfulness">
+                </div>
+                <h3 class="font-display text-xl md:text-2xl text-white mb-3">Atención Plena</h3>
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed">Prácticas de meditación y presencia para
+                    reducir el ruido mental y conectar con el presente.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="glass-panel p-6 md:p-8 rounded-[2rem] group hover:bg-white/5 transition-all">
+                <div class="w-full h-40 md:h-48 rounded-2xl overflow-hidden mb-6">
+                    <img src="https://images.unsplash.com/photo-1499209974431-9dac3adaf471?auto=format&fit=crop&q=80&w=800"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        alt="Crecimiento">
+                </div>
+                <h3 class="font-display text-xl md:text-2xl text-white mb-3">Autoestima</h3>
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed">Un viaje profundo para redescubrir tu
+                    valor y hablarte con la compasión que mereces.</p>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

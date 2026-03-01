@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Serenity Coaching - Light Theme Desktop V1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#f2b90d",
+                "background-light": "#f8f8f5",
+                "background-dark": "#221e10",
+                "navy-accent": "#1a2a44",
+                "lavender-soft": "#e8e8f2"
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<nav class="sticky top-0 z-50 flex items-center bg-background-light/80 backdrop-blur-md border-b border-primary/10 px-6 py-4 justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">spa</span>
+<h2 class="text-navy-accent dark:text-primary text-xl font-bold tracking-tight">Serenity Coaching</h2>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold text-navy-accent hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#">Services</a>
+<a class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#">3 Pillars</a>
+<a class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block px-6 py-2 bg-primary text-navy-accent font-bold rounded-lg hover:shadow-lg transition-all text-sm">
+                Get Started
+            </button>
+<button class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-navy-accent">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto">
+<div class="@container">
+<div class="flex flex-col gap-10 px-6 py-16 @[864px]:flex-row @[864px]:items-center">
+<div class="w-full @[864px]:w-1/2">
+<div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-xl shadow-2xl" data-alt="Professional coach smiling in a bright office" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDY5OZfGFTUusZZfVWo1PPdXtGgz7sfIAVOPF4fDygmeCw8bbWA5udcNIRQPx6QgbEZ7j5_T4XsLvBSa4qh-XmzfD4rHS-BNGpwJBgLtKq0byslQcb9ddhhUrt5cK-ajgIf9mvqFIiyz4yIHadXh5ib2NjOlrVy61H3Clko4pSIv4Z6C-PK0_-oE3P5NIqkfNVUBGNzCK_HDoYQ--iCURHvzBVo-KKexVv0cJYqXyZ5WPis3-xzVmIN8ZvKSFoKw7AwTyLun4SjxAg");'>
+</div>
+</div>
+<div class="flex flex-col gap-8 w-full @[864px]:w-1/2">
+<div class="flex flex-col gap-4">
+<span class="text-primary font-bold tracking-widest uppercase text-xs">Transform Your Life</span>
+<h1 class="text-navy-accent dark:text-slate-100 text-5xl @[1280px]:text-6xl font-black leading-[1.1] tracking-tight">
+                            Professional Emotional Support for Your Journey
+                        </h1>
+<p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed max-w-xl">
+                            A creative space for growth, finding peace, and emotional clarity through personalized coaching designed for the modern world.
+                        </p>
+</div>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-primary text-navy-accent text-base font-bold rounded-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+                            Start Your Journey
+                        </button>
+<button class="px-8 py-4 border-2 border-primary/20 text-navy-accent font-bold rounded-lg hover:bg-primary/5 transition-colors">
+                            View Services
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<section class="py-20 px-6">
+<div class="text-center mb-16">
+<h2 class="text-navy-accent dark:text-slate-100 text-3xl font-bold mb-4 tracking-tight">¿A quién ayudo?</h2>
+<div class="h-1 w-20 bg-primary mx-auto rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="flex flex-col @container rounded-xl overflow-hidden shadow-sm border border-lavender-soft bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" data-alt="Woman looking peacefully at a sunset" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3wRSbetINGrDQZJvmySBJZKs5Qdb_nfY4VGeKVyZKN1AU3PPsEgu9fMxJ6U0__8BKY6iex4-pwVTAljg58JnKoari2ELbjs2S6tmjfWpbraa3YDteBKjxnDK53VCBc6w5reuqAUaVvg-yBiCwuJLaGdPBQLTqGmXjdEQpw1SugSCbOsyMtjXmlfJu_5MtFvghSvkN51FD2Zb7hkWahsoWuzXteWOHXaeQMqunB6q0gwmD7mXMhgww5zd5baUcj91iiWAemirjoYE");'></div>
+<div class="p-8">
+<h3 class="text-navy-accent dark:text-slate-100 text-2xl font-bold mb-3">Individuals Seeking Balance</h3>
+<p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">Helping you navigate life's transitions with confidence and grace. Find the equilibrium you've been searching for.</p>
+<button class="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
+                            Learn More <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col @container rounded-xl overflow-hidden shadow-sm border border-lavender-soft bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" data-alt="Small group of people collaborating in a modern office" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDniIifJd21rQFKk2oSuqlJAhC9-8WDsiMQgTa0DFR2_c0ukaijuurpii-L1n4CZwEfgqVsKPPhNk2j7eOPsviId1FXOZl_F0bFsUpJqDlDRSjO5fENCNmQz2JlWobc0oyfC910mfZILfWheD5JSIiuW5Tdqdyk8ic7vZQJBExGSsRqYMe2EjM6EpBaJmGA7beDocKkoVIwQzmi6X2RszlytHmeXdnC8jK9V3qgK5e7YSrXeNOSfRl_jOZ_MR171kKdObTCtSnqQ2w");'></div>
+<div class="p-8">
+<h3 class="text-navy-accent dark:text-slate-100 text-2xl font-bold mb-3">Teams &amp; Professionals</h3>
+<p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">Cultivating high-trust environments and emotional intelligence in professional settings for better collective outcomes.</p>
+<button class="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
+                            Explore Solutions <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 px-6 bg-primary/5 rounded-[2.5rem] my-10 mx-4">
+<div class="text-center mb-16">
+<h2 class="text-navy-accent dark:text-slate-100 text-3xl font-bold mb-4 tracking-tight">Los 3 Pilares</h2>
+<p class="text-slate-500 max-w-xl mx-auto">Our methodology is built upon three core foundations that ensure sustainable growth.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+<div class="text-center group">
+<div class="size-20 bg-white dark:bg-background-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl">self_improvement</span>
+</div>
+<h4 class="text-navy-accent dark:text-slate-100 font-bold text-xl mb-3">Clarity</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Identifying the core of your challenges and clearing the fog of uncertainty.</p>
+</div>
+<div class="text-center group">
+<div class="size-20 bg-white dark:bg-background-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl">auto_awesome</span>
+</div>
+<h4 class="text-navy-accent dark:text-slate-100 font-bold text-xl mb-3">Empowerment</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Developing the internal tools and resilience to face any life situation with strength.</p>
+</div>
+<div class="text-center group">
+<div class="size-20 bg-white dark:bg-background-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl">favorite</span>
+</div>
+<h4 class="text-navy-accent dark:text-slate-100 font-bold text-xl mb-3">Serenity</h4>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Achieving a state of lasting peace and emotional balance in your daily life.</p>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-navy-accent text-white py-16 px-6 mt-20">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary text-3xl">spa</span>
+<h2 class="text-xl font-bold tracking-tight">Serenity Coaching</h2>
+</div>
+<p class="text-slate-400 max-w-md leading-relaxed">
+                    Helping you find your inner light and navigate life's complexities with professional, empathetic coaching. Available for remote and in-person sessions.
+                </p>
+</div>
+<div>
+<h5 class="font-bold mb-6 text-primary uppercase tracking-widest text-xs">Navigation</h5>
+<ul class="space-y-4 text-slate-400 text-sm">
+<li><a class="hover:text-white transition-colors" href="#">Our Method</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Testimonials</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Resources</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Book a Session</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6 text-primary uppercase tracking-widest text-xs">Connect</h5>
+<ul class="space-y-4 text-slate-400 text-sm">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">mail</span>
+                        hello@serenity.com
+                    </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+                        San Francisco, CA
+                    </li>
+<li class="pt-4 flex gap-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">share</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">group</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">camera</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-xs">
+<p>© 2024 Serenity Coaching. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-background-dark border-t border-primary/10 flex justify-around items-center py-3">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-[10px] font-medium">Services</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">info</span>
+<span class="text-[10px] font-medium">About</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="text-[10px] font-medium">Contact</span>
+</a>
+</div>
+</body></html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva | Reconecta</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="overflow-x-hidden">
+    <div id="app">
+        <div class="relative min-h-screen flex flex-col pt-20 px-6">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=2560"
+                    class="w-full h-full object-cover opacity-20 faded-bg" alt="Nature background">
+            </div>
+
+            <header
+                class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+                <a href="/" class="flex items-center gap-2 text-white no-underline">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="font-display italic text-xl">Volver</span>
+                </a>
+                <button id="menu-btn"
+                    class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-white">menu</span>
+                </button>
+            </header>
+
+            <!-- Navigation Menu Overlay -->
+            <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560"
+                        class="w-full h-full object-cover opacity-10" alt="Background">
+                </div>
+                <div class="relative z-10 h-full flex flex-col p-8">
+                    <header class="flex justify-between items-center mb-16">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-3xl">eco</span>
+                            <span
+                                class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
+                        </div>
+                        <button id="close-menu"
+                            class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                            <span class="material-symbols-outlined text-white">close</span>
+                        </button>
+                    </header>
+                    <nav class="flex flex-col gap-6">
+                        <a href="/" class="menu-link animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
+                        <a href="/services.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.2s;">Servicios</a>
+                        <a href="/metodo.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.3s;">Método</a>
+                        <a href="/faq.html" class="menu-link animate-fade-in" style="animation-delay: 0.4s;">Preguntas
+                            Frecuentes</a>
+                        <a href="/booking.html" class="menu-link active animate-fade-in"
+                            style="animation-delay: 0.5s;">Reservar Sesión</a>
+                        <a href="/cancel.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.6s;">Gestionar mi Cita</a>
+                    </nav>
+                </div>
+            </div>
+
+            <main class="relative z-10 max-w-xl mx-auto w-full pt-6 md:pt-10 pb-20">
+                <div class="glass-panel rounded-[2rem] p-4 md:p-8">
+                    <h1 class="font-display italic text-3xl md:text-4xl text-white mb-2 text-center md:text-left">Elige
+                        tu momento</h1>
+                    <p class="text-slate-400 text-[10px] md:text-sm mb-6 md:mb-8 text-center md:text-left">
+                        Disponibilidad de Lunes a Viernes (9:00 AM - 6:00 PM)</p>
+
+                    <!-- Date Selection -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="text-primary text-[10px] uppercase font-bold tracking-widest"
+                                id="current-month-year">Cargando...</label>
+                            <div class="flex gap-2">
+                                <button id="prev-month" class="text-white hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                                </button>
+                                <button id="next-month" class="text-white hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Calendar Grid -->
+                        <div class="grid grid-cols-7 gap-px sm:gap-1 text-center mb-2">
+                            <span class="text-[9px] sm:text-[10px] text-slate-300 font-bold">LU</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-300 font-bold">MA</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-300 font-bold">MI</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-300 font-bold">JU</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-300 font-bold">VI</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold opacity-40">SA</span>
+                            <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold opacity-40">DO</span>
+                        </div>
+                        <div class="grid grid-cols-7 gap-px sm:gap-1" id="calendar-grid">
+                            <!-- Days will be injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Time Slots -->
+                    <div class="mb-10">
+                        <label class="text-primary text-[10px] uppercase font-bold tracking-widest mb-4 block">Horarios
+                            Disponibles</label>
+                        <div class="grid grid-cols-2 gap-3" id="time-slots-container">
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">09:00
+                                AM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">10:30
+                                AM</button>
+                            <button
+                                class="time-slot active glass-panel py-4 rounded-2xl text-sm font-semibold border-primary/50 bg-primary/10 text-primary">12:00
+                                PM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">02:00
+                                PM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">03:30
+                                PM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">05:00
+                                PM</button>
+                        </div>
+                    </div>
+
+                    <!-- Personal Data Form -->
+                    <div class="mb-10">
+                        <label class="text-primary text-[10px] uppercase font-bold tracking-widest mb-4 block">Tus Datos
+                            Personales</label>
+                        <div class="space-y-4">
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">person</span>
+                                <input type="text" placeholder="Nombre completo" id="user-name" required
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
+                            </div>
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">mail</span>
+                                <input type="email" placeholder="Correo electrónico" id="user-email" required
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
+                            </div>
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">call</span>
+                                <input type="tel" placeholder="Teléfono de contacto" id="user-phone" required
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
+                            </div>
+                        </div>
+                        <p id="error-message" class="text-red-400 text-[10px] mt-4 hidden">Por favor completa todos los
+                            campos para agendar tu cita.</p>
+                    </div>
+
+                    <button id="confirm-booking"
+                        class="w-full block bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] py-4 md:py-5 rounded-2xl font-bold text-base md:text-lg transition-all shadow-lg shadow-primary/20">
+                        Confirmar Cita
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+    <style>
+        @keyframes pulse-gold {
+            0% {
+                box-shadow: 0 0 0 0 rgba(212, 160, 10, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(212, 160, 10, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 160, 10, 0);
+            }
+        }
+
+        .focus-ring {
+            animation: pulse-gold 2s infinite;
+            border: 2px solid rgba(212, 160, 10, 0.8);
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            let selectedDate = null; // No day selected by default in yellow
+            let defaultFocusDate = new Date(now);
+
+            // Logic: Default focus on next available weekday
+            const dayIdx = defaultFocusDate.getDay();
+            if (dayIdx === 0) defaultFocusDate.setDate(defaultFocusDate.getDate() + 1);
+            else if (dayIdx === 6) defaultFocusDate.setDate(defaultFocusDate.getDate() + 2);
+
+            // Force start in March if it's currently Feb 28th
+            let currentViewDate = new Date(defaultFocusDate);
+
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+            function renderCalendar() {
+                const year = currentViewDate.getFullYear();
+                const month = currentViewDate.getMonth();
+                const todayRef = new Date();
+                todayRef.setHours(0, 0, 0, 0);
+
+                document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                let startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+
+                const grid = document.getElementById('calendar-grid');
+                grid.innerHTML = '';
+
+                for (let i = 0; i < startOffset; i++) {
+                    grid.appendChild(document.createElement('div'));
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const dayOfWeek = date.getDay();
+                    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                    const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+                    const isFocused = !selectedDate && date.toDateString() === defaultFocusDate.toDateString();
+                    const isPassed = date < todayRef;
+
+                    const btn = document.createElement('button');
+                    btn.type = "button";
+                    btn.className = `h-10 sm:h-12 w-full rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-black transition-all flex flex-col items-center justify-center relative z-20 `;
+
+                    if (isWeekend) {
+                        btn.className += "text-white/5 cursor-not-allowed pointer-events-none";
+                        btn.innerHTML = `<span>${day}</span>`;
+                    } else if (isPassed) {
+                        btn.className += "text-white/10 cursor-not-allowed pointer-events-none";
+                        btn.innerHTML = `<span>${day}</span>`;
+                    } else {
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            selectedDate = new Date(year, month, day);
+                            renderCalendar();
+                            renderTimeSlots();
+                        });
+
+                        const isFull = (day % 4 === 0); // Simulation logic
+
+                        let statusHTML = isFull
+                            ? '<span class="w-1 h-1 rounded-full bg-red-500 mt-1 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>'
+                            : '<span class="w-1 h-1 rounded-full bg-green-500 mt-1 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>';
+
+                        if (isSelected) {
+                            btn.className += "bg-primary text-[#0a1f1f] shadow-[0_0_20px_rgba(212,160,10,0.6)] scale-110";
+                        } else if (isFocused) {
+                            btn.className += "focus-ring text-white bg-white/5";
+                        } else if (isFull) {
+                            btn.className += "text-red-400 opacity-60 cursor-not-allowed";
+                        } else {
+                            btn.className += "text-white hover:bg-white/10";
+                        }
+
+                        btn.innerHTML = `<span>${day}</span>${isSelected ? '' : statusHTML}`;
+                        if (isFull) btn.onclick = null;
+                    }
+                    grid.appendChild(btn);
+                }
+            }
+
+            function renderTimeSlots() {
+                if (!selectedDate) return;
+                const container = document.getElementById('time-slots-container');
+                container.innerHTML = '';
+
+                // Load existing bookings from localStorage
+                const bookings = JSON.parse(localStorage.getItem('reconecta_bookings') || '[]');
+
+                // Slots from 9:00 to 17:00 (for 6:00 PM finish)
+                for (let hour = 9; hour < 18; hour++) {
+                    const timeString = `${hour.toString().padStart(2, '0')}:00`;
+
+                    // Check if this specific slot is already taken in localStorage
+                    const isTaken = bookings.some(b =>
+                        new Date(b.timestamp).toDateString() === selectedDate.toDateString() &&
+                        b.time === timeString
+                    );
+
+                    const btn = document.createElement('button');
+                    btn.type = "button";
+                    btn.className = `time-slot glass-panel py-3 md:py-4 rounded-xl md:rounded-2xl text-xs md:text-sm font-semibold transition-all flex flex-col items-center justify-center relative `;
+
+                    if (isTaken) {
+                        btn.className += "opacity-50 cursor-not-allowed text-red-500 bg-red-500/10 border-red-500/30";
+                        btn.innerHTML = `
+                            <span>${timeString}</span>
+                            <span class="text-[8px] font-bold mt-1">OCUPADO</span>
+                        `;
+                        btn.disabled = true;
+                    } else {
+                        btn.className += "hover:bg-white/20 text-white bg-white/5";
+                        btn.innerHTML = `
+                            <span>${timeString}</span>
+                            <span class="w-1 h-1 rounded-full bg-green-500 mt-1"></span>
+                        `;
+                        btn.onclick = () => {
+                            document.querySelectorAll('.time-slot').forEach(s => {
+                                s.classList.remove('time-slot-active');
+                            });
+                            btn.classList.add('time-slot-active');
+                        };
+                    }
+                    container.appendChild(btn);
+                }
+            }
+
+            document.getElementById('prev-month').onclick = () => {
+                currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+                renderCalendar();
+            };
+
+            document.getElementById('next-month').onclick = () => {
+                currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+                renderCalendar();
+            };
+
+            document.getElementById('confirm-booking').onclick = () => {
+                const name = document.getElementById('user-name').value.trim();
+                const email = document.getElementById('user-email').value.trim();
+                const phone = document.getElementById('user-phone').value.trim();
+                const errorMsg = document.getElementById('error-message');
+                const selectedSlot = document.querySelector('.time-slot-active');
+
+                if (!name || !email || !phone || !selectedDate || !selectedSlot) {
+                    errorMsg.textContent = !selectedDate ? "Por favor selecciona un día." : (!selectedSlot ? "Por favor selecciona un horario." : "Por favor completa todos los campos.");
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+
+                // Generate random unique 6-digit code
+                const appointmentId = Math.floor(100000 + Math.random() * 900000).toString();
+
+                // Store in session for success page
+                const bookingData = {
+                    id: appointmentId,
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    timestamp: selectedDate.getTime(),
+                    time: selectedSlot.querySelector('span').textContent,
+                    meetLink: `https://meet.google.com/${Math.random().toString(36).substring(2, 5)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 5)}`
+                };
+
+                // Add to persistent storage
+                const bookings = JSON.parse(localStorage.getItem('reconecta_bookings') || '[]');
+                bookings.push(bookingData);
+                localStorage.setItem('reconecta_bookings', JSON.stringify(bookings));
+
+                sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
+
+                errorMsg.classList.add('hidden');
+                window.location.href = '/success.html';
+            };
+
+            renderCalendar();
+            renderTimeSlots();
+        });
+    </script>
+</body>
+
+</html>
