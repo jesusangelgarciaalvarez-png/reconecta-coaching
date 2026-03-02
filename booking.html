@@ -112,16 +112,25 @@
                                 class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">09:00
                                 AM</button>
                             <button
-                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">10:30
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">10:00
                                 AM</button>
                             <button
-                                class="time-slot active glass-panel py-4 rounded-2xl text-sm font-semibold border-primary/50 bg-primary/10 text-primary">12:00
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">11:00
+                                AM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">12:00
+                                PM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">01:00
                                 PM</button>
                             <button
                                 class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">02:00
                                 PM</button>
                             <button
-                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">03:30
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">03:00
+                                PM</button>
+                            <button
+                                class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">04:00
                                 PM</button>
                             <button
                                 class="time-slot glass-panel py-4 rounded-2xl text-sm font-semibold hover:bg-white/20 transition-all">05:00
@@ -189,13 +198,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const now = new Date();
-            let selectedDate = null; // No day selected by default in yellow
             let defaultFocusDate = new Date(now);
 
             // Logic: Default focus on next available weekday
             const dayIdx = defaultFocusDate.getDay();
             if (dayIdx === 0) defaultFocusDate.setDate(defaultFocusDate.getDate() + 1);
             else if (dayIdx === 6) defaultFocusDate.setDate(defaultFocusDate.getDate() + 2);
+
+            let selectedDate = new Date(defaultFocusDate); // Select defaultFocusDate by default
 
             // Force start in March if it's currently Feb 28th
             let currentViewDate = new Date(defaultFocusDate);
