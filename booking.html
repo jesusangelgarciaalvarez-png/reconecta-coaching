@@ -264,7 +264,7 @@
                             renderTimeSlots();
                         });
 
-                        const isFull = (day % 4 === 0); // Simulation logic
+                        const isFull = false; // All days available for presentation
 
                         let statusHTML = isFull
                             ? '<span class="w-1 h-1 rounded-full bg-red-500 mt-1 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>'
@@ -299,11 +299,8 @@
                 for (let hour = 9; hour < 18; hour++) {
                     const timeString = `${hour.toString().padStart(2, '0')}:00`;
 
-                    // Check if this specific slot is already taken in localStorage
-                    const isTaken = bookings.some(b =>
-                        new Date(b.timestamp).toDateString() === selectedDate.toDateString() &&
-                        b.time === timeString
-                    );
+                    // Show all as available for presentation
+                    const isTaken = false;
 
                     const btn = document.createElement('button');
                     btn.type = "button";
