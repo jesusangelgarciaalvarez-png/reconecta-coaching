@@ -12,6 +12,7 @@ export default defineConfig({
                 services: resolve(__dirname, 'services.html'),
                 metodo: resolve(__dirname, 'metodo.html'),
                 faq: resolve(__dirname, 'faq.html'),
+                quienes: resolve(__dirname, 'quienes-somos.html'),
             },
         },
     },
