@@ -7,6 +7,7 @@ export default defineConfig({
             input: {
                 main: resolve(__dirname, 'index.html'),
                 booking: resolve(__dirname, 'booking.html'),
+                reservar: resolve(__dirname, 'reservar.html'),
                 success: resolve(__dirname, 'success.html'),
                 cancel: resolve(__dirname, 'cancel.html'),
                 services: resolve(__dirname, 'services.html'),
