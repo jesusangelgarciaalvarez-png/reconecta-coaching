@@ -14,15 +14,15 @@ import {
     serverTimestamp
 } from "firebase/firestore";
 
-// TODO: Replace with your actual Firebase config
-// You can get this from Firebase Console -> Project Settings -> General -> Your apps
+// Firebase configuration from user project
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM",
+    authDomain: "reconecta-ed650.firebaseapp.com",
+    projectId: "reconecta-ed650",
+    storageBucket: "reconecta-ed650.firebasestorage.app",
+    messagingSenderId: "148326324396",
+    appId: "1:148326324396:web:e4baa888d1b445055e2709",
+    measurementId: "G-FLT31CQN60"
 };
 
 const app = initializeApp(firebaseConfig);
