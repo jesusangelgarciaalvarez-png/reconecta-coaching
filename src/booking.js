@@ -20,15 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+    // OPTIMIZATION: Non-blocking data update
     async function updateCalendarData() {
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
-        // Fetch stats from Firebase
-        monthlyStats = await getMonthlyAvailability(year, month);
-        renderCalendar();
+
+        // 1. Render calendar immediately without dots
+        renderCalendar(true);
+
+        try {
+            // 2. Fetch stats in background
+            monthlyStats = await getMonthlyAvailability(year, month);
+            // 3. Update dots when data arrives
+            renderCalendar(false);
+        } catch (error) {
+            console.error("Error fetching stats:", error);
+            renderCalendar(false); // Render anyway without dots
+        }
     }
 
-    function renderCalendar() {
+    function renderCalendar(isLoadingStats = false) {
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
         const todayRef = new Date();
@@ -74,23 +85,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderTimeSlots(dateStr);
                 });
 
-                const count = monthlyStats[dateStr] || 0;
-                const isFull = count >= 9;
-
                 let statusHTML = '';
-                if (isFull) {
-                    statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>';
-                } else if (count > 0) {
-                    statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1 shadow-[0_0_8px_rgba(234,179,8,0.8)]"></span>';
+                if (isLoadingStats) {
+                    statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white/10 mt-1 animate-pulse"></span>';
                 } else {
-                    statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-500 mt-1 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>';
+                    const count = monthlyStats[dateStr] || 0;
+                    const isFull = count >= 9;
+
+                    if (isFull) {
+                        statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>';
+                    } else if (count > 0) {
+                        statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1 shadow-[0_0_8px_rgba(234,179,8,0.8)]"></span>';
+                    } else {
+                        statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-500 mt-1 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>';
+                    }
+
+                    if (isFull) {
+                        btn.className += "text-red-400 opacity-60";
+                        btn.title = "Día Completo";
+                    }
                 }
 
                 if (isSelected) {
                     btn.className += "bg-primary text-[#0a1f1f] shadow-[0_0_20px_rgba(212,160,10,0.6)] scale-110";
-                } else if (isFull) {
-                    btn.className += "text-red-400 opacity-60 tooltip-booked";
-                    btn.title = "Día Completo";
                 } else {
                     btn.className += "text-white hover:bg-white/10";
                 }
@@ -104,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function renderTimeSlots(dateStr) {
         if (!selectedDate) return;
         const container = document.getElementById('time-slots-container');
-        container.innerHTML = ' <div class="col-span-2 text-center text-slate-400 text-xs animate-pulse">Cargando horarios...</div>';
+        container.innerHTML = ' <div class="col-span-2 text-center text-slate-400 text-xs animate-pulse py-10">Cargando horarios...</div>';
 
         try {
             const occupiedSlots = await getOccupiedSlots(dateStr);
@@ -120,17 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isTaken) {
                     btn.className += "opacity-50 cursor-not-allowed text-red-500 bg-red-500/10 border-red-500/30";
-                    btn.innerHTML = `
-                        <span>${timeString}</span>
-                        <span class="text-[8px] font-bold mt-1">OCUPADO</span>
-                    `;
+                    btn.innerHTML = `<span>${timeString}</span><span class="text-[8px] font-bold mt-1">OCUPADO</span>`;
                     btn.disabled = true;
                 } else {
                     btn.className += "hover:bg-white/20 text-white bg-white/5";
-                    btn.innerHTML = `
-                        <span>${timeString}</span>
-                        <span class="w-1 h-1 rounded-full bg-green-500 mt-1"></span>
-                    `;
+                    btn.innerHTML = `<span>${timeString}</span><span class="w-1 h-1 rounded-full bg-green-500 mt-1"></span>`;
                     btn.onclick = () => {
                         document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('time-slot-active'));
                         btn.classList.add('time-slot-active');
@@ -139,7 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.appendChild(btn);
             }
         } catch (error) {
-            container.innerHTML = '<div class="col-span-2 text-red-400 text-xs text-center">Error al cargar horarios.</div>';
+            console.error("Error loading slots:", error);
+            container.innerHTML = '<div class="col-span-2 text-red-400 text-xs text-center">Error al cargar horarios. Reintenta.</div>';
         }
     }
 
@@ -161,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedSlot = document.querySelector('.time-slot-active');
 
         if (!name || !email || !phone || !selectedDate || !selectedSlot) {
-            errorMsg.textContent = !selectedDate ? "Por favor selecciona un día." : (!selectedSlot ? "Por favor selecciona un horario." : "Por favor completa todos los campos.");
+            errorMsg.textContent = !selectedDate ? "Selecciona un día." : (!selectedSlot ? "Selecciona un horario." : "Completa tus datos.");
             errorMsg.classList.remove('hidden');
             return;
         }
@@ -171,8 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-booking').textContent = "Procesando...";
 
         try {
-            // 1. Manage User (Create or update)
+            console.log("Starting booking process for:", email);
+
+            // 1. Manage User
             const userResult = await manageUser(email, { name, phone });
+            console.log("User managed successfully");
 
             // 2. Register Appointment
             const dateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
@@ -183,31 +198,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const bookingData = {
                 id: appointmentId,
-                name: name,
-                email: email,
-                phone: phone,
+                name,
+                email,
+                phone,
                 date: dateStr,
                 time: timeStr,
                 timestamp: selectedDate.getTime(),
-                meetLink: meetLink,
+                meetLink,
                 isFree: userResult.isFirstTime
             };
 
             await createAppointment(bookingData);
+            console.log("Appointment created!");
 
-            // Store in session for success page
             sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
             window.location.href = '/success.html';
         } catch (error) {
-            console.error(error);
-            errorMsg.textContent = "Error al procesar la reserva. Intenta de nuevo.";
+            console.error("CRITICAL BOOKING ERROR:", error);
+            errorMsg.textContent = "Error de conexión con el servidor. Por favor, asegúrate de tener conexión e intenta de nuevo.";
             errorMsg.classList.remove('hidden');
             document.getElementById('confirm-booking').disabled = false;
             document.getElementById('confirm-booking').textContent = "Confirmar Cita";
         }
     };
 
-    // Initial load
+    // INITIAL LOAD: Parallel execution for speed
     updateCalendarData();
     const initialDateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
     renderTimeSlots(initialDateStr);
