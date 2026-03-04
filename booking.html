@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Reserva | Reconecta</title>
-    <!-- Last Update: 2026-03-01 20:55 - Hourly Schedule Fix -->
+    <!-- Last Update: 2026-03-03 21:00 - Performance Fix V2 (Long Polling + Cache Bust) -->
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
         rel="stylesheet">
@@ -172,6 +172,10 @@
                         class="w-full block bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] py-4 md:py-5 rounded-2xl font-bold text-base md:text-lg transition-all shadow-lg shadow-primary/20">
                         Confirmar Cita
                     </button>
+                    <div class="mt-8 text-center">
+                        <p class="text-[8px] text-white/20 font-mono tracking-widest uppercase">Version: 2026-03-03-v2.1
+                            (LP)</p>
+                    </div>
                 </div>
             </main>
         </div>
@@ -197,7 +201,7 @@
             border: 2px solid rgba(212, 160, 10, 0.8);
         }
     </style>
-    <script type="module" src="/src/booking.js"></script>
+    <script type="module" src="/src/booking.js?v=20260303_2100"></script>
 </body>
 
 </html>
