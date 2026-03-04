@@ -26,8 +26,16 @@
                         class="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce-slow">
                         <span class="material-symbols-outlined text-primary text-4xl">check_circle</span>
                     </div>
-                    <h1 class="font-display italic text-3xl md:text-5xl text-white mb-4">¡Reserva Confirmada!</h1>
-                    <p class="text-slate-300 text-base md:text-lg mb-8">Hemos enviado los detalles a tu correo
+                    <h1 class="font-display italic text-3xl md:text-5xl text-white mb-2">¡Reserva Confirmada!</h1>
+                    <div id="free-session-badge" class="hidden mb-6">
+                        <span
+                            class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] font-bold tracking-widest uppercase">
+                            <span class="material-symbols-outlined text-xs">redeem</span>
+                            Sesión de Regalo
+                        </span>
+                    </div>
+                    <p class="text-slate-300 text-base md:text-lg mb-8" id="success-msg">Hemos enviado los detalles a tu
+                        correo
                         electrónico. Te enviaremos un **recordatorio por WhatsApp y correo 1 hora antes** de la sesión.
                     </p>
 
@@ -105,6 +113,11 @@
                 const dateString = bookingDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 document.getElementById('display-datetime').textContent = `${dateString} • ${data.time}`;
                 document.getElementById('meet-link').href = data.meetLink;
+
+                if (data.isFree) {
+                    document.getElementById('free-session-badge').classList.remove('hidden');
+                    document.getElementById('success-msg').innerHTML = "¡Felicidades! Esta es tu **primera sesión gratuita**. Te hemos enviado los detalles a tu correo electrónico.";
+                }
 
                 // Google Calendar Link Generation with proper dates
                 const adminEmail = 'contacto@reconecta.com';
