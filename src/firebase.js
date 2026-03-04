@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {
-    getFirestore,
+    initializeFirestore,
     collection,
     doc,
     getDoc,
@@ -12,7 +12,8 @@ import {
     query,
     where,
     serverTimestamp,
-    deleteDoc
+    deleteDoc,
+    clearIndexedDbPersistence
 } from "firebase/firestore";
 
 // Firebase configuration
@@ -27,7 +28,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+// CRITICAL FIX FOR 1-MINUTE HANG: Force Long Polling
+// This avoids WebSocket failures that cause the "slowness" in production
+const db = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+});
+
+// Clear persistence to resolve any "stuck" states from previous attempts
+clearIndexedDbPersistence(db).catch(() => { });
 
 /**
  * Manage User based on PHONE as primary key
@@ -71,12 +80,10 @@ export async function createAppointment(appointmentData) {
 
 /**
  * Get all appointments for a specific month
- * OPTIMIZED: Uses simple date comparison
  */
 export async function getMonthlyAvailability(year, month) {
     const appointmentsRef = collection(db, "appointments");
     const mStr = (month + 1).toString().padStart(2, '0');
-    // Start and end dates for the month
     const start = `${year}-${mStr}-01`;
     const end = `${year}-${mStr}-31`;
 
