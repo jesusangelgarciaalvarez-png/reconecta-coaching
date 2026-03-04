@@ -22,10 +22,10 @@
 
             <header
                 class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-3xl">eco</span>
-                    <span class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
-                </div>
+                <a href="/" class="flex items-center gap-2 text-white no-underline">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="font-display italic text-xl">Volver</span>
+                </a>
                 <button id="menu-btn"
                     class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
                     <span class="material-symbols-outlined text-white">menu</span>
@@ -67,14 +67,7 @@
 
             <main class="relative z-10 flex-1 flex flex-col items-center px-6 pt-20 pb-20">
                 <div class="max-w-6xl w-full mx-auto">
-                    <!-- Volver Button -->
-                    <div class="mb-12 animate-fade-in">
-                        <a href="/"
-                            class="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest no-underline">
-                            <span class="material-symbols-outlined text-base">arrow_back</span>
-                            Volver
-                        </a>
-                    </div>
+
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <!-- Left Column: Info & Contact -->
@@ -141,7 +134,10 @@
                                     <div>
                                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Correo
                                         </p>
-                                        <p class="text-white text-sm font-medium">hola@reconectacoaching.com.mx</p>
+                                        <p class="text-white text-sm font-medium">
+                                            <a href="mailto:hola@reconectacoaching.com.mx"
+                                                class="hover:text-primary transition-colors no-underline">hola@reconectacoaching.com.mx</a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

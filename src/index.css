@@ -30,10 +30,11 @@ body {
 }
 
 .time-slot-active {
-  background-color: #ecb613 !important;
-  color: #0a1f1f !important;
-  box-shadow: 0 0 20px rgba(236, 182, 19, 0.4);
+  background-color: #ef4444 !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   transform: scale(1.05);
+  border-color: #ef4444 !important;
 }
 
 .faded-bg {
@@ -44,6 +45,13 @@ body {
   background-size: 115% !important;
   background-position: center 10% !important;
   transform: scale(1.02);
+}
+
+@media (max-width: 640px) {
+  .hero-zoom-crop {
+    background-size: 180% !important;
+    background-position: center 5% !important;
+  }
 }
 
 /* Navigation Menu Styles */

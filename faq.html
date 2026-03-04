@@ -11,106 +11,115 @@
         rel="stylesheet" />
 </head>
 
-<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-lavender/90 font-display">
+<body class="overflow-x-hidden">
     <div id="app">
-        <!-- Header -->
-        <header
-            class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-50 border-b border-sky-blue/10 backdrop-blur-md">
-            <a href="/" class="flex items-center gap-2 text-white no-underline">
-                <span class="material-symbols-outlined">arrow_back</span>
-                <span class="font-display italic text-xl">Volver</span>
-            </a>
-            <button id="menu-btn"
-                class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
-                <span class="material-symbols-outlined text-white">menu</span>
-            </button>
-        </header>
-
-        <!-- Navigation Menu Overlay -->
-        <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
-            <div class="absolute inset-0 z-0">
-                <img src="/hero_reconecta_v3.png" class="w-full h-full object-cover opacity-10 hero-zoom-crop"
-                    alt="Background">
+        <!-- Hero Section with Faded Background -->
+        <div class="relative min-h-screen flex flex-col pt-20">
+            <div class="absolute inset-0 z-0 bg-cover bg-center opacity-40 faded-bg pointer-events-none hero-zoom-crop"
+                style="background-image: url('/hero_reconecta_v3.png'); -webkit-user-select: none; user-select: none;">
             </div>
-            <div class="relative z-10 h-full flex flex-col p-8">
-                <header class="flex justify-between items-center mb-16">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-3xl">eco</span>
-                        <span class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
+            <!-- Header -->
+            <header
+                class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+                <a href="/" class="flex items-center gap-2 text-white no-underline">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="font-display italic text-xl">Volver</span>
+                </a>
+                <button id="menu-btn"
+                    class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-white">menu</span>
+                </button>
+            </header>
+
+            <!-- Navigation Menu Overlay -->
+            <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
+                <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop"
+                    style="background-image: url('/hero_reconecta_v3.png'); -webkit-user-select: none; user-select: none;">
+                </div>
+                <div class="relative z-10 h-full flex flex-col p-8">
+                    <header class="flex justify-between items-center mb-16">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-3xl">eco</span>
+                            <span
+                                class="font-display italic text-2xl font-bold tracking-tight text-white">Reconecta</span>
+                        </div>
+                        <button id="close-menu"
+                            class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                            <span class="material-symbols-outlined text-white">close</span>
+                        </button>
+                    </header>
+                    <nav class="flex flex-col gap-6">
+                        <a href="/" class="menu-link animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
+                        <a href="/quienes-somos.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.15s;">Quiénes Somos</a>
+                        <a href="/services.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.2s;">Nuestros Servicios</a>
+                        <a href="/metodo.html" class="menu-link animate-fade-in" style="animation-delay: 0.25s;">Nuestro
+                            Método</a>
+                        <a href="/booking.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.3s;">Reservar Sesión</a>
+                        <a href="/cancel.html" class="menu-link animate-fade-in"
+                            style="animation-delay: 0.35s;">Cancelar Cita</a>
+                    </nav>
+                </div>
+            </div>
+
+            <main class="relative z-10 pb-24 px-4 md:px-8 max-w-2xl mx-auto pt-10">
+                <div class="mb-10 text-center md:text-left">
+                    <h1 class="font-display italic text-4xl md:text-5xl text-white mb-4">Resuelve tus <span
+                            class="not-italic text-primary">dudas.</span></h1>
+                    <p class="text-slate-300 text-lg font-light leading-relaxed">Claridad para tu proceso de
+                        transformación.</p>
+                </div>
+
+                <!-- FAQ Items -->
+                <div class="flex flex-col gap-4">
+                    <div class="glass-panel p-6 rounded-3xl border-white/10 hover:border-primary/30 transition-all">
+                        <h3 class="font-display text-xl text-white mb-3 italic flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">help</span>
+                            ¿Qué es el coaching de empoderamiento?
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Es un proceso de acompañamiento enfocado en identificar y superar bloqueos emocionales,
+                            reconstruir la autoestima y tomar decisiones alineadas con tu verdadero poder interior.
+                        </p>
                     </div>
-                    <button id="close-menu"
-                        class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
-                        <span class="material-symbols-outlined text-white">close</span>
-                    </button>
-                </header>
-                <nav class="flex flex-col gap-6 text-left">
-                    <a href="/" class="menu-link animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
-                    <a href="/quienes-somos.html" class="menu-link animate-fade-in"
-                        style="animation-delay: 0.15s;">Quiénes Somos</a>
-                    <a href="/services.html" class="menu-link animate-fade-in" style="animation-delay: 0.2s;">Nuestros
-                        Servicios</a>
-                    <a href="/metodo.html" class="menu-link animate-fade-in" style="animation-delay: 0.25s;">Nuestro
-                        Método</a>
-                    <a href="/booking.html" class="menu-link animate-fade-in" style="animation-delay: 0.3s;">Reservar
-                        Sesión</a>
-                    <a href="/cancel.html" class="menu-link animate-fade-in" style="animation-delay: 0.35s;">Cancelar
-                        Cita</a>
-                </nav>
-            </div>
+
+                    <div class="glass-panel p-6 rounded-3xl border-white/10 hover:border-primary/30 transition-all">
+                        <h3 class="font-display text-xl text-white mb-3 italic flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">help</span>
+                            ¿Las sesiones son presenciales u online?
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Ofrecemos ambas modalidades. Las sesiones online se realizan vía Google Meet para tu
+                            comodidad, y las presenciales se coordinan individualmente tras la reserva para asegurar un
+                            espacio seguro.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-3xl border-white/10 hover:border-primary/30 transition-all">
+                        <h3 class="font-display text-xl text-white mb-3 italic flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">help</span>
+                            ¿Cuánto dura un proceso completo?
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Depende de tus objetivos. Recomendamos nuestra plan "Reconecta" de 12 semanas para
+                            resultados integrales y duraderos, aunque también puedes iniciar con sesiones individuales.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Contact CTA -->
+                <div class="mt-12 glass-panel p-8 rounded-[2.5rem] border-primary/20 text-center">
+                    <h3 class="font-display italic text-2xl text-white mb-2">¿Necesitas algo más?</h3>
+                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-6">Estamos aquí para
+                        escucharte</p>
+                    <a href="mailto:hola@reconectacoaching.com.mx"
+                        class="inline-block bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] px-10 py-4 rounded-full font-bold transition-all shadow-lg shadow-primary/20 no-underline">Enviar
+                        Mensaje</a>
+                </div>
+            </main>
         </div>
-
-        <main class="pb-24 px-4 md:px-8 max-w-2xl mx-auto pt-10">
-            <div class="mb-10 text-center md:text-left">
-                <h1 class="text-3xl md:text-4xl font-black text-white mb-2">Resuelve tus <span
-                        class="text-[#f2b90d]">Dudas</span>
-                </h1>
-                <p class="text-lavender/60 text-sm italic">Claridad para tu proceso de transformación.</p>
-            </div>
-
-            <!-- FAQ Items -->
-            <div class="flex flex-col gap-4">
-                <div class="bg-[#112240] border border-sky-blue/10 p-5 rounded-2xl">
-                    <h3 class="text-white font-bold mb-2 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#f2b90d] text-base">help</span>
-                        ¿Qué es el coaching de empoderamiento?
-                    </h3>
-                    <p class="text-lavender/70 text-sm leading-relaxed">
-                        Es un proceso de acompañamiento enfocado en identificar y superar bloqueos emocionales,
-                        reconstruir la autoestima y tomar decisiones alineadas con tu verdadero poder interior.
-                    </p>
-                </div>
-
-                <div class="bg-[#112240] border border-sky-blue/10 p-5 rounded-2xl">
-                    <h3 class="text-white font-bold mb-2 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#f2b90d] text-base">help</span>
-                        ¿Las sesiones son presenciales u online?
-                    </h3>
-                    <p class="text-lavender/70 text-sm leading-relaxed">
-                        Ofrecemos ambas modalidades. Las sesiones online se realizan vía Zoom, y las presenciales se
-                        coordinan individualmente tras la reserva para asegurar un espacio cómodo y seguro.
-                    </p>
-                </div>
-
-                <div class="bg-[#112240] border border-sky-blue/10 p-5 rounded-2xl">
-                    <h3 class="text-white font-bold mb-2 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#f2b90d] text-base">help</span>
-                        ¿Cuánto dura un proceso completo?
-                    </h3>
-                    <p class="text-lavender/70 text-sm leading-relaxed">
-                        Depende de tus objetivos. Recomendamos nuestra "Maestría en Autoestima" de 12 semanas para
-                        resultados integrales y duraderos, aunque también ofrecemos sesiones intensivas puntuales.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Contact CTA -->
-            <div class="mt-12 bg-gradient-to-br from-[#f2b90d] to-[#d4a00a] p-6 rounded-3xl text-[#0a192f]">
-                <h3 class="font-black text-xl mb-2">¿Necesitas algo más?</h3>
-                <p class="text-[10px] font-bold uppercase tracking-widest mb-4 opacity-80">Estamos aquí para escucharte
-                </p>
-                <button class="w-full bg-[#0a192f] text-white py-3 rounded-xl font-bold text-sm">Enviar Mensaje</button>
-            </div>
-        </main>
     </div>
     <script type="module" src="/src/main.js"></script>
 </body>

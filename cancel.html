@@ -126,48 +126,7 @@
         </div>
     </div>
     <script type="module" src="/src/main.js"></script>
-    <script>
-        document.getElementById('cancel-form').onsubmit = (e) => {
-            e.preventDefault();
-            const id = document.getElementById('appointment-id').value.trim();
-            const msg = document.getElementById('cancel-message');
-
-            const bookings = JSON.parse(localStorage.getItem('reconecta_bookings') || '[]');
-            const index = bookings.findIndex(b => b.id === id);
-
-            if (index === -1) {
-                msg.textContent = "No se encontró ninguna cita con ese ID.";
-                msg.className = "p-4 rounded-2xl text-xs font-semibold mb-4 bg-red-500/10 text-red-400";
-                msg.classList.remove('hidden');
-                return;
-            }
-
-            const booking = bookings[index];
-            const appointmentTime = new Date(booking.timestamp);
-            const now = new Date();
-
-            // Appointment date + booked time (HH:00)
-            const [hour] = booking.time.split(':');
-            appointmentTime.setHours(parseInt(hour), 0, 0, 0);
-
-            const diffMs = appointmentTime - now;
-            const diffHours = diffMs / (1000 * 60 * 60);
-
-            if (diffHours < 24) {
-                msg.textContent = "Lo sentimos, la cancelación debe realizarse con al menos 24 horas de antelación.";
-                msg.className = "p-4 rounded-2xl text-xs font-semibold mb-4 bg-orange-500/10 text-orange-400";
-            } else {
-                // Remove from localStorage
-                bookings.splice(index, 1);
-                localStorage.setItem('reconecta_bookings', JSON.stringify(bookings));
-
-                msg.textContent = "Cita cancelada con éxito. El horario ha sido liberado.";
-                msg.className = "p-4 rounded-2xl text-xs font-semibold mb-4 bg-green-500/10 text-green-400";
-                document.getElementById('appointment-id').value = '';
-            }
-            msg.classList.remove('hidden');
-        };
-    </script>
+    <script type="module" src="/src/cancel.js"></script>
 </body>
 
 </html>

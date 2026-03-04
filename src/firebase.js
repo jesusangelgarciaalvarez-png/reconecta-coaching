@@ -11,10 +11,11 @@ import {
     increment,
     query,
     where,
-    serverTimestamp
+    serverTimestamp,
+    deleteDoc
 } from "firebase/firestore";
 
-// Firebase configuration from user project
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM",
     authDomain: "reconecta-ed650.firebaseapp.com",
@@ -28,24 +29,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// NOTE: Offline persistence disabled to resolve 1-minute hang issues on some networks/browsers
+
 /**
  * Check if a user exists and manage session count
- * @param {string} email 
- * @param {object} userData { name, phone }
  */
 export async function manageUser(email, userData) {
     const userRef = doc(db, "users", email.toLowerCase());
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
-        // User exists, increment sessions
         await updateDoc(userRef, {
             sessionCount: increment(1),
             lastActive: serverTimestamp()
         });
         return { isFirstTime: false, ...userSnap.data() };
     } else {
-        // New user
         const newUser = {
             ...userData,
             email: email.toLowerCase(),
@@ -60,7 +59,6 @@ export async function manageUser(email, userData) {
 
 /**
  * Register a new appointment
- * @param {object} appointmentData { email, date, time }
  */
 export async function createAppointment(appointmentData) {
     const appointmentsRef = collection(db, "appointments");
@@ -73,20 +71,17 @@ export async function createAppointment(appointmentData) {
 
 /**
  * Get all appointments for a specific month
- * @param {number} year 
- * @param {number} month (0-11)
  */
 export async function getMonthlyAvailability(year, month) {
-    // Format month and year for simpler querying or fetch all and filter in JS
-    // For simplicity, we create a query for the month
     const appointmentsRef = collection(db, "appointments");
+    const mStr = (month + 1).toString().padStart(2, '0');
     const q = query(appointmentsRef,
-        where("date", ">=", `${year}-${(month + 1).toString().padStart(2, '0')}-01`),
-        where("date", "<=", `${year}-${(month + 1).toString().padStart(2, '0')}-31`)
+        where("date", ">=", `${year}-${mStr}-01`),
+        where("date", "<=", `${year}-${mStr}-31`)
     );
 
     const querySnapshot = await getDocs(q);
-    const dayStats = {}; // { "YYYY-MM-DD": count }
+    const dayStats = {};
 
     querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -98,7 +93,6 @@ export async function getMonthlyAvailability(year, month) {
 
 /**
  * Get occupied slots for a specific date
- * @param {string} dateStr (YYYY-MM-DD)
  */
 export async function getOccupiedSlots(dateStr) {
     const appointmentsRef = collection(db, "appointments");
@@ -106,4 +100,25 @@ export async function getOccupiedSlots(dateStr) {
     const querySnapshot = await getDocs(q);
 
     return querySnapshot.docs.map(doc => doc.data().time);
+}
+
+/**
+ * Get an appointment by its 6-digit ID
+ */
+export async function getAppointment(appointmentId) {
+    const appointmentsRef = collection(db, "appointments");
+    const q = query(appointmentsRef, where("id", "==", appointmentId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) return null;
+    const docSnap = querySnapshot.docs[0];
+    return { docId: docSnap.id, ...docSnap.data() };
+}
+
+/**
+ * Delete/Cancel an appointment
+ */
+export async function deleteAppointment(docId) {
+    const appRef = doc(db, "appointments", docId);
+    return await deleteDoc(appRef);
 }

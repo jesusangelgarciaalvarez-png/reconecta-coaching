@@ -20,22 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    // OPTIMIZATION: Non-blocking data update
+    // SPEED OPTIMIZATION: Non-blocking data update
     async function updateCalendarData() {
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
 
-        // 1. Render calendar immediately without dots
+        // 1. Render calendar immediately
         renderCalendar(true);
 
         try {
             // 2. Fetch stats in background
-            monthlyStats = await getMonthlyAvailability(year, month);
-            // 3. Update dots when data arrives
+            const fetchPromise = getMonthlyAvailability(year, month);
+
+            // Add a safety timeout
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 8000));
+
+            monthlyStats = await Promise.race([fetchPromise, timeoutPromise]);
             renderCalendar(false);
         } catch (error) {
-            console.error("Error fetching stats:", error);
-            renderCalendar(false); // Render anyway without dots
+            console.warn("Load speed warning:", error);
+            renderCalendar(false); // Render anyway
         }
     }
 
@@ -45,7 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const todayRef = new Date();
         todayRef.setHours(0, 0, 0, 0);
 
-        document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
+        const currentMonthDisplay = document.getElementById('current-month-year');
+        if (currentMonthDisplay) {
+            currentMonthDisplay.textContent = `${monthNames[month]} ${year}`;
+        }
 
         const firstDayOfMonth = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -53,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
         const grid = document.getElementById('calendar-grid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         for (let i = 0; i < startOffset; i++) {
@@ -80,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
+                    if (selectedDate && selectedDate.toDateString() === date.toDateString()) return;
                     selectedDate = new Date(year, month, day);
                     renderCalendar();
                     renderTimeSlots(dateStr);
@@ -121,10 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function renderTimeSlots(dateStr) {
         if (!selectedDate) return;
         const container = document.getElementById('time-slots-container');
-        container.innerHTML = ' <div class="col-span-2 text-center text-slate-400 text-xs animate-pulse py-10">Cargando horarios...</div>';
+        if (!container) return;
+        container.innerHTML = '<div class="col-span-2 text-center text-slate-400 text-xs animate-pulse py-10">Cargando horarios...</div>';
 
         try {
-            const occupiedSlots = await getOccupiedSlots(dateStr);
+            const fetchPromise = getOccupiedSlots(dateStr);
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 8000));
+
+            const occupiedSlots = await Promise.race([fetchPromise, timeoutPromise]);
             container.innerHTML = '';
 
             for (let hour = 9; hour < 18; hour++) {
@@ -151,43 +164,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error("Error loading slots:", error);
-            container.innerHTML = '<div class="col-span-2 text-red-400 text-xs text-center">Error al cargar horarios. Reintenta.</div>';
+            container.innerHTML = '<div class="col-span-2 text-red-400 text-xs text-center py-10">La conexión es lenta. Intenta refrescar la página.</div>';
         }
     }
 
-    document.getElementById('prev-month').onclick = () => {
+    const prevMonthBtn = document.getElementById('prev-month');
+    if (prevMonthBtn) prevMonthBtn.onclick = () => {
         currentViewDate.setMonth(currentViewDate.getMonth() - 1);
         updateCalendarData();
     };
 
-    document.getElementById('next-month').onclick = () => {
+    const nextMonthBtn = document.getElementById('next-month');
+    if (nextMonthBtn) nextMonthBtn.onclick = () => {
         currentViewDate.setMonth(currentViewDate.getMonth() + 1);
         updateCalendarData();
     };
 
-    document.getElementById('confirm-booking').onclick = async () => {
-        const name = document.getElementById('user-name').value.trim();
-        const email = document.getElementById('user-email').value.trim();
-        const phone = document.getElementById('user-phone').value.trim();
+    const confirmBtn = document.getElementById('confirm-booking');
+    if (confirmBtn) confirmBtn.onclick = async () => {
+        const nameInput = document.getElementById('user-name');
+        const emailInput = document.getElementById('user-email');
+        const phoneInput = document.getElementById('user-phone');
         const errorMsg = document.getElementById('error-message');
         const selectedSlot = document.querySelector('.time-slot-active');
 
+        const name = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim() : '';
+        const phone = phoneInput ? phoneInput.value.trim() : '';
+
         if (!name || !email || !phone || !selectedDate || !selectedSlot) {
-            errorMsg.textContent = !selectedDate ? "Selecciona un día." : (!selectedSlot ? "Selecciona un horario." : "Completa tus datos.");
-            errorMsg.classList.remove('hidden');
+            if (errorMsg) {
+                errorMsg.textContent = !selectedDate ? "Selecciona un día." : (!selectedSlot ? "Selecciona un horario." : "Completa tus datos.");
+                errorMsg.classList.remove('hidden');
+            }
             return;
         }
 
-        errorMsg.classList.add('hidden');
-        document.getElementById('confirm-booking').disabled = true;
-        document.getElementById('confirm-booking').textContent = "Procesando...";
+        if (errorMsg) errorMsg.classList.add('hidden');
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = "Procesando...";
 
         try {
-            console.log("Starting booking process for:", email);
-
             // 1. Manage User
             const userResult = await manageUser(email, { name, phone });
-            console.log("User managed successfully");
 
             // 2. Register Appointment
             const dateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
@@ -209,20 +228,21 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             await createAppointment(bookingData);
-            console.log("Appointment created!");
 
             sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
             window.location.href = '/success.html';
         } catch (error) {
             console.error("CRITICAL BOOKING ERROR:", error);
-            errorMsg.textContent = "Error de conexión con el servidor. Por favor, asegúrate de tener conexión e intenta de nuevo.";
-            errorMsg.classList.remove('hidden');
-            document.getElementById('confirm-booking').disabled = false;
-            document.getElementById('confirm-booking').textContent = "Confirmar Cita";
+            if (errorMsg) {
+                errorMsg.textContent = "Error al procesar la reserva. Intenta de nuevo.";
+                errorMsg.classList.remove('hidden');
+            }
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = "Confirmar Cita";
         }
     };
 
-    // INITIAL LOAD: Parallel execution for speed
+    // INITIAL LOAD
     updateCalendarData();
     const initialDateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
     renderTimeSlots(initialDateStr);
