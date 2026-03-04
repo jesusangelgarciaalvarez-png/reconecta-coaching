@@ -12,10 +12,7 @@ import {
     query,
     where,
     serverTimestamp,
-    deleteDoc,
-    initializeFirestore,
-    terminate,
-    clearIndexedDbPersistence
+    deleteDoc
 } from "firebase/firestore";
 
 // Firebase configuration
@@ -30,31 +27,28 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// Force long polling to avoid WebSocket hangs which can cause 1-minute delays
-const db = initializeFirestore(app, {
-    experimentalForceLongPolling: true,
-});
-
-// Explicitly clear any old stuck persistence
-clearIndexedDbPersistence(db).catch(() => { });
+const db = getFirestore(app);
 
 /**
- * Check if a user exists and manage session count
+ * Manage User based on PHONE as primary key
  */
-export async function manageUser(email, userData) {
-    const userRef = doc(db, "users", email.toLowerCase());
+export async function manageUser(phone, userData) {
+    const cleanPhone = phone.replace(/\D/g, '');
+    const userRef = doc(db, "users", cleanPhone);
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
         await updateDoc(userRef, {
             sessionCount: increment(1),
-            lastActive: serverTimestamp()
+            lastActive: serverTimestamp(),
+            email: userData.email.toLowerCase() // Sync latest email
         });
         return { isFirstTime: false, ...userSnap.data() };
     } else {
         const newUser = {
             ...userData,
-            email: email.toLowerCase(),
+            phone: cleanPhone,
+            email: userData.email.toLowerCase(),
             firstVisit: serverTimestamp(),
             sessionCount: 1,
             lastActive: serverTimestamp()
@@ -71,20 +65,24 @@ export async function createAppointment(appointmentData) {
     const appointmentsRef = collection(db, "appointments");
     return await addDoc(appointmentsRef, {
         ...appointmentData,
-        email: appointmentData.email.toLowerCase(),
         createdAt: serverTimestamp()
     });
 }
 
 /**
  * Get all appointments for a specific month
+ * OPTIMIZED: Uses simple date comparison
  */
 export async function getMonthlyAvailability(year, month) {
     const appointmentsRef = collection(db, "appointments");
     const mStr = (month + 1).toString().padStart(2, '0');
+    // Start and end dates for the month
+    const start = `${year}-${mStr}-01`;
+    const end = `${year}-${mStr}-31`;
+
     const q = query(appointmentsRef,
-        where("date", ">=", `${year}-${mStr}-01`),
-        where("date", "<=", `${year}-${mStr}-31`)
+        where("date", ">=", start),
+        where("date", "<=", end)
     );
 
     const querySnapshot = await getDocs(q);

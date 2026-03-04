@@ -6,245 +6,200 @@ import {
 } from './firebase.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('RECONECTA VERSION: 2026-03-03-V2 (LONG POLLING ENABLED)');
+    console.log('RECONECTA CALENDAR V3 - PHONE KEY ENABLED');
+
+    // UI Elements
+    const calendarGrid = document.getElementById('calendar-grid');
+    const timeSlotsContainer = document.getElementById('time-slots-container');
+    const currentMonthDisplay = document.getElementById('current-month-year');
+    const confirmBtn = document.getElementById('confirm-booking');
+    const errorMsg = document.getElementById('error-message');
+
+    // Inputs
+    const nameInput = document.getElementById('user-name');
+    const emailInput = document.getElementById('user-email');
+    const phoneInput = document.getElementById('user-phone');
+
+    // State
     const now = new Date();
-    let defaultFocusDate = new Date(now);
-
-    // Logic: Default focus on next available weekday
-    const dayIdx = defaultFocusDate.getDay();
-    if (dayIdx === 0) defaultFocusDate.setDate(defaultFocusDate.getDate() + 1);
-    else if (dayIdx === 6) defaultFocusDate.setDate(defaultFocusDate.getDate() + 2);
-
-    let selectedDate = new Date(defaultFocusDate);
-    let currentViewDate = new Date(defaultFocusDate);
-    let monthlyStats = {};
+    let currentViewDate = new Date(now);
+    let selectedDate = null;
+    let selectedTime = null;
+    let monthlyStatsCache = {};
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    // SPEED OPTIMIZATION: Non-blocking data update
-    async function updateCalendarData() {
+    /**
+     * Renders the calendar for the current view date
+     */
+    async function initCalendar() {
+        renderCalendarShell();
+
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
-
-        // 1. Render calendar immediately
-        renderCalendar(true);
+        const cacheKey = `${year}-${month}`;
 
         try {
-            // 2. Fetch stats in background
-            const fetchPromise = getMonthlyAvailability(year, month);
-
-            // Add a safety timeout
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000));
-
-            monthlyStats = await Promise.race([fetchPromise, timeoutPromise]);
-            renderCalendar(false);
-        } catch (error) {
-            console.warn("Load speed warning:", error);
-            renderCalendar(false); // Render anyway
+            // Background fetch for dot indicators
+            const stats = await getMonthlyAvailability(year, month);
+            monthlyStatsCache[cacheKey] = stats;
+            renderCalendarShell(); // Refresh with dots
+        } catch (e) {
+            console.warn("Could not load indicators", e);
         }
     }
 
-    function renderCalendar(isLoadingStats = false) {
+    function renderCalendarShell() {
+        if (!calendarGrid) return;
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
-        const todayRef = new Date();
-        todayRef.setHours(0, 0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        const currentMonthDisplay = document.getElementById('current-month-year');
-        if (currentMonthDisplay) {
-            currentMonthDisplay.textContent = `${monthNames[month]} ${year}`;
-        }
+        currentMonthDisplay.textContent = `${monthNames[month]} ${year}`;
+        calendarGrid.innerHTML = '';
 
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let startOffset = firstDay === 0 ? 6 : firstDay - 1;
 
-        let startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-
-        const grid = document.getElementById('calendar-grid');
-        if (!grid) return;
-        grid.innerHTML = '';
-
+        // Blanks
         for (let i = 0; i < startOffset; i++) {
-            grid.appendChild(document.createElement('div'));
+            calendarGrid.appendChild(document.createElement('div'));
         }
+
+        const cacheKey = `${year}-${month}`;
+        const stats = monthlyStatsCache[cacheKey] || {};
 
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
             const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            const dayOfWeek = date.getDay();
-            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-            const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
-            const isPassed = date < todayRef;
+            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+            const isPast = date < today;
+            const isSelected = selectedDate === dateStr;
 
             const btn = document.createElement('button');
-            btn.type = "button";
-            btn.className = `h-10 sm:h-12 w-full rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-black transition-all flex flex-col items-center justify-center relative z-20 `;
+            btn.className = `h-10 sm:h-12 w-full rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center relative `;
 
-            if (isWeekend) {
-                btn.className += "text-white/5 cursor-not-allowed pointer-events-none";
-                btn.innerHTML = `<span>${day}</span>`;
-            } else if (isPassed) {
-                btn.className += "text-white/10 cursor-not-allowed pointer-events-none";
-                btn.innerHTML = `<span>${day}</span>`;
+            if (isWeekend || isPast) {
+                btn.className += "opacity-20 cursor-not-allowed text-slate-500";
+                btn.textContent = day;
             } else {
-                btn.addEventListener('click', (e) => {
+                btn.className += isSelected ? "bg-primary text-[#0a1f1f] shadow-lg scale-105" : "text-white hover:bg-white/10";
+                btn.innerHTML = `<span>${day}</span>`;
+
+                // Dot Indicators
+                const count = stats[dateStr] || 0;
+                const dot = document.createElement('span');
+                dot.className = `w-1 h-1 rounded-full mt-1 ${count >= 9 ? 'bg-red-500 shadow-[0_0_5px_red]' : (count > 0 ? 'bg-yellow-500' : 'bg-green-500')}`;
+                if (!isSelected) btn.appendChild(dot);
+
+                btn.onclick = (e) => {
                     e.preventDefault();
-                    if (selectedDate && selectedDate.toDateString() === date.toDateString()) return;
-                    selectedDate = new Date(year, month, day);
-                    renderCalendar();
-                    renderTimeSlots(dateStr);
-                });
-
-                let statusHTML = '';
-                if (isLoadingStats) {
-                    statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white/10 mt-1 animate-pulse"></span>';
-                } else {
-                    const count = monthlyStats[dateStr] || 0;
-                    const isFull = count >= 9;
-
-                    if (isFull) {
-                        statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>';
-                    } else if (count > 0) {
-                        statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1 shadow-[0_0_8px_rgba(234,179,8,0.8)]"></span>';
-                    } else {
-                        statusHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-500 mt-1 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>';
-                    }
-
-                    if (isFull) {
-                        btn.className += "text-red-400 opacity-60";
-                        btn.title = "Día Completo";
-                    }
-                }
-
-                if (isSelected) {
-                    btn.className += "bg-primary text-[#0a1f1f] shadow-[0_0_20px_rgba(212,160,10,0.6)] scale-110";
-                } else {
-                    btn.className += "text-white hover:bg-white/10";
-                }
-
-                btn.innerHTML = `<span>${day}</span>${isSelected ? '' : statusHTML}`;
+                    if (count >= 9) return;
+                    selectedDate = dateStr;
+                    selectedTime = null; // Reset time
+                    renderCalendarShell();
+                    loadTimeSlots(dateStr);
+                };
             }
-            grid.appendChild(btn);
+            calendarGrid.appendChild(btn);
         }
     }
 
-    async function renderTimeSlots(dateStr) {
-        if (!selectedDate) return;
-        const container = document.getElementById('time-slots-container');
-        if (!container) return;
-        container.innerHTML = '<div class="col-span-2 text-center text-slate-400 text-xs animate-pulse py-10">Cargando horarios...</div>';
+    async function loadTimeSlots(dateStr) {
+        timeSlotsContainer.innerHTML = '<div class="col-span-2 text-center text-slate-500 py-6 text-xs italic">Cargando horarios...</div>';
 
         try {
-            const fetchPromise = getOccupiedSlots(dateStr);
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000));
+            const occupied = await getOccupiedSlots(dateStr);
+            timeSlotsContainer.innerHTML = '';
 
-            const occupiedSlots = await Promise.race([fetchPromise, timeoutPromise]);
-            container.innerHTML = '';
-
-            for (let hour = 9; hour < 18; hour++) {
-                const timeString = `${hour.toString().padStart(2, '0')}:00`;
-                const isTaken = occupiedSlots.includes(timeString);
+            const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+            hours.forEach(h => {
+                const time = `${h.toString().padStart(2, '0')}:00`;
+                const isTaken = occupied.includes(time);
 
                 const btn = document.createElement('button');
-                btn.type = "button";
-                btn.className = `time-slot glass-panel py-3 md:py-4 rounded-xl md:rounded-2xl text-xs md:text-sm font-semibold transition-all flex flex-col items-center justify-center relative `;
+                btn.className = `time-slot p-4 rounded-2xl text-sm font-semibold transition-all border ${isTaken ? 'opacity-30 cursor-not-allowed bg-white/5 border-transparent' : 'glass-panel hover:bg-white/20 text-white border-white/10'}`;
 
-                if (isTaken) {
-                    btn.className += "opacity-50 cursor-not-allowed text-red-500 bg-red-500/10 border-red-500/30";
-                    btn.innerHTML = `<span>${timeString}</span><span class="text-[8px] font-bold mt-1">OCUPADO</span>`;
-                    btn.disabled = true;
-                } else {
-                    btn.className += "hover:bg-white/20 text-white bg-white/5";
-                    btn.innerHTML = `<span>${timeString}</span><span class="w-1 h-1 rounded-full bg-green-500 mt-1"></span>`;
+                if (selectedTime === time) btn.classList.add('time-slot-active');
+
+                btn.innerHTML = `<span>${time} ${h < 12 ? 'AM' : 'PM'}</span>`;
+                if (!isTaken) {
                     btn.onclick = () => {
-                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('time-slot-active'));
+                        selectedTime = time;
+                        document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('time-slot-active'));
                         btn.classList.add('time-slot-active');
                     };
+                } else {
+                    btn.disabled = true;
                 }
-                container.appendChild(btn);
-            }
-        } catch (error) {
-            console.error("Error loading slots:", error);
-            container.innerHTML = '<div class="col-span-2 text-red-400 text-xs text-center py-10">La conexión es lenta. Intenta refrescar la página.</div>';
+                timeSlotsContainer.appendChild(btn);
+            });
+        } catch (err) {
+            timeSlotsContainer.innerHTML = '<div class="col-span-2 text-center text-red-400 py-6 text-xs">Error al cargar horarios.</div>';
         }
     }
 
-    const prevMonthBtn = document.getElementById('prev-month');
-    if (prevMonthBtn) prevMonthBtn.onclick = () => {
+    // Event Listeners
+    document.getElementById('prev-month').onclick = (e) => {
+        e.preventDefault();
         currentViewDate.setMonth(currentViewDate.getMonth() - 1);
-        updateCalendarData();
+        initCalendar();
     };
 
-    const nextMonthBtn = document.getElementById('next-month');
-    if (nextMonthBtn) nextMonthBtn.onclick = () => {
+    document.getElementById('next-month').onclick = (e) => {
+        e.preventDefault();
         currentViewDate.setMonth(currentViewDate.getMonth() + 1);
-        updateCalendarData();
+        initCalendar();
     };
 
-    const confirmBtn = document.getElementById('confirm-booking');
-    if (confirmBtn) confirmBtn.onclick = async () => {
-        const nameInput = document.getElementById('user-name');
-        const emailInput = document.getElementById('user-email');
-        const phoneInput = document.getElementById('user-phone');
-        const errorMsg = document.getElementById('error-message');
-        const selectedSlot = document.querySelector('.time-slot-active');
+    confirmBtn.onclick = async () => {
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
 
-        const name = nameInput ? nameInput.value.trim() : '';
-        const email = emailInput ? emailInput.value.trim() : '';
-        const phone = phoneInput ? phoneInput.value.trim() : '';
-
-        if (!name || !email || !phone || !selectedDate || !selectedSlot) {
-            if (errorMsg) {
-                errorMsg.textContent = !selectedDate ? "Selecciona un día." : (!selectedSlot ? "Selecciona un horario." : "Completa tus datos.");
-                errorMsg.classList.remove('hidden');
-            }
+        if (!name || !email || !phone || !selectedDate || !selectedTime) {
+            errorMsg.textContent = "Por favor selecciona fecha, hora y completa tus datos.";
+            errorMsg.classList.remove('hidden');
             return;
         }
 
-        if (errorMsg) errorMsg.classList.add('hidden');
+        errorMsg.classList.add('hidden');
         confirmBtn.disabled = true;
         confirmBtn.textContent = "Procesando...";
 
         try {
-            // 1. Manage User
-            const userResult = await manageUser(email, { name, phone });
-
-            // 2. Register Appointment
-            const dateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
-            const timeStr = selectedSlot.querySelector('span').textContent;
-
+            // Primary Key: Phone
+            const userResult = await manageUser(phone, { name, email });
             const appointmentId = Math.floor(100000 + Math.random() * 900000).toString();
-            const meetLink = `https://meet.google.com/${Math.random().toString(36).substring(2, 5)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 5)}`;
+            const meetLink = `https://meet.google.com/hbm-pivc-mvy`; // Placeholder for now
 
             const bookingData = {
                 id: appointmentId,
                 name,
                 email,
-                phone,
-                date: dateStr,
-                time: timeStr,
-                timestamp: selectedDate.getTime(),
+                phone: phone.replace(/\D/g, ''),
+                date: selectedDate,
+                time: selectedTime,
+                timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime(),
                 meetLink,
                 isFree: userResult.isFirstTime
             };
 
             await createAppointment(bookingData);
-
             sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
             window.location.href = '/success.html';
-        } catch (error) {
-            console.error("CRITICAL BOOKING ERROR:", error);
-            if (errorMsg) {
-                errorMsg.textContent = "Error al procesar la reserva. Intenta de nuevo.";
-                errorMsg.classList.remove('hidden');
-            }
+        } catch (err) {
+            console.error(err);
             confirmBtn.disabled = false;
             confirmBtn.textContent = "Confirmar Cita";
+            errorMsg.textContent = "Error al confirmar. Intenta de nuevo.";
+            errorMsg.classList.remove('hidden');
         }
     };
 
-    // INITIAL LOAD
-    updateCalendarData();
-    const initialDateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
-    renderTimeSlots(initialDateStr);
+    // Auto-focus phone or name?
+    // Start calendar
+    initCalendar();
 });
