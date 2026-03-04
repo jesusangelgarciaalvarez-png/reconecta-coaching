@@ -12,7 +12,10 @@ import {
     query,
     where,
     serverTimestamp,
-    deleteDoc
+    deleteDoc,
+    initializeFirestore,
+    terminate,
+    clearIndexedDbPersistence
 } from "firebase/firestore";
 
 // Firebase configuration
@@ -27,9 +30,13 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Force long polling to avoid WebSocket hangs which can cause 1-minute delays
+const db = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+});
 
-// NOTE: Offline persistence disabled to resolve 1-minute hang issues on some networks/browsers
+// Explicitly clear any old stuck persistence
+clearIndexedDbPersistence(db).catch(() => { });
 
 /**
  * Check if a user exists and manage session count

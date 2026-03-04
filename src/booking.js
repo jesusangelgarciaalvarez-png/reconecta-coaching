@@ -6,6 +6,7 @@ import {
 } from './firebase.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('RECONECTA VERSION: 2026-03-03-V2 (LONG POLLING ENABLED)');
     const now = new Date();
     let defaultFocusDate = new Date(now);
 
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fetchPromise = getMonthlyAvailability(year, month);
 
             // Add a safety timeout
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 8000));
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000));
 
             monthlyStats = await Promise.race([fetchPromise, timeoutPromise]);
             renderCalendar(false);
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const fetchPromise = getOccupiedSlots(dateStr);
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 8000));
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000));
 
             const occupiedSlots = await Promise.race([fetchPromise, timeoutPromise]);
             container.innerHTML = '';
