@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentAppointments.length > 1) {
                         const optAll = document.createElement('option');
                         optAll.value = "all";
-                        optAll.textContent = "─ CANCELAR TODAS LAS CITAS ─";
+                        optAll.textContent = "Seleccionar todas";
                         appointmentSelect.appendChild(optAll);
                     }
 
