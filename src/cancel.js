@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const phoneForm = document.getElementById('phone-form');
     const selectionContainer = document.getElementById('selection-container');
     const appointmentList = document.getElementById('appointment-list');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const quickMsg = document.getElementById('quick-message');
+    const idInput = document.getElementById('appointment-id');
+    const phoneInput = document.getElementById('user-phone');
 
     let currentAppointments = [];
 
@@ -159,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     selectionContainer.classList.remove('hidden');
+                    selectionContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } catch (error) {
                 showMsg("Error al buscar citas. Verifica tu conexión.", "error");
