@@ -145,7 +145,13 @@
 
                 if (data.isFree) {
                     document.getElementById('free-session-badge').classList.remove('hidden');
-                    document.getElementById('success-msg').innerHTML = "¡Felicidades! Esta es tu **primera sesión gratuita**. Te hemos enviado los detalles a tu correo electrónico.";
+                }
+
+                // Visit Message from URL or Session
+                const params = new URLSearchParams(window.location.search);
+                const visitMsg = params.get('msg');
+                if (visitMsg) {
+                    document.getElementById('success-msg').innerHTML = `<strong>${visitMsg}</strong>. Hemos enviado los detalles a tu correo electrónico. Te enviaremos un **recordatorio por WhatsApp y correo 1 hora antes** de la sesión.`;
                 }
 
                 // Google Calendar Link Generation with proper dates

@@ -155,6 +155,30 @@ export async function deleteAppointment(docId, date, time) {
                 times: arrayRemove(time),
                 [`bookings.${time.replace(':', '_')}`]: ""
             });
-        } catch (e) { }
+        } catch (e) {
+            console.error("Error clearing availability:", e);
+        }
+    }
+}
+
+/**
+ * Decrement visit count for a user (used on valid cancellation)
+ */
+export async function decrementUserVisit(phone) {
+    if (!phone) return;
+    const cleanPhone = phone.replace(/\D/g, '');
+    const userRef = doc(db, "users", cleanPhone);
+    try {
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+            const currentCount = docSnap.data().visitCount || 0;
+            const newCount = Math.max(0, currentCount - 1);
+            await updateDoc(userRef, {
+                visitCount: newCount,
+                lastActive: serverTimestamp()
+            });
+        }
+    } catch (e) {
+        console.error("Error decrementing visit count:", e);
     }
 }

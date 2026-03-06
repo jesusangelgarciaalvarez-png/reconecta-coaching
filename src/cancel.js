@@ -1,4 +1,4 @@
-import { getAppointment, deleteAppointment } from './firebase_v13.js';
+import { getAppointment, deleteAppointment, decrementUserVisit } from './firebase_v13.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const cancelForm = document.getElementById('cancel-form');
@@ -40,7 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Proceed with deletion
-            await deleteAppointment(appointment.docId);
+            await deleteAppointment(appointment.docId, appointment.date, appointment.time);
+
+            // LOGIC: Decrement visit count ONLY if cancelled on time
+            if (appointment.phone) {
+                await decrementUserVisit(appointment.phone);
+                console.log("Visit count decremented for", appointment.phone);
+            }
 
             msg.textContent = "¡Cita cancelada con éxito! Tu horario ha sido liberado para que otra persona pueda aprovecharlo. Esperamos verte pronto.";
             msg.className = "p-4 rounded-2xl text-xs font-semibold mb-4 bg-green-500/10 text-green-400";

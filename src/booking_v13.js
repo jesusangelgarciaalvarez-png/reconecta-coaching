@@ -240,16 +240,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 build: 'v9.0-REST-ARCH'
             };
 
-            // This call now has a 4-second internal auto-resolve in firebase.js
-            await createAppointment(bookingData);
-            console.log("SUCCESS AT LAST!");
+            // 1. Helper for ordinals
+            const getOrdinal = (n) => {
+                const ordinals = ["", "primera", "segunda", "tercera", "cuarta", "quinta", "sexta", "séptima", "octava", "novena", "décima"];
+                if (n === 1) return "sesion gratuita, diagnóstico";
+                if (n <= 10) return `Esta es tu ${ordinals[n]} visita`;
+                return `Esta es tu visita número ${n}`;
+            };
+
+            // This call now returns the new visitCount
+            const result = await createAppointment(bookingData);
+            const visitCount = result.visitCount || 1;
+            const visitMessage = getOrdinal(visitCount);
+
+            console.log("SUCCESS AT LAST! Visit Count:", visitCount);
 
             // SAVE TO SESSION STORAGE FOR THE SUCCESS PAGE
             sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
             localStorage.setItem('reconecta_visitor_name', name);
 
             console.log("Moving to success page...");
-            window.location.href = `/success.html?id=${appointmentId}&date=${selectedDate}&time=${selectedTime}&name=${encodeURIComponent(name)}`;
+            window.location.href = `/success.html?id=${appointmentId}&date=${selectedDate}&time=${selectedTime}&name=${encodeURIComponent(name)}&msg=${encodeURIComponent(visitMessage)}`;
 
         } catch (err) {
             console.error("DEBUG BOOKING FAILURE:", err);

@@ -119,10 +119,17 @@
                                 class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
                         </div>
                         <div id="cancel-message" class="hidden p-4 rounded-2xl text-xs font-semibold mb-4"></div>
-                        <button type="submit"
-                            class="w-full bg-white/5 hover:bg-red-400/20 text-white border border-white/10 py-5 rounded-2xl font-bold transition-all">
-                            Validar y Cancelar Cita
-                        </button>
+                        <div class="group relative">
+                            <button type="submit"
+                                class="w-full bg-white/5 hover:bg-red-400/20 text-white border border-white/10 py-5 rounded-2xl font-bold transition-all"
+                                title="Debe cancelar al menos con 24 horas de antelación, de lo contrario se realizará el cargo.">
+                                Validar y Cancelar Cita
+                            </button>
+                            <p
+                                class="mt-2 text-[9px] text-red-400/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                                * Debe cancelar al menos con 24 horas de antelación para evitar cargos.
+                            </p>
+                        </div>
                     </form>
 
                     <p class="mt-8 text-slate-500 text-[10px]">

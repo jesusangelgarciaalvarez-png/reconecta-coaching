@@ -1,6 +1,6 @@
 /**
- * VERCEL BRIDGE v15.0 - SYNC ARCHITECTURE
- * Ensures BOTH the appointment AND the availability map are updated.
+ * VERCEL BRIDGE v16.0 - SYNC ARCHITECTURE + VISIT TRACKING
+ * Ensures BOTH the appointment AND the availability map are updated, and tracks visit counts.
  */
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
                 time: { stringValue: String(data.time) },
                 meetLink: { stringValue: "https://meet.google.com/hbm-pivc-mvy" },
                 timestamp: { integerValue: String(Date.now()) },
-                systemInfo: { stringValue: "v15.0-SYNC" }
+                systemInfo: { stringValue: "v16.0-SYNC-TRACK" }
             }
         };
 
@@ -40,7 +40,6 @@ export default async function handler(req, res) {
         }
 
         // 2. UPDATE AVAILABILITY MAP (days/{date})
-        // We use a read-then-write approach for simplicity in the bridge
         const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/days/${data.date}?key=${API_KEY}`;
 
         let currentTimes = [];
@@ -52,7 +51,6 @@ export default async function handler(req, res) {
             }
         }
 
-        // Add the new time if it's not already there
         if (!currentTimes.includes(data.time)) {
             currentTimes.push(data.time);
         }
@@ -68,14 +66,47 @@ export default async function handler(req, res) {
             }
         };
 
-        // Use PATCH to update the day document
         await fetch(dayUrl, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dayBody)
         });
 
-        return res.status(200).json({ success: true, message: "Appointment and Map updated" });
+        // 3. TRACK USER VISITS (users/{phone})
+        const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${data.phone}?key=${API_KEY}`;
+
+        let visitCount = 1;
+        const userRead = await fetch(userUrl);
+
+        if (userRead.ok) {
+            const userData = await userRead.json();
+            if (userData.fields && userData.fields.visitCount && userData.fields.visitCount.integerValue) {
+                visitCount = parseInt(userData.fields.visitCount.integerValue) + 1;
+            }
+        }
+
+        const userBody = {
+            fields: {
+                name: { stringValue: String(data.name) },
+                email: { stringValue: String(data.email) },
+                phone: { stringValue: String(data.phone) },
+                visitCount: { integerValue: String(visitCount) },
+                lastBookingId: { stringValue: String(data.id) },
+                lastActive: { timestampValue: new Date().toISOString() }
+            }
+        };
+
+        await fetch(userUrl, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userBody)
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Appointment, Map and Visit Count updated",
+            visitCount: visitCount
+        });
 
     } catch (error) {
         console.error("BRIDGE_CRASH:", error);
