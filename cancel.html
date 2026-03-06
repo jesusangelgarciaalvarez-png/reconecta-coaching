@@ -15,8 +15,13 @@
 <body class="overflow-x-hidden">
     <div id="app">
         <div class="relative min-h-screen flex flex-col pt-20 px-6">
-            <div class="absolute inset-0 z-0 bg-cover bg-center opacity-40 faded-bg pointer-events-none hero-zoom-crop"
-                style="background-image: url('/hero_reconecta_v3.png'); -webkit-user-select: none; user-select: none;">
+            <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20 faded-bg pointer-events-none hero-zoom-crop"
+                style="background-image: url('/assets/betza.jpg'); -webkit-user-select: none; user-select: none;">
+            </div>
+            <!-- REBUILD BANNER VERIFICATION -->
+            <div
+                style="background: #2563eb; color: #ffffff; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
+                REBUILD v25.0 - UPDATE: 2026-03-06 12:05
             </div>
 
             <header
@@ -34,7 +39,7 @@
             <!-- Navigation Menu Overlay -->
             <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
                 <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop"
-                    style="background-image: url('/hero_reconecta_v3.png'); -webkit-user-select: none; user-select: none;">
+                    style="background-image: url('/assets/betza.jpg'); -webkit-user-select: none; user-select: none;">
                 </div>
                 <div class="relative z-10 h-full flex flex-col p-8">
                     <header class="flex justify-between items-center mb-16">
@@ -106,31 +111,84 @@
                         </div>
 
                         <p class="text-slate-400 text-sm">
-                            Para cancelar o reprogramar, por favor ingresa tu código de reserva o el correo electrónico
-                            con el que agendaste.
+                            Elige cómo deseas localizar tu sesión para proceder con la cancelación:
                         </p>
                     </div>
 
-                    <form id="cancel-form" class="space-y-4">
-                        <div class="relative">
-                            <span
-                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">confirmation_number</span>
-                            <input type="text" id="appointment-id" placeholder="ID de Cita (6 dígitos)" required
-                                class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
+                    <div class="space-y-8">
+                        <!-- Option 1: By ID -->
+                        <div class="space-y-4">
+                            <label
+                                class="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] block text-left ml-2">Opción
+                                A: Por ID de Cita</label>
+                            <form id="id-form" class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">confirmation_number</span>
+                                <input type="text" id="appointment-id" placeholder="ID de 6 dígitos (ej. 123456)"
+                                    maxlength="6"
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-24 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
+                                <button type="submit"
+                                    class="absolute right-2 top-2 bottom-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border border-primary/20">Validar</button>
+                            </form>
                         </div>
-                        <div id="cancel-message" class="hidden p-4 rounded-2xl text-xs font-semibold mb-4"></div>
+
+                        <div class="relative py-2">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-white/5"></div>
+                            </div>
+                            <div class="relative flex justify-center"><span
+                                    class="bg-[#0f172a] px-4 text-[10px] text-slate-600 font-bold uppercase tracking-widest">o
+                                    bien</span></div>
+                        </div>
+
+                        <!-- Option 2: By Phone -->
+                        <div class="space-y-4">
+                            <label
+                                class="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] block text-left ml-2">Opción
+                                B: Por Teléfono (Ver todas)</label>
+                            <form id="phone-form" class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">phone</span>
+                                <input type="tel" id="user-phone" placeholder="10 dígitos (ej. 55 1234 5678)"
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 pl-12 pr-24 text-sm focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600">
+                                <button type="submit"
+                                    class="absolute right-2 top-2 bottom-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border border-primary/20">Buscar</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="quick-message" class="hidden mt-6 p-4 rounded-2xl text-xs font-semibold"></div>
+
+                    <div id="selection-container" class="hidden mt-8 space-y-6 pt-6 border-t border-white/10">
+                        <div class="text-left">
+                            <label
+                                class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-2 block">Selecciona
+                                la(s) cita(s) a cancelar</label>
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">event</span>
+                                <select id="appointment-select"
+                                    class="w-full glass-panel bg-black/40 border-white/10 rounded-2xl py-4 pl-12 pr-10 text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none text-white">
+                                    <!-- Options will be populated via JS -->
+                                </select>
+                                <span
+                                    class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">expand_more</span>
+                            </div>
+                        </div>
+
+                        <div id="cancel-message" class="hidden p-4 rounded-2xl text-xs font-semibold"></div>
+
                         <div class="group relative">
-                            <button type="submit"
-                                class="w-full bg-white/5 hover:bg-red-400/20 text-white border border-white/10 py-5 rounded-2xl font-bold transition-all"
-                                title="Debe cancelar al menos con 24 horas de antelación, de lo contrario se realizará el cargo.">
-                                Validar y Cancelar Cita
+                            <button id="cancel-btn"
+                                class="w-full bg-red-400/10 hover:bg-red-400/20 text-red-400 border border-red-400/20 py-5 rounded-2xl font-bold transition-all">
+                                Confirmar Cancelación
                             </button>
                             <p
                                 class="mt-2 text-[9px] text-red-400/60 opacity-0 group-hover:opacity-100 transition-opacity">
-                                * Debe cancelar al menos con 24 horas de antelación para evitar cargos.
+                                * Esta acción es irreversible y liberará tu horario.
                             </p>
                         </div>
-                    </form>
+                    </div>
 
                     <p class="mt-8 text-slate-500 text-[10px]">
                         También puedes contactarnos directamente respondiendo al correo de confirmación.

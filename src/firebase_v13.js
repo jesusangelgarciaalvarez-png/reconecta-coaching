@@ -182,3 +182,19 @@ export async function decrementUserVisit(phone) {
         console.error("Error decrementing visit count:", e);
     }
 }
+
+/**
+ * Get all appointments for a user by phone
+ */
+export async function getUserAppointments(phone) {
+    const cleanPhone = phone.replace(/\D/g, '');
+    const appointmentsRef = collection(db, "appointments");
+    const q = query(appointmentsRef, where("phone", "==", cleanPhone));
+    const querySnapshot = await getDocs(q);
+
+    const results = [];
+    querySnapshot.forEach(docSnap => {
+        results.push({ docId: docSnap.id, ...docSnap.data() });
+    });
+    return results;
+}
