@@ -14,6 +14,21 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
+    <style>
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .animate-shimmer {
+            animation: shimmer 3s infinite linear;
+        }
+    </style>
 </head>
 
 <body class="overflow-x-hidden">
@@ -101,6 +116,29 @@
             </div>
 
             <main class="relative z-10 max-w-6xl mx-auto w-full pt-10 pb-20 px-6">
+                <!-- Promo Flash Banner -->
+                <div id="promo-banner" class="hidden mb-10 animate-fade-in">
+                    <div
+                        class="glass-panel p-5 rounded-[2rem] border-primary/30 bg-primary/5 flex items-center justify-between gap-4 overflow-hidden relative group">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent w-full animate-shimmer pointer-events-none">
+                        </div>
+                        <div class="flex items-center gap-4 relative z-10">
+                            <div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-primary text-2xl">campaign</span>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] text-primary uppercase font-bold tracking-[0.2em] mb-1">Promoción
+                                    del Mes</h4>
+                                <p id="promo-text" class="text-white text-base font-medium leading-tight">Explorando
+                                    ofertas especiales para ti...</p>
+                            </div>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-primary/40 group-hover:text-primary transition-all text-3xl cursor-default hidden sm:block group-hover:scale-110">celebration</span>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
                     <!-- Left: Profile and Calendar Selection -->

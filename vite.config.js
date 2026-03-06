@@ -18,6 +18,7 @@ export default defineConfig({
                 adminQr: resolve(__dirname, 'admin-qr.html'),
                 adminStats: resolve(__dirname, 'admin-stats.html'),
                 adminBooking: resolve(__dirname, 'admin-booking.html'),
+                adminPromos: resolve(__dirname, 'admin-promos.html'),
             },
         },
     },

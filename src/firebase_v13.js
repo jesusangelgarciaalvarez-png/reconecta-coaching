@@ -198,3 +198,18 @@ export async function getUserAppointments(phone) {
     });
     return results;
 }
+/**
+ * Get monthly promotion text
+ */
+export async function getMonthlyPromotion(monthId) {
+    try {
+        const promoRef = doc(db, "promotions", monthId);
+        const docSnap = await getDoc(promoRef);
+        if (docSnap.exists()) {
+            return docSnap.data().text;
+        }
+    } catch (e) {
+        console.error("Error fetching promotion:", e);
+    }
+    return null;
+}

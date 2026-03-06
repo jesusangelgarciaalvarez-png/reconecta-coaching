@@ -2,7 +2,8 @@ import {
     manageUser,
     createAppointment,
     getMonthlyAvailability,
-    getOccupiedSlots
+    getOccupiedSlots,
+    getMonthlyPromotion
 } from './firebase_v13.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
         timeSection: document.getElementById('time-section'),
         formSection: document.getElementById('form-section'),
         prevMonthBtn: document.getElementById('prev-month'),
-        nextMonthBtn: document.getElementById('next-month')
+        nextMonthBtn: document.getElementById('next-month'),
+        promoBanner: document.getElementById('promo-banner'),
+        promoText: document.getElementById('promo-text')
     };
 
     // Validation
@@ -70,6 +73,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             console.warn("Background availability engine error:", e);
             // We already have [] in cache, so we just let the user book anyway
+        }
+    }
+
+    async function initPromotion() {
+        if (!elements.promoBanner) return;
+
+        const year = new Date().getFullYear();
+        const monthNum = (new Date().getMonth() + 1).toString().padStart(2, '0');
+        const monthId = `${year}-${monthNum}`;
+
+        const promo = await getMonthlyPromotion(monthId);
+        if (promo) {
+            elements.promoText.textContent = promo;
+            elements.promoBanner.classList.remove('hidden');
         }
     }
 
@@ -319,6 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Launch
+    // Start everything
+    initPromotion();
     initCalendar();
 });
 
