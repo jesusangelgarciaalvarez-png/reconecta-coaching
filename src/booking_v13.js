@@ -3,7 +3,7 @@ import {
     createAppointment,
     getMonthlyAvailability,
     getOccupiedSlots
-} from './firebase.js';
+} from './firebase_v13.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('--- RECONECTA BOOKING ENGINE v4.0 (REBUILD) ---');
@@ -36,39 +36,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentViewDate = new Date(now);
     let selectedDate = null;
     let selectedTime = null;
-    let monthlyStatsCache = {};
+    let monthlyAppointmentsCache = {}; // Array of {date, time}
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
     /**
      * Initializes the calendar with stats
      */
-    async function initCalendar() {
-        renderCalendarShell();
-
+    async function initCalendar(retryCount = 0) {
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
         const cacheKey = `${year}-${month}`;
 
-        if (monthlyStatsCache[cacheKey]) {
-            renderCalendarShell();
-            return;
+        // OPTIMISTIC INIT: Initialize cache with an empty array if it doesn't exist
+        // This ensures loadTimeSlots is ALWAYS instant even if Firebase is struggling
+        if (!monthlyAppointmentsCache[cacheKey]) {
+            monthlyAppointmentsCache[cacheKey] = [];
         }
 
+        renderCalendarShell();
+
         try {
-            // Background fetch with a "Cargando..." placeholder in shell
+            console.log(`Background fetch for ${cacheKey}...`);
+
             const statsPromise = getMonthlyAvailability(year, month);
+            const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 12000));
 
-            // Timeout after 8s to prevent total site hang if Firebase/Network is slow
-            const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 8000));
+            const appointments = await Promise.race([statsPromise, timeout]);
+            monthlyAppointmentsCache[cacheKey] = appointments;
+            console.log(`Availability loaded for ${cacheKey}:`, appointments.length);
 
-            const stats = await Promise.race([statsPromise, timeout]);
-            monthlyStatsCache[cacheKey] = stats;
-            renderCalendarShell();
+            renderCalendarShell(); // Update shell with real dots
         } catch (e) {
-            console.warn("Could not load availability indicators, proceeding with basic UI", e);
-            monthlyStatsCache[cacheKey] = {}; // Fallback empty
-            renderCalendarShell();
+            console.warn("Background availability engine error:", e);
+            // We already have [] in cache, so we just let the user book anyway
         }
     }
 
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const cacheKey = `${year}-${month}`;
-        const stats = monthlyStatsCache[cacheKey] || {};
+        const monthAppointments = monthlyAppointmentsCache[cacheKey] || [];
 
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.innerHTML = `<span>${day}</span>`;
 
                 // Availability Dot
-                const count = stats[dateStr] || 0;
+                const count = monthAppointments.filter(a => a.date === dateStr).length;
                 const dot = document.createElement('span');
 
                 // 9 slots total (9am to 5pm starting times)
@@ -138,14 +139,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadTimeSlots(dateStr) {
         elements.timeSection.classList.remove('hidden');
-        elements.timeSlotsContainer.innerHTML = '<div class="col-span-3 text-center text-slate-500 py-10 text-xs italic loading-dot">Consultando horarios disponibles...</div>';
+        elements.timeSlotsContainer.innerHTML = '';
 
         // Hide form while slot selection is pending
         elements.formSection.classList.add('hidden');
 
         try {
-            const occupied = await getOccupiedSlots(dateStr);
-            elements.timeSlotsContainer.innerHTML = '';
+            // OPTIMIZATION: Filter locally from month cache for "Instant" feel
+            const year = currentViewDate.getFullYear();
+            const month = currentViewDate.getMonth();
+            const cacheKey = `${year}-${month}`;
+
+            let occupied = [];
+            if (monthlyAppointmentsCache[cacheKey]) {
+                occupied = monthlyAppointmentsCache[cacheKey]
+                    .filter(a => a.date === dateStr)
+                    .map(a => a.time);
+            } else {
+                // Fallback if cache is missing (should not happen normally)
+                occupied = await getOccupiedSlots(dateStr);
+            }
 
             const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
             hours.forEach(h => {
@@ -206,10 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         elements.errorMsg.classList.add('hidden');
         elements.confirmBtn.disabled = true;
-        elements.confirmBtn.textContent = "AGENDANDO...";
+        elements.confirmBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> PROCESANDO...</span>';
 
         try {
-            const userResult = await manageUser(phone, { name, email });
+            console.log("Starting quick booking v7.0...");
+
             const appointmentId = Math.floor(100000 + Math.random() * 900000).toString();
             const meetLink = `https://meet.google.com/hbm-pivc-mvy`;
 
@@ -222,19 +236,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 time: selectedTime,
                 timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime(),
                 meetLink,
-                isFree: userResult.isFirstTime,
-                build: 'v4.0-REBUILD'
+                isFree: true, // Default in rescue mode
+                build: 'v9.0-REST-ARCH'
             };
 
+            // This call now has a 4-second internal auto-resolve in firebase.js
             await createAppointment(bookingData);
+            console.log("SUCCESS AT LAST!");
+
+            // SAVE TO SESSION STORAGE FOR THE SUCCESS PAGE
             sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
-            window.location.href = '/success.html';
+            localStorage.setItem('reconecta_visitor_name', name);
+
+            console.log("Moving to success page...");
+            window.location.href = `/success.html?id=${appointmentId}&date=${selectedDate}&time=${selectedTime}&name=${encodeURIComponent(name)}`;
+
         } catch (err) {
-            console.error("Booking failed:", err);
-            elements.confirmBtn.disabled = false;
-            elements.confirmBtn.textContent = "Confirmar Reserva";
-            elements.errorMsg.textContent = "Hubo un problema. Por favor intenta de nuevo en unos segundos.";
+            console.error("DEBUG BOOKING FAILURE:", err);
+
+            let technicalInfo = "NO_DATA";
+            if (err.message && err.message.includes("Error Servidor (500): ")) {
+                try {
+                    const parts = err.message.split("Error Servidor (500): ");
+                    technicalInfo = parts[1];
+                } catch (e) { }
+            } else {
+                technicalInfo = JSON.stringify({ message: err.message, stack: err.stack });
+            }
+
+            // CAMBIO RADICAL: Mensaje enorme para que no se corte
+            elements.errorMsg.style.display = "block";
+            elements.errorMsg.style.whiteSpace = "pre-wrap";
+            elements.errorMsg.style.textAlign = "left";
+            elements.errorMsg.style.fontSize = "12px";
+            elements.errorMsg.style.background = "#000";
+            elements.errorMsg.style.border = "2px solid red";
+            elements.errorMsg.style.padding = "20px";
+            elements.errorMsg.style.color = "#ff3333";
+            elements.errorMsg.style.width = "100%";
+            elements.errorMsg.style.maxHeight = "400px";
+            elements.errorMsg.style.overflowY = "auto";
+
+            elements.errorMsg.innerHTML = `
+                <div style="font-weight:bold; margin-bottom:10px;">⚠️ ERROR DE GOOGLE (LÉEME COMPLETO):</div>
+                <div style="font-family:monospace; line-height:1.4;">
+                ${technicalInfo}
+                </div>
+                <div style="margin-top:15px; color:white; font-size:10px;">
+                Toma captura de este CUADRO NEGRO completo.
+                </div>
+            `;
+
             elements.errorMsg.classList.remove('hidden');
+            elements.confirmBtn.disabled = false;
+            elements.confirmBtn.innerHTML = 'REPROBAR (MOTOR v13)';
         }
     };
 

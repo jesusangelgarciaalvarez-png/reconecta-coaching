@@ -1,4 +1,4 @@
-import { getAppointment, deleteAppointment } from './firebase.js';
+import { getAppointment, deleteAppointment } from './firebase_v13.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const cancelForm = document.getElementById('cancel-form');

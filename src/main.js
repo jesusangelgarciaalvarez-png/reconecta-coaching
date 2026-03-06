@@ -1,4 +1,5 @@
 import './index.css'
+import './tracker.js'
 
 console.log('Bold Empowerment App Initialized');
 

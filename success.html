@@ -103,11 +103,30 @@
     <script type="module" src="/src/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const data = JSON.parse(sessionStorage.getItem('lastBooking'));
+            // Priority 1: Session Storage
+            let data = JSON.parse(sessionStorage.getItem('lastBooking'));
+
+            // Priority 2: URL Parameters (Rescue fallback)
+            if (!data) {
+                console.log("No session data found, using URL rescue...");
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('id')) {
+                    data = {
+                        id: params.get('id'),
+                        name: params.get('name') || "Consultante Reconecta", // Fallback name from URL
+                        email: "",
+                        time: params.get('time') || "--:--",
+                        date: params.get('date'),
+                        timestamp: params.get('date') && params.get('time') ? new Date(`${params.get('date')}T${params.get('time')}`).getTime() : Date.now(),
+                        meetLink: "https://meet.google.com/hbm-pivc-mvy",
+                        isFree: true
+                    };
+                }
+            }
 
             if (data) {
                 document.getElementById('display-id').textContent = data.id;
-                document.getElementById('display-name').textContent = data.name;
+                document.getElementById('display-name').textContent = data.name || "Consultante Reconecta";
 
                 const bookingDate = new Date(data.timestamp);
                 const dateString = bookingDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -121,7 +140,7 @@
 
                 // Google Calendar Link Generation with proper dates
                 const adminEmail = 'hola@reconectacoaching.com.mx';
-                const userEmail = data.email;
+                const userEmail = data.email || "";
                 const title = encodeURIComponent(`Sesión Reconecta: ${data.name} - ${data.id}`);
                 const details = encodeURIComponent(`Invitado: ${data.name}\n\nEsta es tu sesión de coaching confirmada.\nID de Cita (Clave Meet): ${data.id}\nLink Google Meet: ${data.meetLink}\n\nTe recordamos que la sesión inicia puntualmente.`);
 
@@ -136,8 +155,12 @@
                 const endHour = (parseInt(hour) + 1).toString().padStart(2, '0');
                 const end = `${year}${month}${day}T${endHour}0000`;
 
-                const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&add=${adminEmail},${userEmail}`;
+                const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&add=${adminEmail}${userEmail ? ',' + userEmail : ''}`;
                 document.getElementById('calendar-link').href = calendarUrl;
+            } else {
+                // Total failure fallback
+                document.getElementById('display-name').textContent = "Consultante";
+                document.getElementById('display-datetime').textContent = "Confirmada (ver correo)";
             }
         });
     </script>

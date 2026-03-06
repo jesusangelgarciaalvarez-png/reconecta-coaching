@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador QR | Reconecta Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/src/index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body class="overflow-x-hidden bg-[#050f0f]">
+    <div id="app">
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+            <a href="/admin.html" class="flex items-center gap-2 text-white no-underline">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="font-display italic text-xl">Volver al Panel</span>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-2xl">qr_code_2</span>
+                <span class="font-display italic text-xl font-bold text-white">Generador QR</span>
+            </div>
+        </header>
+
+        <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                    <!-- Setup Card -->
+                    <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
+                        <h2 class="font-display italic text-3xl text-white mb-6">Configurar QR</h2>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label
+                                    class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2 block">Enlace
+                                    de Destino</label>
+                                <input type="text" id="qr-link" value="https://reconectacoaching.com.mx"
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:border-primary/50">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2 block">Etiqueta
+                                    (Opcional)</label>
+                                <input type="text" id="qr-label" placeholder="Tarjeta de presentación, etc."
+                                    class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 px-6 text-sm text-white focus:outline-none focus:border-primary/50">
+                            </div>
+
+                            <button id="generate-btn"
+                                class="w-full bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] py-4 rounded-2xl font-bold transition-all shadow-xl shadow-primary/10 active:scale-95">
+                                Generar Nuevo Código
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Result Card -->
+                    <div class="glass-panel p-8 rounded-[2.5rem] border-white/10 flex flex-col items-center">
+                        <div id="qrcode-container" class="bg-white p-6 rounded-3xl mb-8 shadow-2xl shadow-primary/20">
+                            <!-- QR Generated here -->
+                        </div>
+
+                        <div class="text-center">
+                            <h3 id="display-label" class="text-white font-display italic text-xl mb-2">Reconecta Web
+                            </h3>
+                            <p id="display-link" class="text-slate-500 text-xs break-all mb-8">
+                                https://reconectacoaching.com.mx</p>
+
+                            <div class="flex gap-4">
+                                <button id="download-btn"
+                                    class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white py-3 px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">download</span>
+                                    Descargar
+                                </button>
+                                <button id="print-btn"
+                                    class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white py-3 px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">print</span>
+                                    Imprimir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guidance -->
+                <div class="mt-12 glass-panel p-6 rounded-[2rem] border-white/10 flex items-start gap-4">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Tip: Puedes usar este generador para crear códigos específicos para campañas impresas. Por
+                        ejemplo, añade <span class="text-white font-mono">?source=flyer</span> al final del enlace para
+                        rastrear de dónde vienen tus visitas en el dashboard.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth
+            if (sessionStorage.getItem('reconecta_admin_auth') !== 'true') {
+                window.location.href = '/admin.html';
+                return;
+            }
+
+            const qrContainer = document.getElementById('qrcode-container');
+            const linkInput = document.getElementById('qr-link');
+            const labelInput = document.getElementById('qr-label');
+            const generateBtn = document.getElementById('generate-btn');
+
+            let qrcode = new QRCode(qrContainer, {
+                text: linkInput.value,
+                width: 256,
+                height: 256,
+                colorDark: "#0a1f1f",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            generateBtn.addEventListener('click', () => {
+                const link = linkInput.value || 'https://reconectacoaching.com.mx';
+                const label = labelInput.value || 'Reconecta Web';
+
+                qrContainer.innerHTML = '';
+                qrcode = new QRCode(qrContainer, {
+                    text: link,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#0a1f1f",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                document.getElementById('display-label').textContent = label;
+                document.getElementById('display-link').textContent = link;
+            });
+
+            document.getElementById('download-btn').addEventListener('click', () => {
+                const img = qrContainer.querySelector('img');
+                if (img) {
+                    const canvas = qrContainer.querySelector('canvas');
+                    const link = document.createElement('a');
+                    link.download = `reconecta-qr-${Date.now()}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                }
+            });
+
+            document.getElementById('print-btn').addEventListener('click', () => {
+                window.print();
+            });
+        });
+    </script>
+</body>
+
+</html>

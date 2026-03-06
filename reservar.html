@@ -7,8 +7,8 @@
     <link rel="preload" href="/hero_reconecta_v3.png" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <title>Reserva | Reconecta (v4.0)</title>
-    <!-- Update: 2026-03-03 21:40 - REBUILD v4.0 -->
+    <title>Reserva | Reconecta (v4.2)</title>
+    <!-- Update: 2026-03-03 23:35 - REBUILD v4.2 -->
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
         rel="stylesheet">
@@ -19,15 +19,15 @@
 <body class="overflow-x-hidden">
     <!-- REBUILD VERIFICATION BANNER (Invisible to user, but visible in code/DOM) -->
     <div id="rebuild-banner"
-        style="background: #ecb613; color: #0a1f1f; text-align: center; font-family: monospace; font-size: 10px; padding: 2px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-        REBUILD v4.0 - ESTADO: OPERATIVO - 2026-03-03 21:40
+        style="background: #b45309; color: #ffffff; text-align: center; font-family: monospace; font-size: 10px; padding: 2px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold; border-bottom: 2px solid #ffffff;">
+        REBUILD v15.0 - ESTADO: SYNC-STABLE - 2026-03-04 01:15
     </div>
 
     <div id="app">
         <div class="relative min-h-screen flex flex-col pt-20 px-6">
             <!-- Background Backdrop -->
             <div class="absolute inset-0 z-0 bg-cover bg-center opacity-30 faded-bg pointer-events-none hero-zoom-crop"
-                style="background-image: url('/hero_reconecta_v3.png'); -webkit-user-select: none; user-select: none;">
+                style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560'); -webkit-user-select: none; user-select: none;">
             </div>
 
             <header
@@ -45,7 +45,7 @@
             <!-- Navigation Menu Overlay -->
             <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
                 <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop"
-                    style="background-image: url('/hero_reconecta_v3.png'); -webkit-user-select: none; user-select: none;">
+                    style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560'); -webkit-user-select: none; user-select: none;">
                 </div>
                 <div class="relative z-10 h-full flex flex-col p-8">
                     <header class="flex justify-between items-center mb-16">
@@ -77,10 +77,17 @@
 
             <main class="relative z-10 max-w-xl mx-auto w-full pt-10 pb-20">
                 <div class="glass-panel rounded-[2rem] p-6 md:p-8">
-                    <h1 class="font-display italic text-3xl md:text-5xl text-white mb-2 text-center">Elige tu tiempo
-                    </h1>
-                    <p class="text-slate-400 text-xs md:text-sm mb-10 text-center">
-                        Sesiones de 60 min • Lunes a Viernes (9:00 - 18:00)</p>
+                    <div class="flex flex-col items-center mb-10">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/40 mb-3 shadow-lg">
+                            <img src="/assets/betza.jpg" class="w-full h-full object-cover" alt="Betzabeth - Tu Coach">
+                        </div>
+                        <p class="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-4">"Te espero con
+                            gusto"</p>
+                        <h1 class="font-display italic text-3xl md:text-5xl text-white mb-2 text-center">Elige tu tiempo
+                        </h1>
+                        <p class="text-slate-400 text-xs md:text-sm text-center">Sesiones de 60 min • Lunes a Viernes
+                        </p>
+                    </div>
 
                     <!-- Date Selection Section -->
                     <div id="calendar-section" class="mb-10">
@@ -167,7 +174,7 @@
 
                     <div class="text-center">
                         <p class="text-[8px] text-white/10 font-mono tracking-widest uppercase">
-                            Build ID: 2026-03-03-REBUILD-V4.0 - PID: ALPHA_ONE
+                            Build ID: 2026-03-04-REBUILD-V6.3 - PID: SEC_MODE
                         </p>
                     </div>
                 </div>
@@ -177,7 +184,7 @@
 
     <!-- Scripts -->
     <script type="module" src="/src/main.js"></script>
-    <script type="module" src="/src/booking.js?v=4.0"></script>
+    <script type="module" src="/src/booking_v13.js?v=15.0"></script>
 
     <style>
         .v-grid-day-active {
