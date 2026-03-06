@@ -23,7 +23,7 @@
             <!-- REBUILD BANNER VERIFICATION -->
             <div
                 style="background: #065f46; color: #ffffff; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-                REBUILD v28.0 - STABLE - 2026-03-06 12:15 (Contrast Fixed)
+                REBUILD v29.0 - STABLE - 2026-03-06 (Multi-Select Ready)
             </div>
 
             <header
@@ -164,33 +164,11 @@
                     <div id="selection-container" class="hidden mt-8 space-y-6 pt-6 border-t border-white/10">
                         <div class="text-left">
                             <label
-                                class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-2 block">Selecciona
-                                la(s) cita(s) a cancelar</label>
-                            <div class="relative">
-                                <div class="relative group/select">
-                                    <span
-                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm group-hover/select:text-primary transition-colors">event</span>
-                                    <select id="appointment-select"
-                                        class="w-full glass-panel bg-black/60 border-white/10 rounded-2xl py-4 pl-12 pr-10 text-sm focus:outline-none focus:border-primary/50 transition-all appearance-none text-white cursor-pointer hover:border-white/20">
-                                        <!-- Options will be populated via JS -->
-                                    </select>
-                                    <span
-                                        class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none transition-transform group-focus-within/select:rotate-180">expand_more</span>
-                                </div>
-                                <style>
-                                    /* Force distinct colors for select options across all browsers */
-                                    #appointment-select option {
-                                        background-color: #0f172a;
-                                        /* Slate 900 */
-                                        color: #ffffff;
-                                        padding: 12px;
-                                    }
+                                class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Citas
+                                encontradas (Puedes marcar varias)</label>
 
-                                    /* Highlight color for better selection feel */
-                                    #appointment-select:focus {
-                                        box-shadow: 0 0 20px rgba(180, 83, 9, 0.1);
-                                    }
-                                </style>
+                            <div id="appointment-list" class="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                                <!-- Checkboxes will be populated via JS -->
                             </div>
                         </div>
 
@@ -198,14 +176,82 @@
 
                         <div class="group relative">
                             <button id="cancel-btn"
-                                class="w-full bg-red-400/10 hover:bg-red-400/20 text-red-400 border border-red-400/20 py-5 rounded-2xl font-bold transition-all">
+                                class="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-400/20 py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-sm">event_busy</span>
                                 Confirmar Cancelación
                             </button>
                             <p
-                                class="mt-2 text-[9px] text-red-400/60 opacity-0 group-hover:opacity-100 transition-opacity">
-                                * Esta acción es irreversible y liberará tu horario.
+                                class="mt-2 text-[9px] text-red-400/60 opacity-0 group-hover:opacity-100 transition-opacity text-center">
+                                * Esta acción es irreversible y liberará los horarios seleccionados.
                             </p>
                         </div>
+
+                        <style>
+                            .custom-scrollbar::-webkit-scrollbar {
+                                width: 4px;
+                            }
+
+                            .custom-scrollbar::-webkit-scrollbar-track {
+                                background: rgba(255, 255, 255, 0.05);
+                            }
+
+                            .custom-scrollbar::-webkit-scrollbar-thumb {
+                                background: rgba(255, 255, 255, 0.1);
+                                border-radius: 10px;
+                            }
+
+                            .appointment-item {
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                                padding: 16px;
+                                border-radius: 16px;
+                                background: rgba(255, 255, 255, 0.03);
+                                border: 1px solid rgba(255, 255, 255, 0.05);
+                                transition: all 0.3s ease;
+                                cursor: pointer;
+                                -webkit-user-select: none;
+                                user-select: none;
+                            }
+
+                            .appointment-item:hover {
+                                background: rgba(255, 255, 255, 0.06);
+                                border-color: rgba(255, 255, 255, 0.1);
+                            }
+
+                            .appointment-item.selected {
+                                background: rgba(239, 68, 68, 0.1);
+                                border-color: rgba(239, 68, 68, 0.3);
+                            }
+
+                            input[type="checkbox"] {
+                                appearance: none;
+                                width: 20px;
+                                height: 20px;
+                                border: 2px solid rgba(255, 255, 255, 0.2);
+                                border-radius: 6px;
+                                background: transparent;
+                                position: relative;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                            }
+
+                            input[type="checkbox"]:checked {
+                                background: #ef4444;
+                                border-color: #ef4444;
+                            }
+
+                            input[type="checkbox"]:checked::after {
+                                content: 'check';
+                                font-family: 'Material Symbols Outlined';
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                color: white;
+                                font-size: 14px;
+                            }
+                        </style>
                     </div>
 
                     <p class="mt-8 text-slate-500 text-[10px]">

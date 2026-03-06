@@ -4,12 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const idForm = document.getElementById('id-form');
     const phoneForm = document.getElementById('phone-form');
     const selectionContainer = document.getElementById('selection-container');
-    const appointmentSelect = document.getElementById('appointment-select');
-    const cancelBtn = document.getElementById('cancel-btn');
-    const quickMsg = document.getElementById('quick-message');
-
-    const idInput = document.getElementById('appointment-id');
-    const phoneInput = document.getElementById('user-phone');
+    const appointmentList = document.getElementById('appointment-list');
 
     let currentAppointments = [];
 
@@ -116,19 +111,51 @@ document.addEventListener('DOMContentLoaded', () => {
                         ? "Tus citas próximas están dentro del límite de 24 horas y no pueden cancelarse por aquí."
                         : "No encontramos citas pendientes con este número.", "warning");
                 } else {
-                    appointmentSelect.innerHTML = '';
+                    appointmentList.innerHTML = '';
+
+                    // Option: Select All
                     if (currentAppointments.length > 1) {
-                        const optAll = document.createElement('option');
-                        optAll.value = "all";
-                        optAll.textContent = "Seleccionar todas";
-                        appointmentSelect.appendChild(optAll);
+                        const allItem = document.createElement('div');
+                        allItem.className = 'appointment-item mb-4 bg-primary/10 border-primary/20';
+                        allItem.innerHTML = `
+                            <input type="checkbox" id="select-all-checkbox">
+                            <label for="select-all-checkbox" class="flex-1 text-xs text-white font-bold cursor-pointer">SELECCIONAR TODAS LAS CITAS</label>
+                        `;
+                        appointmentList.appendChild(allItem);
+
+                        const masterCb = allItem.querySelector('input');
+                        masterCb.onchange = () => {
+                            const cbs = appointmentList.querySelectorAll('.app-checkbox');
+                            cbs.forEach(cb => {
+                                cb.checked = masterCb.checked;
+                                cb.closest('.appointment-item').classList.toggle('selected', masterCb.checked);
+                            });
+                        };
                     }
 
                     currentAppointments.forEach(app => {
-                        const opt = document.createElement('option');
-                        opt.value = app.docId;
-                        opt.textContent = `${formatDate(app.date)} - ${app.time}`;
-                        appointmentSelect.appendChild(opt);
+                        const item = document.createElement('div');
+                        item.className = 'appointment-item';
+                        item.innerHTML = `
+                            <input type="checkbox" class="app-checkbox" value="${app.docId}" id="cb-${app.docId}">
+                            <div class="flex-1 cursor-pointer">
+                                <p class="text-white text-xs font-bold">${formatDate(app.date)}</p>
+                                <p class="text-slate-400 text-[10px] mt-1">${app.time} hrs • ID: ${app.appointmentId || 'N/A'}</p>
+                            </div>
+                        `;
+
+                        // Click anywhere in the item to toggle
+                        item.onclick = (e) => {
+                            if (e.target.tagName !== 'INPUT') {
+                                const cb = item.querySelector('input');
+                                cb.checked = !cb.checked;
+                                item.classList.toggle('selected', cb.checked);
+                            } else {
+                                item.classList.toggle('selected', e.target.checked);
+                            }
+                        };
+
+                        appointmentList.appendChild(item);
                     });
 
                     selectionContainer.classList.remove('hidden');
@@ -145,22 +172,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LOGIC: MULTI-CANCEL ---
     if (cancelBtn) {
         cancelBtn.onclick = async () => {
-            const val = appointmentSelect.value;
-            if (!val) return;
+            const checkedBoxes = Array.from(appointmentList.querySelectorAll('.app-checkbox:checked'));
+            if (checkedBoxes.length === 0) {
+                alert("Por favor selecciona al menos una cita para cancelar.");
+                return;
+            }
 
-            if (!confirm(val === 'all' ? "¿Deseas cancelar TODAS tus citas mostradas?" : "¿Confirmas la cancelación de esta sesión?")) return;
+            if (!confirm(`¿Confirmas la cancelación de las ${checkedBoxes.length} citas seleccionadas?`)) return;
 
             cancelBtn.disabled = true;
-            cancelBtn.textContent = "Cancelando...";
+            cancelBtn.textContent = "Procesando...";
 
             try {
-                const toCancel = val === 'all' ? currentAppointments : [currentAppointments.find(a => a.docId === val)];
-                for (const app of toCancel) {
-                    await deleteAppointment(app.docId, app.date, app.time);
-                    if (app.phone) await decrementUserVisit(app.phone);
+                for (const cb of checkedBoxes) {
+                    const docId = cb.value;
+                    const app = currentAppointments.find(a => a.docId === docId);
+                    if (app) {
+                        await deleteAppointment(app.docId, app.date, app.time);
+                        if (app.phone) await decrementUserVisit(app.phone);
+                    }
                 }
 
-                showMsg(toCancel.length > 1 ? "¡Todas las citas han sido canceladas!" : "¡Cita cancelada con éxito!", "success");
+                showMsg(checkedBoxes.length > 1 ? "¡Todas las citas seleccionadas han sido canceladas!" : "¡Cita cancelada con éxito!", "success");
                 selectionContainer.classList.add('hidden');
                 phoneInput.value = '';
             } catch (error) {
