@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Consultation | MedPro AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="src/index.css">
+    <script type="module" src="src/med-booking.js"></script>
+    <style>
+        :root {
+            --primary: #2dd4bf;
+            --primary-glow: rgba(45, 212, 191, 0.4);
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden bg-[#020617]">
+    <div id="app">
+        <!-- MEDICAL HEADER -->
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5 bg-black/20">
+            <a href="index.html" class="flex items-center gap-4 no-underline">
+                <div
+                    class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-[#042f2e] text-2xl font-bold">medical_services</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display italic text-lg font-bold text-white leading-none">MedPro AI</span>
+                    <span class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Clinical
+                        Portal</span>
+                </div>
+            </a>
+            <a href="index.html" class="text-white opacity-50 hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined">close</span>
+            </a>
+        </header>
+
+        <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
+            <div class="max-w-xl mx-auto">
+
+                <div id="error-message"
+                    class="hidden mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-2xl text-center">
+                </div>
+
+                <div class="glass-panel p-8 rounded-[2.5rem] border-white/5 relative overflow-hidden bg-white/[0.02]">
+                    <div id="step-1">
+                        <h2 class="font-display italic text-3xl text-white mb-2">Schedule Consultation</h2>
+                        <p class="text-slate-500 text-sm mb-8">Select a date for your medical assessment.</p>
+
+                        <div class="flex items-center justify-between mb-8 px-2">
+                            <h3 id="current-month-year" class="text-white font-display italic text-xl">Loading...</h3>
+                            <div class="flex gap-2">
+                                <button id="prev-month"
+                                    class="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-all">
+                                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                                </button>
+                                <button id="next-month"
+                                    class="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-all">
+                                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="calendar-container" class="mb-8 grid grid-cols-7 gap-1">
+                            <!-- Calendar injected here -->
+                        </div>
+
+                        <div id="time-slots-container" class="hidden grid grid-cols-3 gap-3 mb-8">
+                            <!-- Slots injected here -->
+                        </div>
+                    </div>
+
+                    <div id="step-2" class="hidden">
+                        <h2 class="font-display italic text-3xl text-white mb-8">Patient Information</h2>
+                        <div class="space-y-4">
+                            <input type="text" id="name" placeholder="Full Patient Name"
+                                class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-primary transition-all outline-none">
+                            <input type="email" id="email" placeholder="Email Address"
+                                class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-primary transition-all outline-none">
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="tel" id="phone" placeholder="Phone Number"
+                                    class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-primary transition-all outline-none">
+                                <select id="insurance"
+                                    class="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-4 text-slate-400 focus:border-primary transition-all outline-none appearance-none">
+                                    <option value="" disabled selected>Insurance Provider</option>
+                                    <option value="private">Private (No Insurance)</option>
+                                    <option value="gnp">GNP Seguros</option>
+                                    <option value="axa">AXA Health</option>
+                                    <option value="metlife">MetLife</option>
+                                    <option value="otros">Other Provider</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="confirm-booking"
+                            class="w-full bg-primary hover:bg-[#0d9488] text-[#042f2e] py-4 rounded-2xl font-bold text-base transition-all shadow-xl shadow-primary/10 mt-8 active:scale-95 disabled:opacity-50">
+                            Review Consultation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Checkout Modal with Insurance Adjustment -->
+        <div id="checkout-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center px-6">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckout()"></div>
+            <div
+                class="relative glass-panel w-full max-w-sm rounded-[2.5rem] p-8 border-white/10 animate-scale-up shadow-2xl bg-[#020617]">
+                <div class="flex flex-col items-center text-center mb-8">
+                    <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+                    </div>
+                    <h3 class="font-display italic text-2xl text-white">Clinical Summary</h3>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold mt-2">Insurance Benefit
+                        Applied</p>
+                </div>
+                <div class="space-y-4 mb-8">
+                    <div class="flex justify-between items-center px-2">
+                        <span class="text-xs text-slate-400">Regular Consultation</span>
+                        <span id="checkout-base-price" class="text-sm text-white font-mono">$1,200.00</span>
+                    </div>
+                    <div id="checkout-discount-row"
+                        class="hidden flex justify-between items-center px-2 py-2 bg-primary/10 rounded-xl border border-primary/20">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-xs">shield</span>
+                            <span id="insurance-tag"
+                                class="text-[10px] text-primary font-bold uppercase tracking-widest">Co-pay
+                                Coverage</span>
+                        </div>
+                        <span id="checkout-discount-amount"
+                            class="text-sm text-primary font-bold font-mono">-$0.00</span>
+                    </div>
+                    <div class="pt-4 border-t border-white/5 flex justify-between items-center px-2">
+                        <span class="text-base text-white font-bold italic font-display">Patient Responsibility</span>
+                        <span id="checkout-total-price"
+                            class="text-2xl text-primary font-black font-mono">$1,200.00</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <button id="pay-button"
+                        class="w-full bg-primary text-[#042f2e] py-4 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-3 hover:scale-[1.02] shadow-xl">
+                        Schedule & Confirm
+                    </button>
+                    <button onclick="closeCheckout()"
+                        class="w-full bg-transparent text-slate-500 py-2 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-all">
+                        Edit Information
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

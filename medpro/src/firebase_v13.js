@@ -1,0 +1,226 @@
+import { initializeApp } from "firebase/app";
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    addDoc,
+    updateDoc,
+    increment,
+    query,
+    where,
+    serverTimestamp,
+    deleteDoc,
+    arrayUnion,
+    arrayRemove
+} from "firebase/firestore";
+
+// Helper for Demo collections
+const getColl = (name) => {
+    const isDemo = window.isDemoMode === true;
+    if (isDemo) {
+        if (name === 'appointments') return 'demo_appointments';
+        if (name === 'days') return 'demo_days';
+        if (name === 'users') return 'demo_users';
+    }
+    return name;
+};
+
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM",
+    authDomain: "reconecta-ed650.firebaseapp.com",
+    projectId: "reconecta-ed650",
+    storageBucket: "reconecta-ed650.firebasestorage.app",
+    messagingSenderId: "148326324396",
+    appId: "1:148326324396:web:e4baa888d1b445055e2709",
+    measurementId: "G-FLT31CQN60"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/**
+ * Manage User - Ultra basic version to avoid blocks
+ */
+export async function manageUser(phone, userData) {
+    const cleanPhone = phone.replace(/\D/g, '');
+    const userRef = doc(db, getColl("users"), cleanPhone);
+    try {
+        setDoc(userRef, {
+            ...userData,
+            phone: cleanPhone,
+            lastActive: serverTimestamp(),
+        }, { merge: true }).catch(() => { });
+        return { isFirstTime: false };
+    } catch (e) {
+        return { isFirstTime: false };
+    }
+}
+
+/**
+ * Register a new appointment - BRIDGE MODE v8.1 (Enhanced Debug)
+ */
+export async function createAppointment(appointmentData) {
+    console.log("🚀 BRIDGE MODE v8.1: Iniciando envío al puente...");
+
+    // Controlador de tiempo para no dejar al usuario "pasmado"
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seg de límite
+
+    try {
+        const response = await fetch('/api/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(appointmentData),
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error del puente (Servidor):", errorText);
+            throw new Error(`Error Servidor (500): ${errorText}`);
+        }
+
+        const result = await response.json();
+        console.log("✅ Puente respondió con éxito:", result);
+        return result;
+
+    } catch (err) {
+        clearTimeout(timeoutId);
+        if (err.name === 'AbortError') {
+            throw new Error("El servidor tardó demasiado en responder (Timeout).");
+        }
+        console.error("Error de Red/Puente:", err);
+        throw err;
+    }
+}
+
+/**
+ * Get monthly availability by fetching all documents in 'days' for that range
+ */
+export async function getMonthlyAvailability(year, month) {
+    const daysRef = collection(db, getColl("days"));
+    const mStr = (month + 1).toString().padStart(2, '0');
+    const start = `${year}-${mStr}-01`;
+    const end = `${year}-${mStr}-31`;
+
+    const q = query(daysRef,
+        where("__name__", ">=", start),
+        where("__name__", "<=", end)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const results = [];
+
+    querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const date = docSnap.id;
+        if (data.times) {
+            data.times.forEach(time => results.push({ date, time }));
+        }
+    });
+
+    return results;
+}
+
+/**
+ * Get occupied slots
+ */
+export async function getOccupiedSlots(dateStr) {
+    const dayRef = doc(db, getColl("days"), dateStr);
+    const docSnap = await getDoc(dayRef);
+    if (docSnap.exists()) {
+        return docSnap.data().times || [];
+    }
+    return [];
+}
+
+/**
+ * Get an appointment by its 6-digit ID
+ */
+export async function getAppointment(appointmentId) {
+    const appointmentsRef = collection(db, getColl("appointments"));
+    const q = query(appointmentsRef, where("id", "==", appointmentId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) return null;
+    const docSnap = querySnapshot.docs[0];
+    return { docId: docSnap.id, ...docSnap.data() };
+}
+
+/**
+ * Delete/Cancel an appointment
+ */
+export async function deleteAppointment(docId, date, time) {
+    const appRef = doc(db, getColl("appointments"), docId);
+    await deleteDoc(appRef);
+    if (date && time) {
+        const dayRef = doc(db, getColl("days"), date);
+        try {
+            await updateDoc(dayRef, {
+                times: arrayRemove(time),
+                [`bookings.${time.replace(':', '_')}`]: ""
+            });
+        } catch (e) {
+            console.error("Error clearing availability:", e);
+        }
+    }
+}
+
+/**
+ * Decrement visit count for a user (used on valid cancellation)
+ */
+export async function decrementUserVisit(phone) {
+    if (!phone) return;
+    const cleanPhone = phone.replace(/\D/g, '');
+    const userRef = doc(db, getColl("users"), cleanPhone);
+    try {
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+            const currentCount = docSnap.data().visitCount || 0;
+            const newCount = Math.max(0, currentCount - 1);
+            await updateDoc(userRef, {
+                visitCount: newCount,
+                lastActive: serverTimestamp()
+            });
+        }
+    } catch (e) {
+        console.error("Error decrementing visit count:", e);
+    }
+}
+
+/**
+ * Get all appointments for a user by phone
+ */
+export async function getUserAppointments(phone) {
+    const cleanPhone = phone.replace(/\D/g, '');
+    const appointmentsRef = collection(db, getColl("appointments"));
+    const q = query(appointmentsRef, where("phone", "==", cleanPhone));
+    const querySnapshot = await getDocs(q);
+
+    const results = [];
+    querySnapshot.forEach(docSnap => {
+        results.push({ docId: docSnap.id, ...docSnap.data() });
+    });
+    return results;
+}
+/**
+ * Get monthly promotion text
+ */
+export async function getMonthlyPromotion(monthId) {
+    try {
+        const promoRef = doc(db, "promotions", monthId);
+        const docSnap = await getDoc(promoRef);
+        if (docSnap.exists()) {
+            return docSnap.data().text;
+        }
+    } catch (e) {
+        console.error("Error fetching promotion:", e);
+    }
+    return null;
+}

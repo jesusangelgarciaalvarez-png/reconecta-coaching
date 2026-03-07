@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedPro AI | Smart Clinic Management</title>
+    <link rel="preload"
+        href="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2560" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="src/index.css">
+    <style>
+        :root {
+            --primary: #2dd4bf;
+            /* Medical Teal */
+            --primary-glow: rgba(45, 212, 191, 0.4);
+        }
+
+        .med-badge {
+            background: linear-gradient(90deg, #2dd4bf, #0d9488);
+            color: #042f2e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden bg-[#020617]">
+    <div id="app">
+        <div class="relative min-h-screen flex flex-col pt-20">
+            <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+                <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2560"
+                    class="w-full h-full object-cover opacity-10" alt="Hospital Background">
+            </div>
+
+            <header
+                class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5 bg-black/20">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                        <span
+                            class="material-symbols-outlined text-[#042f2e] text-3xl font-bold">medical_services</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span
+                            class="font-display italic text-xl font-bold tracking-tight text-white leading-none">MedPro
+                            AI</span>
+                        <span
+                            class="text-[9px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Precision
+                            Clinical Management</span>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <a href="booking.html"
+                        class="bg-primary text-[#042f2e] px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all">Patient
+                        Portal</a>
+                </div>
+            </header>
+
+            <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pb-20">
+                <div class="max-w-4xl mx-auto pt-32">
+                    <div class="med-badge">Intelligent Healthcare v1.0</div>
+                    <h1
+                        class="font-display italic text-5xl md:text-7xl lg:text-8xl text-white mb-8 leading-[1.1] animate-fade-in-up">
+                        Smart <span class="text-primary font-bold">Clinical</span> Ecosystem.
+                    </h1>
+                    <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light leading-relaxed animate-fade-in-up"
+                        style="animation-delay: 0.2s;">
+                        Automate your practice with intelligent scheduling, insurance verification, and automated
+                        procedure tracking for high-performance medical teams.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 animate-fade-in-up"
+                        style="animation-delay: 0.4s;">
+                        <div class="glass-panel p-6 rounded-3xl border-white/5 text-left bg-white/[0.02]">
+                            <span class="material-symbols-outlined text-primary mb-4 text-3xl">verified_user</span>
+                            <h3 class="text-white font-bold mb-2">Insurance Logic</h3>
+                            <p class="text-slate-500 text-xs">Automated co-pay calculation and coverage verification
+                                during booking.</p>
+                        </div>
+                        <div class="glass-panel p-6 rounded-3xl border-white/5 text-left bg-white/[0.02]">
+                            <span class="material-symbols-outlined text-primary mb-4 text-3xl">medication</span>
+                            <h3 class="text-white font-bold mb-2">Procedure Slots</h3>
+                            <p class="text-slate-500 text-xs">Dynamic duration blocking based on specialized medical
+                                procedures.</p>
+                        </div>
+                        <div class="glass-panel p-6 rounded-3xl border-white/5 text-left bg-white/[0.02]">
+                            <span class="material-symbols-outlined text-primary mb-4 text-3xl">groups_3</span>
+                            <h3 class="text-white font-bold mb-2">Multi-Provider</h3>
+                            <p class="text-slate-500 text-xs">Single-interface coordination for multiple doctors and
+                                specialists.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="booking.html"
+                            class="bg-white/5 hover:bg-white/10 border border-white/10 px-8 py-4 rounded-2xl transition-all hover:scale-105 flex items-center justify-center gap-2 group">
+                            <span class="text-white font-bold">Try Clinic Portal</span>
+                            <span
+                                class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">health_metrics</span>
+                        </a>
+                        <a href="/admin-stats.html"
+                            class="bg-primary text-[#042f2e] px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105 flex items-center justify-center gap-2">
+                            Full Dashboard
+                            <span class="material-symbols-outlined">analytics</span>
+                        </a>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="relative z-10 py-10 border-t border-white/5 bg-black/10 text-center">
+                <p class="text-slate-600 text-[10px] uppercase tracking-widest">© 2026 MedPro AI - Clinical Intelligence
+                </p>
+            </footer>
+        </div>
+    </div>
+</body>
+
+</html>
