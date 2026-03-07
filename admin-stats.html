@@ -104,6 +104,13 @@
                         <div id="count-total" class="text-4xl font-display text-white mb-1">0</div>
                         <p class="text-slate-500 text-xs">Vidas alcanzadas</p>
                     </div>
+                    <div
+                        class="glass-panel p-6 rounded-3xl border-primary/20 bg-primary/5 flex flex-col items-center text-center">
+                        <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Ingresos
+                            Mes</span>
+                        <div id="revenue-month" class="text-4xl font-display text-white mb-1">$0</div>
+                        <p class="text-slate-500 text-xs">Recaudación actual</p>
+                    </div>
                 </div>
 
                 <!-- Charts Section -->
@@ -125,9 +132,9 @@
                     </div>
                 </div>
 
-                <!-- Detailed Table -->
-                <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
-                    <h2 class="font-display italic text-2xl text-white mb-8">Registro Detallado</h2>
+                <!-- Detailed Table: Visits -->
+                <div class="glass-panel p-8 rounded-[2.5rem] border-white/10 mb-12">
+                    <h2 class="font-display italic text-2xl text-white mb-8">Tráfico Web (Visitas)</h2>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -139,9 +146,31 @@
                                 </tr>
                             </thead>
                             <tbody id="visits-table-body">
-                                <!-- Data injected here -->
                                 <tr>
-                                    <td colspan="4" class="text-center text-slate-500 py-12">Cargando datos...</td>
+                                    <td colspan="4" class="text-center text-slate-500 py-12">Cargando visitas...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detailed Table: Appointments & Transactions -->
+                <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
+                    <h2 class="font-display italic text-2xl text-white mb-8">Citas y Transacciones</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>ID Cita</th>
+                                    <th>Fecha Sesión</th>
+                                    <th>Hora</th>
+                                    <th>Cobro</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center text-slate-500 py-12">Cargando citas...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -168,35 +197,45 @@
 
         async function loadStats() {
             try {
-                // Fetch visits from Firestore
-                const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/visits?pageSize=1000&key=${API_KEY}`;
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (!data.documents) {
-                    showEmpty();
-                    return;
-                }
-
-                const visits = data.documents.map(doc => {
-                    const fields = doc.fields;
+                // 1. Fetch Visits
+                const visitsUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/visits?pageSize=1000&key=${API_KEY}`;
+                const visitsRes = await fetch(visitsUrl);
+                const visitsData = await visitsRes.json();
+                const visits = (visitsData.documents || []).map(doc => {
+                    const f = doc.fields;
                     return {
-                        visitorId: fields.visitorId?.stringValue,
-                        name: fields.name?.stringValue || 'Anónimo',
-                        path: fields.path?.stringValue || '/',
-                        timestamp: parseInt(fields.timestamp?.integerValue) || 0,
-                        date: fields.date?.stringValue,
-                        month: fields.month?.stringValue
+                        visitorId: f.visitorId?.stringValue,
+                        name: f.name?.stringValue || 'Anónimo',
+                        path: f.path?.stringValue || '/',
+                        timestamp: parseInt(f.timestamp?.integerValue) || 0,
+                        date: f.date?.stringValue,
+                        month: f.month?.stringValue
                     };
                 }).sort((a, b) => b.timestamp - a.timestamp);
 
-                renderDashboard(visits);
+                // 2. Fetch Appointments
+                const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/appointments?pageSize=1000&key=${API_KEY}`;
+                const appRes = await fetch(appUrl);
+                const appData = await appRes.json();
+                const appointments = (appData.documents || []).map(doc => {
+                    const f = doc.fields;
+                    return {
+                        id: f.id?.stringValue,
+                        name: f.name?.stringValue,
+                        date: f.date?.stringValue,
+                        time: f.time?.stringValue,
+                        price: f.price?.stringValue || '0',
+                        timestamp: parseInt(f.timestamp?.integerValue) || 0
+                    };
+                }).sort((a, b) => b.timestamp - a.timestamp);
+
+                renderDashboard(visits, appointments);
             } catch (err) {
                 console.error('Error loading stats:', err);
             }
         }
 
-        function renderDashboard(visits) {
+        function renderDashboard(visits, appointments) {
             const today = new Date().toISOString().split('T')[0];
             const thisMonth = today.substring(0, 7);
 
@@ -204,9 +243,15 @@
             const todayVisits = visits.filter(v => v.date === today).length;
             const monthVisits = visits.filter(v => v.month === thisMonth).length;
 
+            // Monthly Revenue calculate
+            const monthRevenue = appointments
+                .filter(a => a.date?.startsWith(thisMonth))
+                .reduce((acc, a) => acc + parseFloat(a.price || 0), 0);
+
             document.getElementById('count-today').textContent = todayVisits;
             document.getElementById('count-month').textContent = monthVisits;
             document.getElementById('count-total').textContent = visits.length;
+            document.getElementById('revenue-month').textContent = `$${monthRevenue}`;
 
             // 2. Visits Chart (By Day for the last 14 days)
             const dailyCounts = {};
@@ -300,6 +345,30 @@
                     <td>${timeStr}</td>
                 `;
                 tableBody.appendChild(tr);
+            });
+
+            // 5. Appointments Table
+            const appTableBody = document.getElementById('appointments-table-body');
+            appTableBody.innerHTML = '';
+
+            if (appointments.length === 0) {
+                appTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-slate-500 py-12">No hay citas registradas aún.</td></tr>';
+            }
+
+            appointments.slice(0, 50).forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-bold text-white">${a.name}</td>
+                    <td class="text-slate-500 font-mono text-[10px]">${a.id}</td>
+                    <td class="text-primary font-bold">${a.date}</td>
+                    <td>${a.time}</td>
+                    <td>
+                        <span class="bg-primary/20 text-primary px-2 py-1 rounded-md text-xs font-bold border border-primary/30">
+                            $${a.price}
+                        </span>
+                    </td>
+                `;
+                appTableBody.appendChild(tr);
             });
         }
 

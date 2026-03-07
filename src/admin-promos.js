@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const promosRef = collection(db, "promotions");
         const querySnapshot = await getDocs(promosRef);
         const dataMap = {};
-        querySnapshot.forEach(doc => dataMap[doc.id] = doc.data().text);
+        querySnapshot.forEach(doc => dataMap[doc.id] = doc.data());
 
         // Generate cards for the next 12 months
         for (let i = 0; i < 12; i++) {
@@ -71,11 +71,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             card.dataset.id = monthId;
 
             card.innerHTML = `
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center mb-2">
                     <span class="text-xs font-bold text-primary uppercase tracking-widest">${monthName} ${year}</span>
                     <span class="material-symbols-outlined text-white/20 text-sm">edit_note</span>
                 </div>
-                <textarea class="promo-input" placeholder="Escribe la promoción aquí..." rows="3">${dataMap[monthId] || ''}</textarea>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-white/40 uppercase font-bold tracking-tighter">Promoción Flash</label>
+                    <textarea class="promo-input" placeholder="Escribe la promoción aquí..." rows="2">${dataMap[monthId]?.text || ''}</textarea>
+                </div>
+                <div class="pt-4 border-t border-white/5 flex items-center justify-between mt-auto">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-xs">payments</span>
+                        <label class="text-[10px] text-primary uppercase font-bold tracking-widest">Tarifa Base</label>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs text-slate-500">$</span>
+                        <input type="number" class="price-input bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-white w-20 text-right focus:border-primary/50 outline-none" 
+                               placeholder="0" value="${dataMap[monthId]?.price || '600'}">
+                    </div>
+                </div>
             `;
 
             grid.appendChild(card);
@@ -101,9 +115,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         cards.forEach(card => {
             const id = card.dataset.id;
-            const text = card.querySelector('textarea').value.trim();
-            if (text) {
-                promises.push(setDoc(doc(db, "promotions", id), { text, updatedAt: new Date() }));
+            const text = card.querySelector('.promo-input').value.trim();
+            const price = card.querySelector('.price-input').value.trim();
+
+            if (text || price) {
+                promises.push(setDoc(doc(db, "promotions", id), {
+                    text: text || '',
+                    price: price || '0',
+                    updatedAt: new Date()
+                }, { merge: true }));
             }
         });
 

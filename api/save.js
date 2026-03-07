@@ -14,6 +14,22 @@ export default async function handler(req, res) {
 
         // 1. SAVE APPOINTMENT RECORD
         let promoValidation = "NONE";
+        let basePrice = "600"; // Default
+
+        // FETCH MONTHLY PRICE
+        try {
+            const monthId = data.date.substring(0, 7); // YYYY-MM
+            const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/promotions/${monthId}?key=${API_KEY}`;
+            const promoRead = await fetch(promoUrl);
+            if (promoRead.ok) {
+                const promoData = await promoRead.json();
+                if (promoData.fields && promoData.fields.price) {
+                    basePrice = promoData.fields.price.stringValue;
+                }
+            }
+        } catch (e) {
+            console.warn("Could not fetch monthly price, using default");
+        }
 
         // FRIEND PROMO VALIDATION (CHECK IF FRIEND EXISTS)
         if (data.friendPhone) {
@@ -33,9 +49,10 @@ export default async function handler(req, res) {
                 time: { stringValue: String(data.time) },
                 friendPhone: { stringValue: String(data.friendPhone || "") },
                 promoValidation: { stringValue: promoValidation },
+                price: { stringValue: String(basePrice) },
                 meetLink: { stringValue: "https://meet.google.com/hbm-pivc-mvy" },
                 timestamp: { integerValue: String(Date.now()) },
-                systemInfo: { stringValue: "v19.0-FRIEND-SYNC" }
+                systemInfo: { stringValue: "v20.0-PRICE-TRACK" }
             }
         };
 
