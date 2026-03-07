@@ -14,6 +14,7 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="/src/index.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .table-container {
             overflow-x: auto;
@@ -155,8 +156,15 @@
                 </div>
 
                 <!-- Detailed Table: Appointments & Transactions -->
-                <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
-                    <h2 class="font-display italic text-2xl text-white mb-8">Citas y Transacciones</h2>
+                <div id="report-content" class="glass-panel p-8 rounded-[2.5rem] border-white/10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <h2 class="font-display italic text-2xl text-white">Citas y Transacciones</h2>
+                        <button onclick="exportToPDF()"
+                            class="bg-primary/10 hover:bg-primary text-primary hover:text-black border border-primary/30 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                            Exportar Reporte (PDF)
+                        </button>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -372,8 +380,32 @@
             });
         }
 
+
         function showEmpty() {
             document.getElementById('visits-table-body').innerHTML = '<tr><td colspan="4" class="text-center text-slate-500 py-12">No hay datos de visitas registrados aún.</td></tr>';
+        }
+
+        async function exportToPDF() {
+            const element = document.getElementById('report-content');
+            const opt = {
+                margin: 10,
+                filename: `Reconecta_Reporte_${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#050f0f' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Temporary styling for PDF
+            const originalStyle = element.style.background;
+            element.style.background = '#050f0f';
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (err) {
+                console.error("PDF Export Error:", err);
+            } finally {
+                element.style.background = originalStyle;
+            }
         }
     </script>
 </body>
