@@ -9,8 +9,15 @@ export default async function handler(req, res) {
     const PROJECT_ID = "reconecta-ed650";
     const API_KEY = "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM";
 
+    // DEMO MODE CONFIG
+    const isDemo = data.isDemo === true;
+    const COLL_APP = isDemo ? "demo_appointments" : "appointments";
+    const COLL_DAYS = isDemo ? "demo_days" : "days";
+    const COLL_USERS = isDemo ? "demo_users" : "users";
+    const COLL_PROMOS = "promotions"; // Promos are shared or could be demo_promos
+
     try {
-        console.log("SYNC-BRIDGE: Processing booking for", data.id, "at", data.date);
+        console.log(`SYNC-BRIDGE: Processing ${isDemo ? 'DEMO' : 'LIVE'} booking for`, data.id, "at", data.date);
 
         // 1. SAVE APPOINTMENT RECORD
         let promoValidation = "NONE";
@@ -20,7 +27,7 @@ export default async function handler(req, res) {
         // FETCH MONTHLY PROMO DATA
         try {
             const monthId = data.date.substring(0, 7); // YYYY-MM
-            const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/promotions/${monthId}?key=${API_KEY}`;
+            const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_PROMOS}/${monthId}?key=${API_KEY}`;
             const promoRead = await fetch(promoUrl);
             if (promoRead.ok) {
                 const promoData = await promoRead.json();
@@ -36,7 +43,7 @@ export default async function handler(req, res) {
         }
 
         // 2. FETCH USER VISIT HISTORY (FOR TARGETED PROMOS)
-        const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${data.phone}?key=${API_KEY}`;
+        const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
         let visitCount = 1;
         const userRead = await fetch(userUrl);
         if (userRead.ok) {
@@ -83,7 +90,7 @@ export default async function handler(req, res) {
 
         // FRIEND PROMO VALIDATION (CHECK IF FRIEND EXISTS)
         if (data.friendPhone) {
-            const checkUserUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${data.friendPhone}?key=${API_KEY}`;
+            const checkUserUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.friendPhone}?key=${API_KEY}`;
             const checkRes = await fetch(checkUserUrl);
             promoValidation = checkRes.ok ? "FRIEND_VERIFIED" : "FRIEND_NOT_FOUND";
             // Apply 20% friend discount if verified
@@ -93,7 +100,7 @@ export default async function handler(req, res) {
             }
         }
 
-        const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/appointments/${data.id}?key=${API_KEY}`;
+        const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_APP}/${data.id}?key=${API_KEY}`;
         const appBody = {
             fields: {
                 id: { stringValue: String(data.id) },
@@ -125,7 +132,7 @@ export default async function handler(req, res) {
         }
 
         // 4. UPDATE AVAILABILITY MAP (days/{date})
-        const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/days/${data.date}?key=${API_KEY}`;
+        const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_DAYS}/${data.date}?key=${API_KEY}`;
 
         // Calculate block times (current + next hour if doubleSlot is active)
         const blockTimes = [data.time];
@@ -170,7 +177,7 @@ export default async function handler(req, res) {
         });
 
         // 3. TRACK USER VISITS (users/{phone})
-        const userUrlUpdate = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${data.phone}?key=${API_KEY}`;
+        const userUrlUpdate = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
         const userBody = {
             fields: {
                 name: { stringValue: String(data.name) },

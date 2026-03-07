@@ -17,6 +17,17 @@ import {
     arrayRemove
 } from "firebase/firestore";
 
+// Helper for Demo collections
+const getColl = (name) => {
+    const isDemo = window.isDemoMode === true;
+    if (isDemo) {
+        if (name === 'appointments') return 'demo_appointments';
+        if (name === 'days') return 'demo_days';
+        if (name === 'users') return 'demo_users';
+    }
+    return name;
+};
+
 // Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM",
@@ -36,7 +47,7 @@ const db = getFirestore(app);
  */
 export async function manageUser(phone, userData) {
     const cleanPhone = phone.replace(/\D/g, '');
-    const userRef = doc(db, "users", cleanPhone);
+    const userRef = doc(db, getColl("users"), cleanPhone);
     try {
         setDoc(userRef, {
             ...userData,
@@ -93,7 +104,7 @@ export async function createAppointment(appointmentData) {
  * Get monthly availability by fetching all documents in 'days' for that range
  */
 export async function getMonthlyAvailability(year, month) {
-    const daysRef = collection(db, "days");
+    const daysRef = collection(db, getColl("days"));
     const mStr = (month + 1).toString().padStart(2, '0');
     const start = `${year}-${mStr}-01`;
     const end = `${year}-${mStr}-31`;
@@ -121,7 +132,7 @@ export async function getMonthlyAvailability(year, month) {
  * Get occupied slots
  */
 export async function getOccupiedSlots(dateStr) {
-    const dayRef = doc(db, "days", dateStr);
+    const dayRef = doc(db, getColl("days"), dateStr);
     const docSnap = await getDoc(dayRef);
     if (docSnap.exists()) {
         return docSnap.data().times || [];
@@ -133,7 +144,7 @@ export async function getOccupiedSlots(dateStr) {
  * Get an appointment by its 6-digit ID
  */
 export async function getAppointment(appointmentId) {
-    const appointmentsRef = collection(db, "appointments");
+    const appointmentsRef = collection(db, getColl("appointments"));
     const q = query(appointmentsRef, where("id", "==", appointmentId));
     const querySnapshot = await getDocs(q);
 
@@ -146,10 +157,10 @@ export async function getAppointment(appointmentId) {
  * Delete/Cancel an appointment
  */
 export async function deleteAppointment(docId, date, time) {
-    const appRef = doc(db, "appointments", docId);
+    const appRef = doc(db, getColl("appointments"), docId);
     await deleteDoc(appRef);
     if (date && time) {
-        const dayRef = doc(db, "days", date);
+        const dayRef = doc(db, getColl("days"), date);
         try {
             await updateDoc(dayRef, {
                 times: arrayRemove(time),
@@ -167,7 +178,7 @@ export async function deleteAppointment(docId, date, time) {
 export async function decrementUserVisit(phone) {
     if (!phone) return;
     const cleanPhone = phone.replace(/\D/g, '');
-    const userRef = doc(db, "users", cleanPhone);
+    const userRef = doc(db, getColl("users"), cleanPhone);
     try {
         const docSnap = await getDoc(userRef);
         if (docSnap.exists()) {
@@ -188,7 +199,7 @@ export async function decrementUserVisit(phone) {
  */
 export async function getUserAppointments(phone) {
     const cleanPhone = phone.replace(/\D/g, '');
-    const appointmentsRef = collection(db, "appointments");
+    const appointmentsRef = collection(db, getColl("appointments"));
     const q = query(appointmentsRef, where("phone", "==", cleanPhone));
     const querySnapshot = await getDocs(q);
 

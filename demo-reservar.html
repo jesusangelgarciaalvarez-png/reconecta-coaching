@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Session | CoachPro AI Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/src/index.css">
+    <script type="module" src="/src/demo-booking.js"></script>
+    <style>
+        .demo-overlay-banner {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: 15px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden bg-[#050f0f]">
+    <div id="app">
+        <!-- DEMO BANNER -->
+        <div class="demo-overlay-banner">
+            <span class="material-symbols-outlined text-primary text-sm mr-2">science</span>
+            Environment: Simulation Mode Active
+        </div>
+
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+            <a href="/demo.html" class="flex items-center gap-4 no-underline">
+                <img src="/demo/logo.png" alt="CoachPro Logo"
+                    class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow-sm">
+                <div class="flex flex-col">
+                    <span class="font-display italic text-xl font-bold text-white leading-none">CoachPro AI</span>
+                    <span class="text-[9px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Scheduling
+                        Demo</span>
+                </div>
+            </a>
+            <a href="/demo.html" class="text-white opacity-50 hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined">close</span>
+            </a>
+        </header>
+
+        <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
+            <div class="max-w-xl mx-auto">
+
+                <!-- PROMO FLASH (Demo) -->
+                <div id="promo-banner"
+                    class="hidden mb-8 glass-panel border-primary/30 p-4 rounded-2xl animate-fade-in">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">campaign</span>
+                        <p id="promo-text" class="text-xs text-white uppercase tracking-wider font-bold"></p>
+                    </div>
+                </div>
+
+                <div id="error-message"
+                    class="hidden mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-2xl text-center">
+                </div>
+
+                <div class="glass-panel p-8 rounded-[2.5rem] border-white/10 relative overflow-hidden">
+                    <div id="step-1">
+                        <h2 class="font-display italic text-3xl text-white mb-2">Select your Session</h2>
+                        <p class="text-slate-500 text-sm mb-8">All times are displayed in your local timezone.</p>
+
+                        <div class="flex items-center justify-between mb-8 px-2">
+                            <h3 id="current-month-year" class="text-white font-display italic text-xl">Loading...</h3>
+                            <div class="flex gap-2">
+                                <button id="prev-month"
+                                    class="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-all">
+                                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                                </button>
+                                <button id="next-month"
+                                    class="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-all">
+                                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="calendar-container" class="mb-8 grid grid-cols-7 gap-1">
+                            <!-- Calendar injected here -->
+                        </div>
+
+                        <div id="time-slots-container" class="hidden grid grid-cols-3 gap-3 mb-8">
+                            <!-- Slots injected here -->
+                        </div>
+                    </div>
+
+                    <div id="step-2" class="hidden">
+                        <h2 class="font-display italic text-3xl text-white mb-8">Registration</h2>
+                        <div class="space-y-4">
+                            <input type="text" id="name" placeholder="Full Name"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary transition-all outline-none">
+                            <input type="email" id="email" placeholder="Email Address"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary transition-all outline-none">
+                            <input type="tel" id="phone" placeholder="Phone (e.g. 52 1234 5678)"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary transition-all outline-none">
+
+                            <div id="friend-promo-container" class="hidden pt-4 border-t border-white/5">
+                                <p class="text-[10px] text-primary font-bold uppercase tracking-widest mb-3">Friend
+                                    Referral Reward Active</p>
+                                <input type="tel" id="friend-phone" placeholder="Friend's Phone (for 20% discount)"
+                                    class="w-full bg-primary/5 border border-primary/20 rounded-2xl px-6 py-4 text-primary placeholder:text-primary/50 focus:border-primary transition-all outline-none text-sm">
+                            </div>
+                        </div>
+
+                        <button id="confirm-booking"
+                            class="w-full bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] py-4 rounded-2xl font-bold text-base transition-all shadow-xl shadow-primary/10 mt-8 active:scale-95 disabled:opacity-50 disabled:cursor-wait">
+                            Book Session
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Smart Checkout Modal (Demo) -->
+        <div id="checkout-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center px-6">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeCheckout()"></div>
+            <div
+                class="relative glass-panel w-full max-w-sm rounded-[2.5rem] p-8 border-white/20 animate-scale-up shadow-2xl">
+                <div class="flex flex-col items-center text-center mb-8">
+                    <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-primary text-3xl">payments</span>
+                    </div>
+                    <h3 class="font-display italic text-2xl text-white">Payment Summary</h3>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold mt-2">CoachPro Intelligent
+                        Billing</p>
+                </div>
+                <div class="space-y-4 mb-8">
+                    <div class="flex justify-between items-center px-2">
+                        <span class="text-xs text-slate-400">Standard Rate</span>
+                        <span id="checkout-base-price" class="text-sm text-white font-mono">$600.00</span>
+                    </div>
+                    <div id="checkout-discount-row"
+                        class="hidden flex justify-between items-center px-2 py-2 bg-primary/10 rounded-xl border border-primary/20">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-xs">auto_awesome</span>
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-widest">Savings
+                                Applied</span>
+                        </div>
+                        <span id="checkout-discount-amount"
+                            class="text-sm text-primary font-bold font-mono">-$0.00</span>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex justify-between items-center px-2">
+                        <span class="text-base text-white font-bold italic font-display">Total Due</span>
+                        <span id="checkout-total-price"
+                            class="text-2xl text-primary font-black font-mono">$600.00</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <button id="pay-button"
+                        class="w-full bg-white text-black py-4 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-3 hover:bg-slate-200 active:scale-95 shadow-xl">
+                        <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+                        Pay & Schedule
+                    </button>
+                    <button onclick="closeCheckout()"
+                        class="w-full bg-transparent text-slate-500 py-2 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-all">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
