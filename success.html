@@ -44,6 +44,13 @@
                             Sesión de Regalo
                         </span>
                     </div>
+                    <div id="friend-promo-badge" class="hidden mb-6">
+                        <span
+                            class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] font-bold tracking-widest uppercase">
+                            <span class="material-symbols-outlined text-xs">celebration</span>
+                            ¡Descuento 20% Aplicado!
+                        </span>
+                    </div>
                     <p class="text-slate-300 text-base md:text-lg mb-8" id="success-msg">Hemos enviado los detalles a tu
                         correo
                         electrónico. Te enviaremos un **recordatorio por WhatsApp y correo 1 hora antes** de la sesión.
@@ -145,6 +152,10 @@
 
                 if (data.isFree) {
                     document.getElementById('free-session-badge').classList.remove('hidden');
+                }
+
+                if (data.friendPhone) {
+                    document.getElementById('friend-promo-badge').classList.remove('hidden');
                 }
 
                 // Visit Message from URL or Session

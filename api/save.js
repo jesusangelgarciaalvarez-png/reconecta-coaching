@@ -13,6 +13,15 @@ export default async function handler(req, res) {
         console.log("SYNC-BRIDGE: Processing booking for", data.id, "at", data.date);
 
         // 1. SAVE APPOINTMENT RECORD
+        let promoValidation = "NONE";
+
+        // FRIEND PROMO VALIDATION (CHECK IF FRIEND EXISTS)
+        if (data.friendPhone) {
+            const checkUserUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/users/${data.friendPhone}?key=${API_KEY}`;
+            const checkRes = await fetch(checkUserUrl);
+            promoValidation = checkRes.ok ? "FRIEND_VERIFIED" : "FRIEND_NOT_FOUND";
+        }
+
         const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/appointments/${data.id}?key=${API_KEY}`;
         const appBody = {
             fields: {
@@ -22,9 +31,11 @@ export default async function handler(req, res) {
                 phone: { stringValue: String(data.phone) },
                 date: { stringValue: String(data.date) },
                 time: { stringValue: String(data.time) },
+                friendPhone: { stringValue: String(data.friendPhone || "") },
+                promoValidation: { stringValue: promoValidation },
                 meetLink: { stringValue: "https://meet.google.com/hbm-pivc-mvy" },
                 timestamp: { integerValue: String(Date.now()) },
-                systemInfo: { stringValue: "v16.0-SYNC-TRACK" }
+                systemInfo: { stringValue: "v19.0-FRIEND-SYNC" }
             }
         };
 
@@ -42,6 +53,14 @@ export default async function handler(req, res) {
         // 2. UPDATE AVAILABILITY MAP (days/{date})
         const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/days/${data.date}?key=${API_KEY}`;
 
+        // Calculate block times (current + next hour if doubleSlot is active)
+        const blockTimes = [data.time];
+        if (data.doubleSlot) {
+            const [h, m] = data.time.split(':');
+            const nextH = (parseInt(h) + 1).toString().padStart(2, '0');
+            blockTimes.push(`${nextH}:${m}`);
+        }
+
         let currentTimes = [];
         const dayRead = await fetch(dayUrl);
         if (dayRead.ok) {
@@ -51,9 +70,13 @@ export default async function handler(req, res) {
             }
         }
 
-        if (!currentTimes.includes(data.time)) {
-            currentTimes.push(data.time);
-        }
+        const bookingsUpdates = {};
+        blockTimes.forEach(t => {
+            if (!currentTimes.includes(t)) {
+                currentTimes.push(t);
+            }
+            bookingsUpdates[`bookings.${t.replace(':', '_')}`] = { stringValue: data.id };
+        });
 
         const dayBody = {
             fields: {
@@ -62,7 +85,7 @@ export default async function handler(req, res) {
                         values: currentTimes.map(t => ({ stringValue: t }))
                     }
                 },
-                [`bookings.${data.time.replace(':', '_')}`]: { stringValue: data.id }
+                ...bookingsUpdates
             }
         };
 

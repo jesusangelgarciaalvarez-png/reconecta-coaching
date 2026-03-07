@@ -24,7 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         prevMonthBtn: document.getElementById('prev-month'),
         nextMonthBtn: document.getElementById('next-month'),
         promoBanner: document.getElementById('promo-banner'),
-        promoText: document.getElementById('promo-text')
+        promoText: document.getElementById('promo-text'),
+        friendPromoContainer: document.getElementById('friend-promo-container'),
+        friendPhoneInput: document.getElementById('friend-phone')
     };
 
     // Validation
@@ -40,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedDate = null;
     let selectedTime = null;
     let monthlyAppointmentsCache = {}; // Array of {date, time}
+    let is90MinPromo = false; // Flag for 90-minute sessions that block 120 min
+    let isFriendPromo = false; // Flag for bring-a-friend promotions
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
@@ -87,6 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (promo) {
             elements.promoText.textContent = promo;
             elements.promoBanner.classList.remove('hidden');
+            // Check if it's the 90-minute promotion
+            is90MinPromo = promo.toLowerCase().includes('90 min');
+            console.log("Promo status: 90min =", is90MinPromo);
+
+            // Detect Friend Promo
+            isFriendPromo = promo.toLowerCase().includes('amiga') || promo.toLowerCase().includes('recomienda');
+            if (isFriendPromo && elements.friendPromoContainer) {
+                elements.friendPromoContainer.classList.remove('hidden');
+                console.log("Friend promo ACTIVE");
+            }
         }
     }
 
@@ -178,9 +192,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
-            hours.forEach(h => {
+            hours.forEach((h, index) => {
                 const time = `${h.toString().padStart(2, '0')}:00`;
-                const isTaken = occupied.includes(time);
+                let isTaken = occupied.includes(time);
+
+                // For 90-min sessions, we also need the NEXT hour to be free
+                if (is90MinPromo && !isTaken) {
+                    const nextH = h + 1;
+                    const nextTime = `${nextH.toString().padStart(2, '0')}:00`;
+                    const isNextTaken = occupied.includes(nextTime);
+                    // If next hour is out of range or taken, this hour is effectively taken
+                    if (h === 17 || isNextTaken) {
+                        isTaken = true;
+                    }
+                }
 
                 const btn = document.createElement('button');
                 btn.className = `p-4 rounded-xl text-xs font-bold transition-all border ${isTaken ? 'opacity-20 cursor-not-allowed border-transparent' : 'glass-panel hover:bg-primary/20 hover:border-primary/50 text-white border-white/10'}`;
@@ -254,7 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime(),
                 meetLink,
                 isFree: true, // Default in rescue mode
-                build: 'v9.0-REST-ARCH'
+                doubleSlot: is90MinPromo, // Block next hour too
+                friendPhone: elements.friendPhoneInput ? elements.friendPhoneInput.value.replace(/\D/g, '') : null,
+                build: 'v19.0-FRIEND-SYNC'
             };
 
             // 1. Helper for ordinals
