@@ -1,6 +1,6 @@
 /**
- * VERCEL BRIDGE v16.0 - SYNC ARCHITECTURE + VISIT TRACKING
- * Ensures BOTH the appointment AND the availability map are updated, and tracks visit counts.
+ * MEDIC/COACH PRO BRIDGE v40.0 - AGNOSTIC ARCHITECTURE
+ * Handles both Coaching and Medical bookings with specialized price logic.
  */
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -9,40 +9,43 @@ export default async function handler(req, res) {
     const PROJECT_ID = "reconecta-ed650";
     const API_KEY = "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM";
 
-    // DEMO MODE CONFIG
+    // INDUSTRY MODE CONFIG
     const isDemo = data.isDemo === true;
+    const isMedical = data.serviceType === 'MEDICAL';
     const COLL_APP = isDemo ? "demo_appointments" : "appointments";
     const COLL_DAYS = isDemo ? "demo_days" : "days";
     const COLL_USERS = isDemo ? "demo_users" : "users";
-    const COLL_PROMOS = "promotions"; // Promos are shared or could be demo_promos
+    const COLL_PROMOS = "promotions";
 
     try {
-        console.log(`SYNC-BRIDGE: Processing ${isDemo ? 'DEMO' : 'LIVE'} booking for`, data.id, "at", data.date);
+        console.log(`SYNC-BRIDGE: Processing ${isMedical ? 'MEDICAL' : 'COACHING'} booking for`, data.id);
 
         // 1. SAVE APPOINTMENT RECORD
         let promoValidation = "NONE";
-        let basePrice = 600; // Default Numeric
+        let basePrice = isMedical ? 1200 : 600;
         let promoText = "";
 
-        // FETCH MONTHLY PROMO DATA
-        try {
-            const monthId = data.date.substring(0, 7); // YYYY-MM
-            const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_PROMOS}/${monthId}?key=${API_KEY}`;
-            const promoRead = await fetch(promoUrl);
-            if (promoRead.ok) {
-                const promoData = await promoRead.json();
-                if (promoData.fields && promoData.fields.price) {
-                    basePrice = parseFloat(promoData.fields.price.stringValue || "600");
+        // FETCH MONTHLY PROMO DATA (Only for Coaching normally)
+        if (!isMedical) {
+            try {
+                const monthId = data.date.substring(0, 7);
+                const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_PROMOS}/${monthId}?key=${API_KEY}`;
+                const promoRead = await fetch(promoUrl);
+                if (promoRead.ok) {
+                    const promoData = await promoRead.json();
+                    if (promoData.fields && promoData.fields.price) {
+                        basePrice = parseFloat(promoData.fields.price.stringValue || "600");
+                    }
+                    if (promoData.fields && promoData.fields.text) {
+                        promoText = promoData.fields.text.stringValue.toLowerCase();
+                    }
                 }
-                if (promoData.fields && promoData.fields.text) {
-                    promoText = promoData.fields.text.stringValue.toLowerCase();
-                }
+            } catch (e) {
+                console.warn("Could not fetch monthly promo");
             }
-        } catch (e) {
-            console.warn("Could not fetch monthly promo, using defaults");
         }
 
-        // 2. FETCH USER VISIT HISTORY (FOR TARGETED PROMOS)
+        // 2. FETCH USER VISIT HISTORY
         const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
         let visitCount = 1;
         const userRead = await fetch(userUrl);
@@ -53,53 +56,55 @@ export default async function handler(req, res) {
             }
         }
 
-        // 3. PROMOTION INTELLIGENCE ENGINE (CALCULATE FINAL PRICE)
+        // 3. PRICE CALCULATION LOGIC
         let finalPrice = basePrice;
         let discountApplied = "ORIGINAL_PRICE";
 
-        if (promoText) {
-            // Check for specific session promos
-            const isFirstSessionPromo = promoText.includes("primera") || promoText.includes("1era");
-            const isSecondSessionPromo = promoText.includes("segunda") || promoText.includes("2da");
-            const isThirdSessionPromo = promoText.includes("tercera") || promoText.includes("3ra");
+        // A. Promo Text Logic (Coaching)
+        if (!isMedical && promoText) {
+            const isFirst = promoText.includes("primera") || promoText.includes("1era");
+            const isSecond = promoText.includes("segunda") || promoText.includes("2da");
+            const isThird = promoText.includes("tercera") || promoText.includes("3ra");
 
-            let isTargetMatched = false;
-            if (isFirstSessionPromo && visitCount === 1) isTargetMatched = true;
-            if (isSecondSessionPromo && visitCount === 2) isTargetMatched = true;
-            if (isThirdSessionPromo && visitCount === 3) isTargetMatched = true;
+            let match = false;
+            if (isFirst && visitCount === 1) match = true;
+            if (isSecond && visitCount === 2) match = true;
+            if (isThird && visitCount === 3) match = true;
+            if (!isFirst && !isSecond && !isThird) match = true; // General promo
 
-            // If it's a general promo (e.g., "Descuento del 10% en todas...")
-            const isGeneralPromo = !isFirstSessionPromo && !isSecondSessionPromo && !isThirdSessionPromo;
-
-            if (isTargetMatched || isGeneralPromo) {
-                // Check if it's FREE
-                if (promoText.includes("gratis") || promoText.includes("regalo")) {
-                    finalPrice = 0;
-                    discountApplied = "PROMO_FREE_SUCCESS";
-                } else {
-                    // Look for percentage discount (e.g., 25%)
+            if (match) {
+                if (promoText.includes("gratis")) finalPrice = 0;
+                else {
                     const pctMatch = promoText.match(/(\d+)\s*%/);
-                    if (pctMatch) {
-                        const pct = parseInt(pctMatch[1]);
-                        finalPrice = basePrice * (1 - (pct / 100));
-                        discountApplied = `PROMO_${pct}PCT_OFF`;
-                    }
+                    if (pctMatch) finalPrice = basePrice * (1 - (parseInt(pctMatch[1]) / 100));
                 }
             }
         }
 
-        // FRIEND PROMO VALIDATION (CHECK IF FRIEND EXISTS)
+        // B. Friend Promo (Viral)
         if (data.friendPhone) {
-            const checkUserUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.friendPhone}?key=${API_KEY}`;
-            const checkRes = await fetch(checkUserUrl);
-            promoValidation = checkRes.ok ? "FRIEND_VERIFIED" : "FRIEND_NOT_FOUND";
-            // Apply 20% friend discount if verified
+            const checkUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.friendPhone}?key=${API_KEY}`;
+            const checkRes = await fetch(checkUrl);
             if (checkRes.ok) {
                 finalPrice = finalPrice * 0.8;
                 discountApplied += "_FRIEND_REBATE";
+                promoValidation = "FRIEND_VERIFIED";
+            } else {
+                promoValidation = "FRIEND_NOT_FOUND";
             }
         }
 
+        // C. Insurance Logic (Medical)
+        if (isMedical && data.insurance && data.insurance !== 'private') {
+            finalPrice = basePrice * 0.4; // 60% coverage
+            discountApplied = `INSURANCE_${data.insurance.toUpperCase()}_APPLIED`;
+        }
+
+        if (data.previewOnly) {
+            return res.status(200).json({ success: true, finalPrice: finalPrice });
+        }
+
+        // 4. PERSIST TO FIRESTORE
         const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_APP}/${data.id}?key=${API_KEY}`;
         const appBody = {
             fields: {
@@ -109,101 +114,75 @@ export default async function handler(req, res) {
                 phone: { stringValue: String(data.phone) },
                 date: { stringValue: String(data.date) },
                 time: { stringValue: String(data.time) },
-                friendPhone: { stringValue: String(data.friendPhone || "") },
-                promoValidation: { stringValue: promoValidation },
                 price: { stringValue: String(finalPrice) },
                 discountStatus: { stringValue: discountApplied },
-                meetLink: { stringValue: "https://meet.google.com/hbm-pivc-mvy" },
-                visitNumber: { integerValue: String(visitCount) },
+                serviceType: { stringValue: String(data.serviceType || "COACHING") },
+                insurance: { stringValue: String(data.insurance || "NONE") },
                 timestamp: { integerValue: String(Date.now()) },
-                systemInfo: { stringValue: "v38.0-INTELIBRAIN" }
+                visitNumber: { integerValue: String(visitCount) },
+                systemInfo: { stringValue: "v40.0-GENERIC-READY" }
             }
         };
 
-        const appResponse = await fetch(appUrl, {
+        await fetch(appUrl, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(appBody)
         });
 
-        if (!appResponse.ok) {
-            const err = await appResponse.text();
-            return res.status(500).json({ error: "ERR_SAVE_APP", details: err });
-        }
-
-        // 4. UPDATE AVAILABILITY MAP (days/{date})
+        // 5. UPDATE AVAILABILITY MAP
         const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_DAYS}/${data.date}?key=${API_KEY}`;
-
-        // Calculate block times (current + next hour if doubleSlot is active)
         const blockTimes = [data.time];
         if (data.doubleSlot) {
             const [h, m] = data.time.split(':');
-            const nextH = (parseInt(h) + 1).toString().padStart(2, '0');
-            blockTimes.push(`${nextH}:${m}`);
+            blockTimes.push(`${(parseInt(h) + 1).toString().padStart(2, '0')}:${m}`);
         }
 
         let currentTimes = [];
         const dayRead = await fetch(dayUrl);
         if (dayRead.ok) {
             const dayData = await dayRead.json();
-            if (dayData.fields && dayData.fields.times && dayData.fields.times.arrayValue) {
-                currentTimes = dayData.fields.times.arrayValue.values?.map(v => v.stringValue) || [];
+            if (dayData.fields?.times?.arrayValue?.values) {
+                currentTimes = dayData.fields.times.arrayValue.values.map(v => v.stringValue);
             }
         }
 
         const bookingsUpdates = {};
         blockTimes.forEach(t => {
-            if (!currentTimes.includes(t)) {
-                currentTimes.push(t);
-            }
+            if (!currentTimes.includes(t)) currentTimes.push(t);
             bookingsUpdates[`bookings.${t.replace(':', '_')}`] = { stringValue: data.id };
         });
-
-        const dayBody = {
-            fields: {
-                times: {
-                    arrayValue: {
-                        values: currentTimes.map(t => ({ stringValue: t }))
-                    }
-                },
-                ...bookingsUpdates
-            }
-        };
 
         await fetch(dayUrl, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dayBody)
+            body: JSON.stringify({
+                fields: {
+                    times: { arrayValue: { values: currentTimes.map(t => ({ stringValue: t })) } },
+                    ...bookingsUpdates
+                }
+            })
         });
 
-        // 3. TRACK USER VISITS (users/{phone})
-        const userUrlUpdate = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
-        const userBody = {
-            fields: {
-                name: { stringValue: String(data.name) },
-                email: { stringValue: String(data.email) },
-                phone: { stringValue: String(data.phone) },
-                visitCount: { integerValue: String(visitCount) },
-                lastBookingId: { stringValue: String(data.id) },
-                lastActive: { timestampValue: new Date().toISOString() }
-            }
-        };
-
-        await fetch(userUrlUpdate, {
+        // 6. UPDATE USER PROFILE
+        const userUpdateUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
+        await fetch(userUpdateUrl, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userBody)
+            body: JSON.stringify({
+                fields: {
+                    name: { stringValue: String(data.name) },
+                    email: { stringValue: String(data.email) },
+                    visitCount: { integerValue: String(visitCount) },
+                    lastActive: { timestampValue: new Date().toISOString() }
+                }
+            })
         });
 
-        return res.status(200).json({
-            success: true,
-            message: "App, Map and Visit Count updated (InteliBrain Active)",
-            visitCount: visitCount,
-            finalPrice: finalPrice
-        });
+        return res.status(200).json({ success: true, finalPrice: finalPrice, visitCount: visitCount });
 
-    } catch (error) {
-        console.error("BRIDGE_CRASH:", error);
-        return res.status(500).json({ error: "BRIDGE_CRASH", details: error.message });
+    } catch (err) {
+        console.error("BRIDGE_CRASH:", err);
+        return res.status(500).json({ error: "BRIDGE_CRASH", details: err.message });
     }
 }

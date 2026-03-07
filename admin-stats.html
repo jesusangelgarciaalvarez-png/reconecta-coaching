@@ -170,8 +170,10 @@
                             <thead>
                                 <tr>
                                     <th>Cliente</th>
+                                    <th>Tipo</th>
+                                    <th>Seguro</th>
                                     <th>ID Cita</th>
-                                    <th>Fecha Sesión</th>
+                                    <th>Fecha</th>
                                     <th>Hora</th>
                                     <th>Cobro</th>
                                 </tr>
@@ -233,6 +235,8 @@
                         date: f.date?.stringValue,
                         time: f.time?.stringValue,
                         price: f.price?.stringValue || '0',
+                        serviceType: f.serviceType?.stringValue || 'COACHING',
+                        insurance: f.insurance?.stringValue || 'NONE',
                         timestamp: parseInt(f.timestamp?.integerValue) || 0
                     };
                 }).sort((a, b) => b.timestamp - a.timestamp);
@@ -365,11 +369,18 @@
 
             appointments.slice(0, 50).forEach(a => {
                 const tr = document.createElement('tr');
+                const isMed = a.serviceType === 'MEDICAL';
                 tr.innerHTML = `
                     <td class="font-bold text-white">${a.name}</td>
+                    <td>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${isMed ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'bg-primary/20 text-primary border border-primary/30'}">
+                            ${a.serviceType}
+                        </span>
+                    </td>
+                    <td class="text-slate-400 text-xs">${a.insurance}</td>
                     <td class="text-slate-500 font-mono text-[10px]">${a.id}</td>
-                    <td class="text-primary font-bold">${a.date}</td>
-                    <td>${a.time}</td>
+                    <td class="text-slate-300 font-bold text-xs">${a.date}</td>
+                    <td class="text-xs">${a.time}</td>
                     <td>
                         <span class="bg-primary/20 text-primary px-2 py-1 rounded-md text-xs font-bold border border-primary/30">
                             $${a.price}
