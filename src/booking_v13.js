@@ -26,7 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
         promoBanner: document.getElementById('promo-banner'),
         promoText: document.getElementById('promo-text'),
         friendPromoContainer: document.getElementById('friend-promo-container'),
-        friendPhoneInput: document.getElementById('friend-phone')
+        friendPhoneInput: document.getElementById('friend-phone'),
+        checkoutModal: document.getElementById('checkout-modal'),
+        payBtn: document.getElementById('pay-button'),
+        checkoutBase: document.getElementById('checkout-base-price'),
+        checkoutTotal: document.getElementById('checkout-total-price'),
+        checkoutDiscountRow: document.getElementById('checkout-discount-row'),
+        checkoutDiscountAmount: document.getElementById('checkout-discount-amount')
+    };
+
+    window.closeCheckout = () => {
+        elements.checkoutModal.classList.add('hidden');
     };
 
     // Validation
@@ -264,48 +274,57 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.confirmBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> PROCESANDO...</span>';
 
         try {
-            console.log("Starting quick booking v7.0...");
+            // INSTEAD OF SAVING DIRECTLY, SHOW CHECKOUT
+            console.log("CHECKOUT-FLOW: Pre-calculating price...");
+            elements.confirmBtn.disabled = true;
+            elements.confirmBtn.textContent = 'Calculando tarifa...';
 
-            const appointmentId = Math.floor(100000 + Math.random() * 900000).toString();
-            const meetLink = `https://meet.google.com/hbm-pivc-mvy`;
-
-            const bookingData = {
-                id: appointmentId,
-                name,
-                email,
-                phone: phone.replace(/\D/g, ''),
+            const checkData = {
+                id: Math.random().toString(36).substring(2, 9).toUpperCase(),
+                name: elements.nameInput.value,
+                phone: elements.phoneInput.value.replace(/\D/g, ''),
+                email: elements.emailInput.value,
                 date: selectedDate,
                 time: selectedTime,
-                timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime(),
-                meetLink,
-                isFree: true, // Default in rescue mode
-                doubleSlot: is90MinPromo, // Block next hour too
                 friendPhone: elements.friendPhoneInput ? elements.friendPhoneInput.value.replace(/\D/g, '') : null,
-                build: 'v19.0-FRIEND-SYNC'
+                doubleSlot: is90MinPromo
             };
 
-            // 1. Helper for ordinals
-            const getOrdinal = (n) => {
-                const ordinals = ["", "primera", "segunda", "tercera", "cuarta", "quinta", "sexta", "séptima", "octava", "novena", "décima"];
-                if (n === 1) return "sesion gratuita, diagnóstico";
-                if (n <= 10) return `Esta es tu ${ordinals[n]} visita`;
-                return `Esta es tu visita número ${n}`;
-            };
+            try {
+                // Call API with a dummy flag to only get price
+                const response = await fetch('/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...checkData, previewOnly: true })
+                });
+                const result = await response.json();
 
-            // This call now returns the new visitCount
-            const result = await createAppointment(bookingData);
-            const visitCount = result.visitCount || 1;
-            const visitMessage = getOrdinal(visitCount);
+                if (result.success || result.finalPrice !== undefined) {
+                    const base = 600; // Expected from admin
+                    const final = result.finalPrice;
 
-            console.log("SUCCESS AT LAST! Visit Count:", visitCount);
+                    elements.checkoutBase.textContent = `$${base}.00`;
+                    elements.checkoutTotal.textContent = `$${final}.00`;
 
-            // SAVE TO SESSION STORAGE FOR THE SUCCESS PAGE
-            sessionStorage.setItem('lastBooking', JSON.stringify(bookingData));
-            localStorage.setItem('reconecta_visitor_name', name);
+                    if (final < base) {
+                        elements.checkoutDiscountRow.classList.remove('hidden');
+                        elements.checkoutDiscountAmount.textContent = `-$${(base - final).toFixed(2)}`;
+                    } else {
+                        elements.checkoutDiscountRow.classList.add('hidden');
+                    }
 
-            console.log("Moving to success page...");
-            window.location.href = `/success.html?id=${appointmentId}&date=${selectedDate}&time=${selectedTime}&name=${encodeURIComponent(name)}&msg=${encodeURIComponent(visitMessage)}`;
-
+                    elements.checkoutModal.classList.remove('hidden');
+                } else {
+                    throw new Error("Failed to calculate price");
+                }
+            } catch (err) {
+                console.error("Checkout Error:", err);
+                elements.errorMsg.textContent = 'Error al conectar con el servidor. Intenta de nuevo.';
+                elements.errorMsg.classList.remove('hidden');
+            } finally {
+                elements.confirmBtn.disabled = false;
+                elements.confirmBtn.textContent = 'Confirmar Reserva';
+            }
         } catch (err) {
             console.error("DEBUG BOOKING FAILURE:", err);
 
@@ -347,6 +366,50 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.confirmBtn.innerHTML = 'REPROBAR (MOTOR v13)';
         }
     };
+
+    // FINAL STEP: Execute payment and save
+    if (elements.payBtn) {
+        elements.payBtn.onclick = async () => {
+            elements.payBtn.disabled = true;
+            elements.payBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Procesando...';
+
+            const appointmentId = Math.random().toString(36).substring(2, 9).toUpperCase();
+            const meetLink = "https://meet.google.com/hbm-pivc-mvy";
+
+            const finalData = {
+                id: appointmentId,
+                name: elements.nameInput.value,
+                email: elements.emailInput.value,
+                phone: elements.phoneInput.value.replace(/\D/g, ''),
+                date: selectedDate,
+                time: selectedTime,
+                friendPhone: elements.friendPhoneInput ? elements.friendPhoneInput.value.replace(/\D/g, '') : null,
+                doubleSlot: is90MinPromo,
+                meetLink: meetLink
+            };
+
+            try {
+                const response = await fetch('/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    sessionStorage.setItem('lastBooking', JSON.stringify({ ...finalData, isFree: result.finalPrice === 0 }));
+                    window.location.href = `/success.html?id=${appointmentId}&name=${encodeURIComponent(finalData.name)}&date=${finalData.date}&time=${finalData.time}&msg=${encodeURIComponent('Pago confirmado')}`;
+                } else {
+                    throw new Error("Final save failed");
+                }
+            } catch (err) {
+                console.error("Payment Error:", err);
+                alert("Hubo un error al procesar tu reserva. Por favor intenta de nuevo.");
+                elements.payBtn.disabled = false;
+                elements.payBtn.textContent = 'Pagar y Agendar';
+            }
+        };
+    }
 
     // Modern Phone Formatter
     if (elements.phoneInput) {
