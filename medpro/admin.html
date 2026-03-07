@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration | MedPro AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="src/index.css">
+    <style>
+        .pin-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            width: 3rem;
+            height: 4rem;
+            border-radius: 1rem;
+            margin: 0 0.25rem;
+            transition: all 0.3s;
+        }
+
+        .pin-input:focus {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), 0.1);
+            outline: none;
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        :root {
+            --primary: #2dd4bf;
+            --primary-rgb: 45, 212, 191;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden bg-[#020617]">
+    <div id="app">
+        <!-- Background -->
+        <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2560"
+                class="w-full h-full object-cover opacity-10" alt="Clinic Background">
+        </div>
+
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                        <span
+                            class="material-symbols-outlined text-[#042f2e] text-3xl font-bold">medical_services</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span
+                            class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">MedPro
+                            AI Clinical Admin</span>
+                        <span
+                            class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Precision
+                            Clinical Management Ecosystem</span>
+                    </div>
+                </div>
+                <a href="/"
+                    class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                    <span class="material-symbols-outlined text-white">home</span>
+                </a>
+        </header>
+
+        <!-- PIN Login Section -->
+        <main id="login-section" class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+            <div class="glass-panel p-10 rounded-[3rem] max-w-md w-full text-center border-white/10">
+                <span class="material-symbols-outlined text-primary text-5xl mb-6">lock</span>
+                <h1 class="font-display italic text-3xl text-white mb-2">Acceso Administrativo</h1>
+                <p class="text-slate-400 mb-8 font-light">Ingresa el PIN de 6 dígitos para continuar</p>
+
+                <div class="flex justify-center mb-8" id="pin-container">
+                    <input type="password" maxlength="1" class="pin-input" data-index="0">
+                    <input type="password" maxlength="1" class="pin-input" data-index="1">
+                    <input type="password" maxlength="1" class="pin-input" data-index="2">
+                    <input type="password" maxlength="1" class="pin-input" data-index="3">
+                    <input type="password" maxlength="1" class="pin-input" data-index="4">
+                    <input type="password" maxlength="1" class="pin-input" data-index="5">
+                </div>
+
+                <p id="login-error" class="text-red-400 text-sm mb-4 hidden">PIN incorrecto. Intenta de nuevo.</p>
+            </div>
+        </main>
+
+        <!-- Admin Dashboard Section -->
+        <main id="admin-section" class="relative z-10 min-h-screen pt-32 pb-20 px-6 hidden">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="font-display italic text-4xl text-white mb-4">Panel de Control</h2>
+                    <p class="text-slate-400 max-w-xl mx-auto">Bienvenida, Administradora. Gestiona el material,
+                        visualiza el impacto y organiza la agenda desde este espacio centralizado.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Statistics Card -->
+                    <a href="admin-stats.html"
+                        class="glass-panel group p-6 rounded-[2.5rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.03] no-underline bg-white/[0.02]">
+                        <div class="aspect-[16/9] rounded-2xl overflow-hidden mb-6 relative">
+                            <img src="https://images.unsplash.com/photo-1551288049-bbda33a0f9a0?auto=format&fit=crop&q=80&w=800"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                alt="Dashboard">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary">analytics</span>
+                            </div>
+                            <h3 class="font-display italic text-2xl text-white">Clinical Insights</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed">Visualize patient flow, revenue by insurance,
+                            and daily consultation trends in real-time.</p>
+                    </a>
+
+                    <!-- Booking Card -->
+                    <a href="booking.html"
+                        class="glass-panel group p-6 rounded-[2.5rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.03] no-underline bg-white/[0.02]">
+                        <div class="aspect-[16/9] rounded-2xl overflow-hidden mb-6 relative">
+                            <img src="https://images.unsplash.com/photo-1505751172107-5739a00723a5?auto=format&fit=crop&q=80&w=800"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                alt="Calendar Management">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary">calendar_month</span>
+                            </div>
+                            <h3 class="font-display italic text-2xl text-white">Agenda Control</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed">Manually block slots for surgeries or
+                            specialized procedures and manage multi-doctor schedules.</p>
+                    </a>
+                </div>
+
+                <div class="mt-16 text-center">
+                    <button id="logout-btn"
+                        class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 mx-auto">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.pin-input');
+            const loginSection = document.getElementById('login-section');
+            const adminSection = document.getElementById('admin-section');
+            const errorMsg = document.getElementById('login-error');
+            const CORRECT_PIN = "780402"; // User requested update
+
+            // Check if already logged in (sessionStorage)
+            if (sessionStorage.getItem('reconecta_admin_auth') === 'true') {
+                loginSection.classList.add('hidden');
+                adminSection.classList.remove('hidden');
+            }
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+
+                    if (Array.from(inputs).every(i => i.value)) {
+                        validatePin();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+
+            function validatePin() {
+                const pin = Array.from(inputs).map(i => i.value).join('');
+                if (pin === CORRECT_PIN) {
+                    sessionStorage.setItem('medpro_admin_auth', 'true');
+                    loginSection.classList.add('animate-fade-out');
+                    setTimeout(() => {
+                        loginSection.classList.add('hidden');
+                        adminSection.classList.remove('hidden');
+                    }, 300);
+                } else {
+                    errorMsg.classList.remove('hidden');
+                    inputs.forEach(i => {
+                        i.value = '';
+                        i.classList.add('border-red-500');
+                    });
+                    inputs[0].focus();
+                    setTimeout(() => {
+                        inputs.forEach(i => i.classList.remove('border-red-500'));
+                    }, 1000);
+                }
+            }
+
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                sessionStorage.removeItem('reconecta_admin_auth');
+                location.reload();
+            });
+        });
+    </script>
+</body>
+
+</html>

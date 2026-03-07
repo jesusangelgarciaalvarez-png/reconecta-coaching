@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Stats | MedPro AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="src/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .table-container {
+            overflow-x: auto;
+            border-radius: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1.5rem;
+            color: var(--primary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        td {
+            padding: 1.5rem;
+            color: white;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        :root {
+            --primary: #2dd4bf;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden bg-[#020617]">
+    <div id="app">
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+            <a href="admin.html" class="flex items-center gap-2 text-white no-underline">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="font-display italic text-xl text-primary">Back to Admin Panel</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col text-right hidden md:flex">
+                    <span class="font-display italic text-lg font-bold text-white leading-none">MedPro AI</span>
+                    <span class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Precision
+                        Clinical Management</span>
+                </div>
+                <div
+                    class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-[#042f2e] text-3xl font-bold">medical_services</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
+            <div class="max-w-6xl mx-auto">
+
+                <!-- Performance Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="glass-panel p-6 rounded-3xl border-white/10 flex flex-col items-center text-center">
+                        <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Visitas
+                            Hoy</span>
+                        <div id="count-today" class="text-4xl font-display text-white mb-1">0</div>
+                        <p class="text-slate-500 text-xs">Impacto proyectado</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl border-white/10 flex flex-col items-center text-center">
+                        <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Visitas
+                            Mes</span>
+                        <div id="count-month" class="text-4xl font-display text-white mb-1">0</div>
+                        <p class="text-slate-500 text-xs">Crecimiento orgánico</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl border-white/10 flex flex-col items-center text-center">
+                        <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Total
+                            Histórico</span>
+                        <div id="count-total" class="text-4xl font-display text-white mb-1">0</div>
+                        <p class="text-slate-500 text-xs">Vidas alcanzadas</p>
+                    </div>
+                    <div
+                        class="glass-panel p-6 rounded-3xl border-primary/20 bg-primary/5 flex flex-col items-center text-center">
+                        <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Ingresos
+                            Mes</span>
+                        <div id="revenue-month" class="text-4xl font-display text-white mb-1">$0</div>
+                        <p class="text-slate-500 text-xs">Recaudación actual</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    <!-- Visits by Day Chart -->
+                    <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
+                        <h2 class="font-display italic text-2xl text-white mb-8">Fluidez de Visitas (Día/Mes)</h2>
+                        <div class="h-64">
+                            <canvas id="visits-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Visitors Chart -->
+                    <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
+                        <h2 class="font-display italic text-2xl text-white mb-8">Compromiso por Persona</h2>
+                        <div class="h-64">
+                            <canvas id="visitors-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Table: Visits -->
+                <div class="glass-panel p-8 rounded-[2.5rem] border-white/10 mb-12">
+                    <h2 class="font-display italic text-2xl text-white mb-8">Tráfico Web (Visitas)</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Persona</th>
+                                    <th>Página</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visits-table-body">
+                                <tr>
+                                    <td colspan="4" class="text-center text-slate-500 py-12">Cargando visitas...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detailed Table: Appointments & Transactions -->
+                <div id="report-content" class="glass-panel p-8 rounded-[2.5rem] border-white/10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <h2 class="font-display italic text-2xl text-white">Citas y Transacciones</h2>
+                        <button onclick="exportToPDF()"
+                            class="bg-primary/10 hover:bg-primary text-primary hover:text-black border border-primary/30 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                            Exportar Reporte (PDF)
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Tipo</th>
+                                    <th>Seguro</th>
+                                    <th>ID Cita</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Cobro</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center text-slate-500 py-12">Cargando citas...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const PROJECT_ID = "reconecta-ed650";
+        const API_KEY = "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth
+            if (sessionStorage.getItem('medpro_admin_auth') !== 'true') {
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            loadStats();
+        });
+
+        async function loadStats() {
+            try {
+                // 1. Fetch Visits
+                const visitsUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/visits?pageSize=1000&key=${API_KEY}`;
+                const visitsRes = await fetch(visitsUrl);
+                const visitsData = await visitsRes.json();
+                const visits = (visitsData.documents || []).map(doc => {
+                    const f = doc.fields;
+                    return {
+                        visitorId: f.visitorId?.stringValue,
+                        name: f.name?.stringValue || 'Anónimo',
+                        path: f.path?.stringValue || '/',
+                        timestamp: parseInt(f.timestamp?.integerValue) || 0,
+                        date: f.date?.stringValue,
+                        month: f.month?.stringValue
+                    };
+                }).sort((a, b) => b.timestamp - a.timestamp);
+
+                // 2. Fetch Appointments
+                const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/appointments?pageSize=1000&key=${API_KEY}`;
+                const appRes = await fetch(appUrl);
+                const appData = await appRes.json();
+                const appointments = (appData.documents || []).map(doc => {
+                    const f = doc.fields;
+                    return {
+                        id: f.id?.stringValue,
+                        name: f.name?.stringValue,
+                        date: f.date?.stringValue,
+                        time: f.time?.stringValue,
+                        price: f.price?.stringValue || '0',
+                        serviceType: f.serviceType?.stringValue || 'COACHING',
+                        insurance: f.insurance?.stringValue || 'NONE',
+                        timestamp: parseInt(f.timestamp?.integerValue) || 0
+                    };
+                }).sort((a, b) => b.timestamp - a.timestamp);
+
+                renderDashboard(visits, appointments);
+            } catch (err) {
+                console.error('Error loading stats:', err);
+            }
+        }
+
+        function renderDashboard(visits, appointments) {
+            const today = new Date().toISOString().split('T')[0];
+            const thisMonth = today.substring(0, 7);
+
+            // 1. High-level counts
+            const todayVisits = visits.filter(v => v.date === today).length;
+            const monthVisits = visits.filter(v => v.month === thisMonth).length;
+
+            // Monthly Revenue calculate
+            const monthRevenue = appointments
+                .filter(a => a.date?.startsWith(thisMonth))
+                .reduce((acc, a) => acc + parseFloat(a.price || 0), 0);
+
+            document.getElementById('count-today').textContent = todayVisits;
+            document.getElementById('count-month').textContent = monthVisits;
+            document.getElementById('count-total').textContent = visits.length;
+            document.getElementById('revenue-month').textContent = `$${monthRevenue}`;
+
+            // 2. Visits Chart (By Day for the last 14 days)
+            const dailyCounts = {};
+            const last14Days = [];
+            for (let i = 13; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dStr = d.toISOString().split('T')[0];
+                last14Days.push(dStr);
+                dailyCounts[dStr] = 0;
+            }
+
+            visits.forEach(v => {
+                if (dailyCounts[v.date] !== undefined) dailyCounts[v.date]++;
+            });
+
+            const visitsCtx = document.getElementById('visits-chart').getContext('2d');
+            new Chart(visitsCtx, {
+                type: 'line',
+                data: {
+                    labels: last14Days.map(d => d.split('-').slice(1).reverse().join('/')),
+                    datasets: [{
+                        label: 'Visits',
+                        data: last14Days.map(d => dailyCounts[d]),
+                        borderColor: '#2dd4bf',
+                        backgroundColor: 'rgba(45, 212, 191, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 3. Top Visitors Chart
+            const visitorEngagement = {};
+            visits.forEach(v => {
+                const key = v.name !== 'Anónimo' ? v.name : `Anónimo (${v.visitorId.substring(0, 6)})`;
+                visitorEngagement[key] = (visitorEngagement[key] || 0) + 1;
+            });
+
+            const topVisitors = Object.entries(visitorEngagement)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+
+            const visitorsCtx = document.getElementById('visitors-chart').getContext('2d');
+            new Chart(visitorsCtx, {
+                type: 'bar',
+                data: {
+                    labels: topVisitors.map(v => v[0]),
+                    datasets: [{
+                        label: 'Engagement',
+                        data: topVisitors.map(v => v[1]),
+                        backgroundColor: '#2dd4bf',
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 4. Detailed Table
+            const tableBody = document.getElementById('visits-table-body');
+            tableBody.innerHTML = '';
+
+            visits.slice(0, 50).forEach(v => {
+                const dateObj = new Date(v.timestamp);
+                const timeStr = dateObj.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = dateObj.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-bold">${v.name}</td>
+                    <td class="text-slate-400 text-xs">${v.path}</td>
+                    <td>${dateStr}</td>
+                    <td>${timeStr}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // 5. Appointments Table
+            const appTableBody = document.getElementById('appointments-table-body');
+            appTableBody.innerHTML = '';
+
+            if (appointments.length === 0) {
+                appTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-slate-500 py-12">No hay citas registradas aún.</td></tr>';
+            }
+
+            appointments.slice(0, 50).forEach(a => {
+                const tr = document.createElement('tr');
+                const isMed = a.serviceType === 'MEDICAL';
+                tr.innerHTML = `
+                    <td class="font-bold text-white">${a.name}</td>
+                    <td>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${isMed ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'bg-primary/20 text-primary border border-primary/30'}">
+                            ${a.serviceType}
+                        </span>
+                    </td>
+                    <td class="text-slate-400 text-xs">${a.insurance}</td>
+                    <td class="text-slate-500 font-mono text-[10px]">${a.id}</td>
+                    <td class="text-slate-300 font-bold text-xs">${a.date}</td>
+                    <td class="text-xs">${a.time}</td>
+                    <td>
+                        <span class="bg-primary/20 text-primary px-2 py-1 rounded-md text-xs font-bold border border-primary/30">
+                            $${a.price}
+                        </span>
+                    </td>
+                `;
+                appTableBody.appendChild(tr);
+            });
+        }
+
+
+        function showEmpty() {
+            document.getElementById('visits-table-body').innerHTML = '<tr><td colspan="4" class="text-center text-slate-500 py-12">No hay datos de visitas registrados aún.</td></tr>';
+        }
+
+        async function exportToPDF() {
+            const element = document.getElementById('report-content');
+            const opt = {
+                margin: 10,
+                filename: `Reconecta_Reporte_${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#050f0f' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Temporary styling for PDF
+            const originalStyle = element.style.background;
+            element.style.background = '#050f0f';
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (err) {
+                console.error("PDF Export Error:", err);
+            } finally {
+                element.style.background = originalStyle;
+            }
+        }
+    </script>
+</body>
+
+</html>
