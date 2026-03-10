@@ -14,7 +14,7 @@
             "destination": "/api/$1"
         },
         {
-            "source": "/((?!api/|master-dashboard|admin|reservar|success|src/|assets/|public/|.*\\.).*)",
+            "source": "/((?!api/|master-dashboard|admin|reservar|success|src/|assets/|public/|admin-.*|.*\\.).*)",
             "destination": "/public-site.html"
         }
     ]
