@@ -220,7 +220,7 @@ async function applyBranding() {
     const photoElements = document.querySelectorAll('#coach-photo, #home-coach-photo, #checkout-coach-photo, #brand-logo, #menu-logo');
     photoElements.forEach(img => {
         const id = img.id;
-        if (id === 'coach-photo' || id === 'checkout-coach-photo') {
+        if (id === 'coach-photo' || id === 'home-coach-photo' || id === 'checkout-coach-photo') {
             img.src = metadata.coachPhoto || defaults.coachPhotoPlaceholder;
         } else if (id === 'brand-logo' || id === 'menu-logo') {
             img.src = metadata.logoUrl || "/assets/logo.jpg";
