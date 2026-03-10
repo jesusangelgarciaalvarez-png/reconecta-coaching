@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             elements.brandingForm.photoIcon.classList.add('hidden');
         }
         sideName.textContent = metadata.name || tenantId;
-        if (elements.welcomeMsg) elements.welcomeMsg.textContent = `Buenas tardes, ${metadata.name?.split(' ')[0] || tenantId}`;
+        if (elements.welcomeMsg) elements.welcomeMsg.textContent = `Buenas tardes, ${metadata.name?.split(' ')[0] || 'Coach'}`;
 
         // Form Fields
         elements.basePriceInput.value = metadata.price || 600;
@@ -416,6 +416,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         sessionStorage.removeItem(`pc_auth_${tenantId}`);
         location.reload();
     };
+
+    // --- AUTO-SAVE TRIGGERS ---
+    window.saveDraft = saveDraft;
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') saveDraft();
+    });
+    window.addEventListener('beforeunload', saveDraft);
 
     showTab('setup');
 });
