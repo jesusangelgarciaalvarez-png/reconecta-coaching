@@ -421,7 +421,13 @@
         };
 
         document.getElementById('magic-fill').onclick = () => {
-            if (confirm("Se reemplazará tu contenido actual por una estructura sugerida de alta calidad. ¿Continuar?")) {
+            const hasExistingContent = Object.values(currentState).some(p =>
+                p.secciones && p.secciones.some(s => s.titulo.trim() || s.contenido.trim())
+            );
+
+            const warning = "La información actual será reemplazada totalmente, ¿estás de acuerdo?";
+
+            if (!hasExistingContent || confirm(warning)) {
                 currentState = JSON.parse(JSON.stringify(MAGIC_TEMPLATES));
                 saveToLocal();
                 renderSections();
