@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Súmate a PortalCoach | Registro de Coaches</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#2dd4bf', dark: '#0a0a0a' },
+                    fontFamily: { display: ['Newsreader', 'serif'], sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-mesh {
+            background: radial-gradient(circle at 0% 0%, rgba(45, 212, 191, 0.1) 0%, transparent 50%), #0a0a0a;
+        }
+    </style>
+</head>
+
+<body class="bg-mesh text-white min-h-screen font-sans flex items-center justify-center p-6">
+
+    <div class="glass p-12 rounded-[3rem] w-full max-w-xl text-center">
+        <div
+            class="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center border border-primary/30 mx-auto mb-8">
+            <span class="material-symbols-outlined text-4xl text-primary">rocket_launch</span>
+        </div>
+
+        <h1 class="font-display italic text-5xl mb-4">Empieza hoy mismo</h1>
+        <p class="text-slate-400 mb-10">Crea tu portal personalizado en segundos. <br> <span
+                class="text-primary font-bold">Plan Trial: 2 sesiones gratis</span> para que lo pruebes.</p>
+
+        <form id="register-form" class="space-y-6 text-left">
+            <div>
+                <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 block">Subdominio
+                    deseado</label>
+                <div class="relative">
+                    <input type="text" id="coach-id" required placeholder="ej: coach-lucia"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary transition-all">
+                    <span class="absolute right-6 top-4 text-slate-500 text-xs mt-0.5"
+                        id="subdomain-suffix">.portalcoach.com</span>
+                </div>
+                <!-- Availability Status -->
+                <div id="availability-status"
+                    class="mt-2 text-[10px] hidden font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <span id="availability-icon" class="material-symbols-outlined text-sm"></span>
+                    <span id="availability-text"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 block">Nombre
+                        Profesional</label>
+                    <input type="text" id="coach-name" required placeholder="Ej: Lucia Fernández"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary transition-all">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 block">Slogan /
+                        Tagline</label>
+                    <input type="text" id="coach-tagline" placeholder="Ej: Tu camino al éxito"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 block">Título de
+                    Bienvenida (Hero)</label>
+                <input type="text" id="coach-hero" placeholder="Ej: Encuentra tu centro, conecta contigo"
+                    class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary transition-all">
+            </div>
+
+            <div>
+                <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 block">Elige tu Estilo
+                    Visual (Tema)</label>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="nature" class="hidden peer" checked>
+                        <div
+                            class="aspect-square rounded-xl border-2 border-transparent peer-checked:border-primary overflow-hidden transition-all grayscale peer-checked:grayscale-0">
+                            <img src="/assets/themes/nature.png" class="w-full h-full object-cover">
+                        </div>
+                        <span
+                            class="text-[8px] text-center block mt-1 text-slate-500 group-hover:text-primary uppercase">Bosque</span>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="premium" class="hidden peer">
+                        <div
+                            class="aspect-square rounded-xl border-2 border-transparent peer-checked:border-primary overflow-hidden transition-all grayscale peer-checked:grayscale-0">
+                            <img src="/assets/themes/premium.png" class="w-full h-full object-cover">
+                        </div>
+                        <span
+                            class="text-[8px] text-center block mt-1 text-slate-500 group-hover:text-primary uppercase">Noche</span>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="sunset" class="hidden peer">
+                        <div
+                            class="aspect-square rounded-xl border-2 border-transparent peer-checked:border-primary overflow-hidden transition-all grayscale peer-checked:grayscale-0">
+                            <img src="/assets/themes/sunset.png" class="w-full h-full object-cover">
+                        </div>
+                        <span
+                            class="text-[8px] text-center block mt-1 text-slate-500 group-hover:text-primary uppercase">Ocaso</span>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="cosmic" class="hidden peer">
+                        <div
+                            class="aspect-square rounded-xl border-2 border-transparent peer-checked:border-primary overflow-hidden transition-all grayscale peer-checked:grayscale-0">
+                            <img src="/assets/themes/cosmic.png" class="w-full h-full object-cover">
+                        </div>
+                        <span
+                            class="text-[8px] text-center block mt-1 text-slate-500 group-hover:text-primary uppercase">Cosmos</span>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="zen" class="hidden peer">
+                        <div
+                            class="aspect-square rounded-xl border-2 border-transparent peer-checked:border-primary overflow-hidden transition-all grayscale peer-checked:grayscale-0">
+                            <img src="/assets/themes/zen.png" class="w-full h-full object-cover">
+                        </div>
+                        <span
+                            class="text-[8px] text-center block mt-1 text-slate-500 group-hover:text-primary uppercase">Zen</span>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="executive" class="hidden peer">
+                        <div
+                            class="aspect-square rounded-xl border-2 border-transparent peer-checked:border-primary overflow-hidden transition-all grayscale peer-checked:grayscale-0">
+                            <img src="/assets/themes/executive.png" class="w-full h-full object-cover">
+                        </div>
+                        <span
+                            class="text-[8px] text-center block mt-1 text-slate-500 group-hover:text-primary uppercase">Líder</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-3 block">Genera tu PIN
+                    de Acceso (6 dígitos)</label>
+                <input type="password" id="coach-pin" required maxlength="6" pattern="\d{6}" placeholder="Ej: 123456"
+                    class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-2xl tracking-[1em] text-center focus:outline-none focus:border-primary transition-all font-mono"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <p class="text-[9px] text-slate-500 mt-2 italic text-center">Este PIN será necesario para entrar a tu
+                    dashboard de administración.</p>
+            </div>
+
+            <button type="submit" id="submit-btn"
+                class="w-full bg-primary text-dark py-5 rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                CREAR MI PORTAL AHORA
+            </button>
+        </form>
+
+        <p class="text-[10px] text-slate-600 mt-8 italic">Al registrarte, aceptas nuestros términos de servicio para
+            coaches.</p>
+    </div>
+
+    <script type="module">
+        import { checkTenantAvailability } from '/src/firebase_v13.js';
+
+        const coachIdInput = document.getElementById('coach-id');
+        const statusDiv = document.getElementById('availability-status');
+        const statusIcon = document.getElementById('availability-icon');
+        const statusText = document.getElementById('availability-text');
+        let checkTimeout = null;
+
+        coachIdInput.oninput = () => {
+            const id = coachIdInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+            coachIdInput.value = id; // Sanitize in place
+
+            if (checkTimeout) clearTimeout(checkTimeout);
+
+            if (id.length < 3) {
+                statusDiv.classList.add('hidden');
+                return;
+            }
+
+            statusDiv.classList.remove('hidden');
+            statusText.textContent = 'Verificando...';
+            statusText.className = 'text-slate-500';
+            statusIcon.textContent = 'sync';
+            statusIcon.className = 'material-symbols-outlined text-sm text-slate-500 animate-spin';
+
+            checkTimeout = setTimeout(async () => {
+                try {
+                    const isAvailable = await checkTenantAvailability(id);
+                    if (isAvailable) {
+                        statusText.textContent = 'Subdominio disponible';
+                        statusText.className = 'text-primary';
+                        statusIcon.textContent = 'check_circle';
+                        statusIcon.className = 'material-symbols-outlined text-sm text-primary';
+                        coachIdInput.classList.remove('border-red-500');
+                        coachIdInput.classList.add('border-primary/50');
+                    } else {
+                        statusText.textContent = 'Subdominio ya ocupado';
+                        statusText.className = 'text-red-400';
+                        statusIcon.textContent = 'cancel';
+                        statusIcon.className = 'material-symbols-outlined text-sm text-red-400';
+                        coachIdInput.classList.remove('border-primary/50');
+                        coachIdInput.classList.add('border-red-500');
+                    }
+                } catch (e) {
+                    statusDiv.classList.add('hidden');
+                }
+            }, 500);
+        };
+
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+
+            const id = coachIdInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+
+            // Final check
+            btn.disabled = true;
+            btn.innerHTML = 'VERIFICANDO DISPONIBILIDAD...';
+            const isAvail = await checkTenantAvailability(id);
+            if (!isAvail) {
+                alert("Lo sentimos, este subdominio acaba de ser ocupado o ya no está disponible.");
+                btn.disabled = false;
+                btn.innerHTML = 'CREAR MI PORTAL AHORA';
+                return;
+            }
+
+            btn.innerHTML = 'PREPARANDO TU PORTAL...';
+
+            const name = document.getElementById('coach-name').value.trim();
+            const tagline = document.getElementById('coach-tagline').value.trim();
+            const heroTitle = document.getElementById('coach-hero').value.trim();
+            const theme = document.querySelector('input[name="theme"]:checked').value;
+            const pin = document.getElementById('coach-pin').value.trim();
+
+            if (!id || !name || pin.length !== 6) {
+                alert("Por favor completa los campos correctamente (PIN de 6 dígitos).");
+                btn.disabled = false;
+                btn.innerHTML = 'CREAR MI PORTAL AHORA';
+                return;
+            }
+
+            // Smart Defaults
+            const finalHero = heroTitle || `Bienvenidos al espacio de \n${name}`;
+            const finalTagline = tagline || "Tu transformación comienza hoy.";
+
+            try {
+                const res = await fetch('/api/update-tenant', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Tenant-Id': id },
+                    body: JSON.stringify({
+                        name: name,
+                        tagline: finalTagline,
+                        heroTitle: finalHero,
+                        theme: theme,
+                        pin: pin,
+                        price: "600",
+                        status: "trial"
+                    })
+                });
+
+                if (res.ok) {
+                    alert("¡Felicidades! Tu portal ha sido creado. Serás redirigido a tu dashboard.");
+                    window.location.href = `/coach-dashboard?tenant=${id}`;
+                } else {
+                    const error = await res.json();
+                    alert("Error: " + (error.error?.message || "Error al crear el portal."));
+                }
+            } catch (err) {
+                alert("Error de conexión.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'CREAR MI PORTAL AHORA';
+            }
+        };
+    </script>
+</body>
+
+</html>

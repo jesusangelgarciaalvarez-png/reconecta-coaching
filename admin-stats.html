@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas | Reconecta Admin</title>
+    <title>Dashboard | Reconecta Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -66,21 +66,61 @@
     <div id="app">
         <header
             class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
-            <a href="/admin.html" class="flex items-center gap-2 text-white no-underline">
+            <a href="#" id="back-to-dash" class="flex items-center gap-2 text-white no-underline">
                 <span class="material-symbols-outlined">arrow_back</span>
                 <span class="font-display italic text-xl">Volver al Panel</span>
             </a>
             <div class="flex items-center gap-4">
-                <div class="flex flex-col text-right hidden md:flex">
-                    <span class="font-display italic text-lg font-bold text-white leading-none">Reconecta
-                        Coaching</span>
-                    <span class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Transforma
-                        tu interior, lidera tu vida.</span>
+                <div class="flex flex-col text-right">
+                    <span id="header-coach-name"
+                        class="font-display italic text-lg font-bold text-white leading-none">Cargando...</span>
+                    <span class="text-[8px] text-yellow-500 uppercase font-bold tracking-widest mt-1 opacity-100">Portal
+                        Coach Admin (v40.0 DASHBOARD SYNC)</span>
                 </div>
-                <img src="/assets/logo.jpg" alt="Logo Reconecta"
-                    class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-sm shadow-black/50">
+                <div class="w-12 h-12 rounded-full border border-white/10 overflow-hidden bg-white/5">
+                    <img id="header-coach-photo" src="/assets/logo.jpg" class="w-full h-full object-cover hidden">
+                    <div id="header-coach-icon" class="w-full h-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-xl">person</span>
+                    </div>
+                </div>
             </div>
         </header>
+
+        <script>
+            (function () {
+                const params = new URLSearchParams(window.location.search);
+                const t = params.get('tenant') || 'master';
+
+                const checkAuth = () => {
+                    if (sessionStorage.getItem('reconecta_admin_auth') === 'true' || localStorage.getItem('reconecta_admin_auth') === 'true') return true;
+                    const ms = localStorage.getItem('master_session');
+                    if (ms && (Date.now() - parseInt(ms)) < 1800000) return true;
+                    const storages = [sessionStorage, localStorage];
+                    for (const s of storages) {
+                        for (let i = 0; i < s.length; i++) {
+                            const k = s.key(i);
+                            if (k && k.startsWith('pc_auth_') && s.getItem(k) === 'true') return true;
+                        }
+                    }
+                    return false;
+                };
+
+                const attemptAccess = (retries = 2) => {
+                    if (checkAuth()) {
+                        sessionStorage.setItem('reconecta_admin_auth', 'true');
+                        console.log("[SECURITY] Access Granted.");
+                    } else if (retries > 0) {
+                        console.log("[SECURITY] Auth check pending. Retrying in 500ms... (Retries left: " + retries + ")");
+                        setTimeout(() => attemptAccess(retries - 1), 500);
+                    } else {
+                        console.error("[SECURITY] Access denied. Redirecting to dashboard.");
+                        window.location.replace('coach-dashboard.html?tenant=' + t);
+                    }
+                };
+
+                attemptAccess(2);
+            })();
+        </script>
 
         <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
             <div class="max-w-6xl mx-auto">
@@ -100,17 +140,29 @@
                         <p class="text-slate-500 text-xs">Crecimiento orgánico</p>
                     </div>
                     <div class="glass-panel p-6 rounded-3xl border-white/10 flex flex-col items-center text-center">
-                        <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Total
-                            Histórico</span>
-                        <div id="count-total" class="text-4xl font-display text-white mb-1">0</div>
-                        <p class="text-slate-500 text-xs">Vidas alcanzadas</p>
-                    </div>
-                    <div
-                        class="glass-panel p-6 rounded-3xl border-primary/20 bg-primary/5 flex flex-col items-center text-center">
                         <span class="text-primary text-[10px] uppercase font-bold tracking-widest mb-2">Ingresos
                             Mes</span>
                         <div id="revenue-month" class="text-4xl font-display text-white mb-1">$0</div>
                         <p class="text-slate-500 text-xs">Recaudación actual</p>
+                    </div>
+                </div>
+
+                <!-- Business Performance (Moved from main dashboard) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="glass-panel p-8 rounded-[2rem] border-white/10 flex flex-col items-center text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-black mb-1">Volumen Bruto (Mes)</p>
+                        <p class="text-3xl font-bold text-white" id="gross-revenue">$0.00</p>
+                        <p class="text-[9px] text-primary font-bold mt-2 font-mono">STREAMS SYNCED</p>
+                    </div>
+                    <div class="glass-panel p-8 rounded-[2rem] border-white/10 flex flex-col items-center text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-black mb-1">Consultantes Activos</p>
+                        <p class="text-3xl font-bold text-white" id="active-clients">0</p>
+                        <p class="text-[9px] text-primary font-bold mt-2 font-mono">LOYALTY ENGINE</p>
+                    </div>
+                    <div class="glass-panel p-8 rounded-[2rem] border-white/10 flex flex-col items-center text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-black mb-1">Crecimiento</p>
+                        <p class="text-3xl font-bold text-white" id="conversion-rate">0%</p>
+                        <p class="text-[9px] text-primary font-bold mt-2 font-mono">PORTAL MOMENTUM</p>
                     </div>
                 </div>
 
@@ -191,55 +243,79 @@
         </main>
     </div>
 
-    <script>
+    <script type="module">
+        import { getTenantMetadata } from './src/firebase_v13.js';
+
         const PROJECT_ID = "reconecta-ed650";
         const API_KEY = "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM";
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check auth
-            if (sessionStorage.getItem('reconecta_admin_auth') !== 'true') {
-                window.location.href = '/admin.html';
-                return;
-            }
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const tenantId = params.get('tenant') || 'master';
 
-            loadStats();
+            document.getElementById('back-to-dash').href = `coach-dashboard.html?tenant=${tenantId}`;
+
+            // Load Tropicalization
+            try {
+                const metadata = await getTenantMetadata(tenantId);
+                if (metadata) {
+                    document.getElementById('header-coach-name').textContent = metadata.name || tenantId;
+                    if (metadata.coachPhoto) {
+                        const img = document.getElementById('header-coach-photo');
+                        img.src = metadata.coachPhoto;
+                        img.classList.remove('hidden');
+                        document.getElementById('header-coach-icon').classList.add('hidden');
+                    }
+                }
+            } catch (e) { console.error(e); }
+
+            loadStats(tenantId);
         });
 
-        async function loadStats() {
+        async function loadStats(tenantId) {
             try {
-                // 1. Fetch Visits
+                // 1. Fetch Visits and filter by tenantId
                 const visitsUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/visits?pageSize=1000&key=${API_KEY}`;
                 const visitsRes = await fetch(visitsUrl);
                 const visitsData = await visitsRes.json();
-                const visits = (visitsData.documents || []).map(doc => {
-                    const f = doc.fields;
-                    return {
-                        visitorId: f.visitorId?.stringValue,
-                        name: f.name?.stringValue || 'Anónimo',
-                        path: f.path?.stringValue || '/',
-                        timestamp: parseInt(f.timestamp?.integerValue) || 0,
-                        date: f.date?.stringValue,
-                        month: f.month?.stringValue
-                    };
-                }).sort((a, b) => b.timestamp - a.timestamp);
+                const visits = (visitsData.documents || [])
+                    .map(doc => {
+                        const f = doc.fields;
+                        return {
+                            visitorId: f.visitorId?.stringValue,
+                            tenantId: f.tenantId?.stringValue || 'master',
+                            name: f.name?.stringValue || 'Anónimo',
+                            path: f.path?.stringValue || '/',
+                            timestamp: parseInt(f.timestamp?.integerValue) || 0,
+                            date: f.date?.stringValue,
+                            month: f.month?.stringValue
+                        };
+                    })
+                    .filter(v => v.tenantId === tenantId)
+                    .sort((a, b) => b.timestamp - a.timestamp);
 
-                // 2. Fetch Appointments
+                // 2. Fetch Appointments and filter by tenantId
+                // Note: appointments currently use a 'tenantId' field if available, or we assume isolation by collection structure in Phase 3
                 const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/appointments?pageSize=1000&key=${API_KEY}`;
                 const appRes = await fetch(appUrl);
                 const appData = await appRes.json();
-                const appointments = (appData.documents || []).map(doc => {
-                    const f = doc.fields;
-                    return {
-                        id: f.id?.stringValue,
-                        name: f.name?.stringValue,
-                        date: f.date?.stringValue,
-                        time: f.time?.stringValue,
-                        price: f.price?.stringValue || '0',
-                        serviceType: f.serviceType?.stringValue || 'COACHING',
-                        insurance: f.insurance?.stringValue || 'NONE',
-                        timestamp: parseInt(f.timestamp?.integerValue) || 0
-                    };
-                }).sort((a, b) => b.timestamp - a.timestamp);
+                const appointments = (appData.documents || [])
+                    .map(doc => {
+                        const f = doc.fields;
+                        return {
+                            id: f.id?.stringValue,
+                            tenantId: f.tenantId?.stringValue || 'master',
+                            name: f.name?.stringValue,
+                            date: f.date?.stringValue,
+                            time: f.time?.stringValue,
+                            price: f.price?.stringValue || '0',
+                            serviceType: f.serviceType?.stringValue || 'COACHING',
+                            insurance: f.insurance?.stringValue || 'NONE',
+                            timestamp: parseInt(f.timestamp?.integerValue) || 0
+                        };
+                    })
+                    .filter(a => a.tenantId === tenantId)
+                    .sort((a, b) => b.timestamp - a.timestamp);
 
                 renderDashboard(visits, appointments);
             } catch (err) {
@@ -255,15 +331,25 @@
             const todayVisits = visits.filter(v => v.date === today).length;
             const monthVisits = visits.filter(v => v.month === thisMonth).length;
 
-            // Monthly Revenue calculate
+            // Business Metrics Calculation
             const monthRevenue = appointments
                 .filter(a => a.date?.startsWith(thisMonth))
                 .reduce((acc, a) => acc + parseFloat(a.price || 0), 0);
+
+            const activeClients = new Set(appointments.map(a => a.name)).size;
+
+            const uniqueVisitsMonth = new Set(visits.filter(v => v.month === thisMonth).map(v => v.visitorId)).size;
+            const conversionRate = uniqueVisitsMonth > 0 ? ((activeClients / uniqueVisitsMonth) * 100).toFixed(1) : 0;
 
             document.getElementById('count-today').textContent = todayVisits;
             document.getElementById('count-month').textContent = monthVisits;
             document.getElementById('count-total').textContent = visits.length;
             document.getElementById('revenue-month').textContent = `$${monthRevenue}`;
+
+            // Populating moved stats
+            document.getElementById('gross-revenue').textContent = `$${monthRevenue.toLocaleString()}`;
+            document.getElementById('active-clients').textContent = activeClients;
+            document.getElementById('conversion-rate').textContent = `${conversionRate}%`;
 
             // 2. Visits Chart (By Day for the last 14 days)
             const dailyCounts = {};

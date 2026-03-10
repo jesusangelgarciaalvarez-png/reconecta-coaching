@@ -29,22 +29,20 @@
             </div>
             <!-- REBUILD BANNER VERIFICATION -->
             <div
-                style="background: #022c22; color: #ffffff; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-                REBUILD v31.0 - SYNC-STABLE (Forest Fixed)
+                style="background: #eab308; color: #000000; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
+                REBUILD v35.0 - MANUAL SYNC (Tenant Proof)
             </div>
 
             <header
                 class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
                 <div class="flex items-center gap-4">
-                    <img src="/assets/logo.jpg" alt="Logo Reconecta"
+                    <img id="brand-logo" src="/assets/logo.jpg" alt="Logo Reconecta"
                         class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-sm shadow-black/50">
                     <div class="flex flex-col">
-                        <span
-                            class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Reconecta
-                            Coaching</span>
-                        <span
-                            class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Transforma
-                            tu interior, lidera tu vida.</span>
+                        <span id="brand-name"
+                            class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
+                        <span id="brand-tagline"
+                            class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
                     </div>
                 </div>
                 <button id="menu-btn"
@@ -61,15 +59,13 @@
                 <div class="relative z-10 h-full flex flex-col p-8">
                     <header class="flex justify-between items-center mb-16">
                         <div class="flex items-center gap-4">
-                            <img src="/assets/logo.jpg" alt="Logo Reconecta"
+                            <img id="menu-logo" src="/assets/logo.jpg" alt="Logo Reconecta"
                                 class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-inner">
                             <div class="flex flex-col text-left">
-                                <span
-                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Reconecta
-                                    Coaching</span>
-                                <span
-                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Transforma
-                                    tu interior, lidera tu vida.</span>
+                                <span id="menu-name"
+                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
+                                <span id="menu-tagline"
+                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
                             </div>
                         </div>
                         <button id="close-menu"
@@ -107,14 +103,13 @@
                         </span>
                         Tu espacio de transformación
                     </div>
-                    <h1
+                    <h1 id="hero-title"
                         class="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.1] md:leading-tight">
-                        Encuentra tu centro,<br>
-                        <span class="not-italic text-primary">conecta contigo.</span>
+                        Cargando...
                     </h1>
-                    <p
+                    <p id="hero-subtitle"
                         class="text-slate-300 text-base md:text-xl font-light leading-relaxed mb-8 md:mb-10 max-w-lg mx-auto px-2">
-                        Acompañamiento personalizado para reconstruir tu autoestima con serenidad y claridad emocional.
+                        Cargando...
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full mt-12">
                         <a href="/quienes-somos.html"
@@ -219,6 +214,7 @@
             </div>
         </div>
     </div>
+    <script type="module" src="/src/branding.js"></script>
     <script type="module" src="/src/main.js"></script>
 </body>
 

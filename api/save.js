@@ -1,6 +1,6 @@
 /**
- * MEDIC/COACH PRO BRIDGE v40.0 - AGNOSTIC ARCHITECTURE
- * Handles both Coaching and Medical bookings with specialized price logic.
+ * PORTALCOACH.COM SaaS BRIDGE v50.0 - B2B MULTI-TENANT ARCHITECTURE
+ * Handles Coaching/Medical bookings with strict data isolation.
  */
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -9,106 +9,153 @@ export default async function handler(req, res) {
     const PROJECT_ID = "reconecta-ed650";
     const API_KEY = "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM";
 
+    // 0. MULTI-TENANT RESOLUTION
+    let tid = req.headers['x-tenant-id'] || data.tenant_id;
+    if (!tid) {
+        const host = req.headers.host || "";
+        const hostParts = host.split('.');
+        tid = hostParts.length > 2 ? hostParts[0] : "master";
+    }
+    const tenantId = tid.toLowerCase();
+
     // INDUSTRY MODE CONFIG
     const isDemo = data.isDemo === true;
     const isMedical = data.serviceType === 'MEDICAL';
     const COLL_APP = isDemo ? "demo_appointments" : "appointments";
     const COLL_DAYS = isDemo ? "demo_days" : "days";
     const COLL_USERS = isDemo ? "demo_users" : "users";
-    const COLL_PROMOS = "promotions";
 
     try {
-        console.log(`SYNC-BRIDGE: Processing ${isMedical ? 'MEDICAL' : 'COACHING'} booking for`, data.id);
+        console.log(`[Coaching-SaaS] Processing ${tenantId} | ${data.id}`);
 
-        // 1. SAVE APPOINTMENT RECORD
-        let promoValidation = "NONE";
-        let basePrice = isMedical ? 1200 : 600;
-        let promoText = "";
+        // 1. FETCH USER VISIT HISTORY (Tenant Scoped)
+        const userDocId = `${tenantId}_${data.phone}`;
+        const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${userDocId}?key=${API_KEY}`;
+        let visitCount = 1;
 
-        // FETCH MONTHLY PROMO DATA (Only for Coaching normally)
-        if (!isMedical) {
-            try {
-                const monthId = data.date.substring(0, 7);
-                const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_PROMOS}/${monthId}?key=${API_KEY}`;
-                const promoRead = await fetch(promoUrl);
-                if (promoRead.ok) {
-                    const promoData = await promoRead.json();
-                    if (promoData.fields && promoData.fields.price) {
-                        basePrice = parseFloat(promoData.fields.price.stringValue || "600");
-                    }
-                    if (promoData.fields && promoData.fields.text) {
-                        promoText = promoData.fields.text.stringValue.toLowerCase();
+        try {
+            const userRead = await fetch(userUrl);
+            if (userRead.ok) {
+                const userData = await userRead.json();
+                if (userData.fields?.visitCount?.integerValue) {
+                    visitCount = parseInt(userData.fields.visitCount.integerValue) + 1;
+                }
+            }
+        } catch (e) { }
+
+        // 2. FETCH TENANT SETTINGS & PROMOTIONS (For Price/Stripe)
+        const tenantUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/tenants/${tenantId}?key=${API_KEY}`;
+        const now = new Date();
+        const monthId = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        const promoUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/promotions/${tenantId}_${monthId}?key=${API_KEY}`;
+
+        let [tenantRes, promoRes] = await Promise.all([
+            fetch(tenantUrl),
+            fetch(promoUrl)
+        ]);
+
+        let tenantData = tenantRes.ok ? await tenantRes.json() : {};
+        let promoData = promoRes.ok ? await promoRes.json() : null;
+
+        // 2.5 TRIAL LIMIT CHECK (Phase 3)
+        const status = tenantData.fields?.status?.stringValue || "active";
+        if (status === "trial") {
+            const totalVolumeUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents:runQuery?key=${API_KEY}`;
+            const totalQuery = {
+                structuredQuery: {
+                    from: [{ collectionId: COLL_APP }],
+                    where: {
+                        fieldFilter: { field: { fieldPath: "tenant_id" }, op: "EQUAL", value: { stringValue: tenantId } }
                     }
                 }
-            } catch (e) {
-                console.warn("Could not fetch monthly promo");
+            };
+            const totalRes = await fetch(totalVolumeUrl, { method: 'POST', body: JSON.stringify(totalQuery) });
+            if (totalRes.ok) {
+                const totalData = await totalRes.json();
+                const totalCount = (totalData[0]?.document) ? totalData.length : 0;
+                if (totalCount >= 2 && !data.previewOnly) {
+                    return res.status(403).json({
+                        error: "TRIAL_LIMIT_REACHED",
+                        message: "Límite de prueba alcanzado (2 sesiones). Contacte a soporte para activar el plan premium."
+                    });
+                }
             }
         }
 
-        // 2. FETCH USER VISIT HISTORY
-        const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
-        let visitCount = 1;
-        const userRead = await fetch(userUrl);
-        if (userRead.ok) {
-            const userData = await userRead.json();
-            if (userData.fields && userData.fields.visitCount && userData.fields.visitCount.integerValue) {
-                visitCount = parseInt(userData.fields.visitCount.integerValue) + 1;
-            }
+        // 3. INTELLIGENT PRICE ENGINE & TIERED COMMISSION POLICY
+        let basePrice = isMedical ? 1200 : 600;
+        if (tenantData.fields?.price?.stringValue) {
+            basePrice = parseFloat(tenantData.fields.price.stringValue);
         }
 
-        // 3. PRICE CALCULATION LOGIC
         let finalPrice = basePrice;
         let discountApplied = "ORIGINAL_PRICE";
 
-        // A. Promo Text Logic (Coaching)
-        if (!isMedical && promoText) {
-            const isFirst = promoText.includes("primera") || promoText.includes("1era");
-            const isSecond = promoText.includes("segunda") || promoText.includes("2da");
-            const isThird = promoText.includes("tercera") || promoText.includes("3ra");
-
-            let match = false;
-            if (isFirst && visitCount === 1) match = true;
-            if (isSecond && visitCount === 2) match = true;
-            if (isThird && visitCount === 3) match = true;
-            if (!isFirst && !isSecond && !isThird) match = true; // General promo
-
-            if (match) {
-                if (promoText.includes("gratis")) finalPrice = 0;
-                else {
-                    const pctMatch = promoText.match(/(\d+)\s*%/);
-                    if (pctMatch) finalPrice = basePrice * (1 - (parseInt(pctMatch[1]) / 100));
+        // Logic 3.1: Promotions (Intelligent Mode)
+        if (promoData && promoData.fields?.text?.stringValue) {
+            const promo = promoData.fields.text.stringValue.toLowerCase();
+            if ((promo.includes('gratis') || promo.includes('primera')) && visitCount === 1) {
+                finalPrice = 0;
+                discountApplied = "FIRST_SESSION_FREE";
+            } else if (promo.includes('%')) {
+                const percentMatch = promo.match(/(\d+)%/);
+                if (percentMatch) {
+                    const discount = parseInt(percentMatch[1]);
+                    finalPrice = basePrice * (1 - discount / 100);
+                    discountApplied = `${discount}%_OFF`;
                 }
             }
         }
 
-        // B. Friend Promo (Viral)
-        if (data.friendPhone) {
-            const checkUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.friendPhone}?key=${API_KEY}`;
-            const checkRes = await fetch(checkUrl);
-            if (checkRes.ok) {
-                finalPrice = finalPrice * 0.8;
-                discountApplied += "_FRIEND_REBATE";
-                promoValidation = "FRIEND_VERIFIED";
-            } else {
-                promoValidation = "FRIEND_NOT_FOUND";
+        // Logic 3.2: Tiered Platform Commission (Dynamic Calculation)
+        // We fetch current month's total appointments for this tenant to decide the fee
+        let monthlyVolume = 1;
+        try {
+            const volumeUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents:runQuery?key=${API_KEY}`;
+            const volumeQuery = {
+                structuredQuery: {
+                    from: [{ collectionId: COLL_APP }],
+                    where: {
+                        compositeFilter: {
+                            op: "AND",
+                            filters: [
+                                { fieldFilter: { field: { fieldPath: "tenant_id" }, op: "EQUAL", value: { stringValue: tenantId } } },
+                                { fieldFilter: { field: { fieldPath: "timestamp" }, op: "GREATER_THAN_OR_EQUAL", value: { integerValue: String(new Date(now.getFullYear(), now.getMonth(), 1).getTime()) } } }
+                            ]
+                        }
+                    }
+                }
+            };
+            const volumeRes = await fetch(volumeUrl, { method: 'POST', body: JSON.stringify(volumeQuery) });
+            if (volumeRes.ok) {
+                const volumeData = await volumeRes.json();
+                monthlyVolume = volumeData.length || 1;
             }
-        }
+        } catch (e) { }
 
-        // C. Insurance Logic (Medical)
-        if (isMedical && data.insurance && data.insurance !== 'private') {
-            finalPrice = basePrice * 0.4; // 60% coverage
-            discountApplied = `INSURANCE_${data.insurance.toUpperCase()}_APPLIED`;
-        }
+        // Decide Fee based on Tier Policy (Default or Custom)
+        let t1_rate = parseFloat(tenantData.fields?.fee_tier1?.doubleValue || 0.10);
+        let t2_min = parseInt(tenantData.fields?.fee_tier2_min?.integerValue || 20);
+        let t2_rate = parseFloat(tenantData.fields?.fee_tier2_rate?.doubleValue || 0.06);
+        let t3_min = parseInt(tenantData.fields?.fee_tier3_min?.integerValue || 40);
+        let t3_rate = parseFloat(tenantData.fields?.fee_tier3_rate?.doubleValue || 0.04);
+
+        let platformFeeRate = t1_rate;
+        if (monthlyVolume >= t3_min) platformFeeRate = t3_rate;
+        else if (monthlyVolume >= t2_min) platformFeeRate = t2_rate;
+
+        const platformAmount = finalPrice * platformFeeRate;
 
         if (data.previewOnly) {
             return res.status(200).json({ success: true, finalPrice: finalPrice });
         }
 
-        // 4. PERSIST TO FIRESTORE
+        // 4. PERSIST APPOINTMENT (With Tenant Isolation)
         const appUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_APP}/${data.id}?key=${API_KEY}`;
         const appBody = {
             fields: {
                 id: { stringValue: String(data.id) },
+                tenant_id: { stringValue: tenantId },
                 name: { stringValue: String(data.name) },
                 email: { stringValue: String(data.email) },
                 phone: { stringValue: String(data.phone) },
@@ -117,10 +164,10 @@ export default async function handler(req, res) {
                 price: { stringValue: String(finalPrice) },
                 discountStatus: { stringValue: discountApplied },
                 serviceType: { stringValue: String(data.serviceType || "COACHING") },
-                insurance: { stringValue: String(data.insurance || "NONE") },
+                status: { stringValue: "SCHEDULED" },
                 timestamp: { integerValue: String(Date.now()) },
                 visitNumber: { integerValue: String(visitCount) },
-                systemInfo: { stringValue: "v40.0-GENERIC-READY" }
+                systemInfo: { stringValue: `PORTALCOACH-B2B-v50.0-${tenantId}` }
             }
         };
 
@@ -130,12 +177,15 @@ export default async function handler(req, res) {
             body: JSON.stringify(appBody)
         });
 
-        // 5. UPDATE AVAILABILITY MAP
-        const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_DAYS}/${data.date}?key=${API_KEY}`;
+        // 5. UPDATE AVAILABILITY (Tenant Scoped ID)
+        const dayDocId = `${tenantId}_${data.date}`;
+        const dayUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_DAYS}/${dayDocId}?key=${API_KEY}`;
+
         const blockTimes = [data.time];
         if (data.doubleSlot) {
-            const [h, m] = data.time.split(':');
-            blockTimes.push(`${(parseInt(h) + 1).toString().padStart(2, '0')}:${m}`);
+            const [h, m] = data.time.split(':').map(Number);
+            const nextTime = `${(h + 1).toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+            blockTimes.push(nextTime);
         }
 
         let currentTimes = [];
@@ -158,19 +208,21 @@ export default async function handler(req, res) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 fields: {
+                    tenant_id: { stringValue: tenantId },
                     times: { arrayValue: { values: currentTimes.map(t => ({ stringValue: t })) } },
                     ...bookingsUpdates
                 }
             })
         });
 
-        // 6. UPDATE USER PROFILE
-        const userUpdateUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${data.phone}?key=${API_KEY}`;
+        // 6. UPDATE USER PROFILE (Tenant Scoped)
+        const userUpdateUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${userDocId}?key=${API_KEY}`;
         await fetch(userUpdateUrl, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 fields: {
+                    tenant_id: { stringValue: tenantId },
                     name: { stringValue: String(data.name) },
                     email: { stringValue: String(data.email) },
                     visitCount: { integerValue: String(visitCount) },
@@ -179,10 +231,23 @@ export default async function handler(req, res) {
             })
         });
 
-        return res.status(200).json({ success: true, finalPrice: finalPrice, visitCount: visitCount });
+        // 7. STRIPE PHASE 2 PREP (Sandbox Mode)
+        const stripeEnabled = tenantData.fields?.stripeEnabled?.booleanValue || false;
+        let checkoutUrl = null;
+        if (stripeEnabled && !data.isDemo) {
+            // Here we would call Stripe API. For now, we return a mock URL.
+            checkoutUrl = `https://checkout.stripe.com/pay/cs_test_mock_${data.id}?tenant=${tenantId}`;
+        }
+
+        return res.status(200).json({
+            success: true,
+            finalPrice: finalPrice,
+            visitCount: visitCount,
+            checkoutUrl: checkoutUrl
+        });
 
     } catch (err) {
-        console.error("BRIDGE_CRASH:", err);
-        return res.status(500).json({ error: "BRIDGE_CRASH", details: err.message });
+        console.error("SaaS_BRIDGE_CRASH:", err);
+        return res.status(500).json({ error: "SaaS_BRIDGE_CRASH", details: err.message });
     }
 }

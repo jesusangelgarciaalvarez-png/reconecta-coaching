@@ -20,21 +20,60 @@
     <div id="app">
         <header
             class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
-            <a href="/admin.html" class="flex items-center gap-2 text-white no-underline">
+            <a href="#" id="back-to-dash" class="flex items-center gap-2 text-white no-underline">
                 <span class="material-symbols-outlined">arrow_back</span>
                 <span class="font-display italic text-xl">Volver al Panel</span>
             </a>
             <div class="flex items-center gap-4">
-                <div class="flex flex-col text-right hidden md:flex">
-                    <span class="font-display italic text-lg font-bold text-white leading-none">Reconecta
-                        Coaching</span>
-                    <span class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Transforma
-                        tu interior, lidera tu vida.</span>
+                <div class="flex flex-col text-right">
+                    <span id="header-coach-name"
+                        class="font-display italic text-lg font-bold text-white leading-none">Cargando...</span>
+                    <span class="text-[8px] text-yellow-500 uppercase font-bold tracking-widest mt-1 opacity-100">Portal
+                        Coach Admin (v40.0 QR SYNC)</span>
                 </div>
-                <img src="/assets/logo.jpg" alt="Logo Reconecta"
-                    class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-sm shadow-black/50">
+                <div class="w-12 h-12 rounded-full border border-white/10 overflow-hidden bg-white/5">
+                    <img id="header-coach-photo" src="/assets/logo.jpg" class="w-full h-full object-cover hidden">
+                    <div id="header-coach-icon" class="w-full h-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-xl">person</span>
+                    </div>
+                </div>
             </div>
         </header>
+        <script>
+            (function () {
+                const params = new URLSearchParams(window.location.search);
+                const t = params.get('tenant') || 'master';
+
+                const checkAuth = () => {
+                    if (sessionStorage.getItem('reconecta_admin_auth') === 'true' || localStorage.getItem('reconecta_admin_auth') === 'true') return true;
+                    const ms = localStorage.getItem('master_session');
+                    if (ms && (Date.now() - parseInt(ms)) < 1800000) return true;
+                    const storages = [sessionStorage, localStorage];
+                    for (const s of storages) {
+                        for (let i = 0; i < s.length; i++) {
+                            const k = s.key(i);
+                            if (k && k.startsWith('pc_auth_') && s.getItem(k) === 'true') return true;
+                        }
+                    }
+                    return false;
+                };
+
+                const attemptAccess = (retries = 2) => {
+                    if (checkAuth()) {
+                        sessionStorage.setItem('reconecta_admin_auth', 'true');
+                        console.log("[SECURITY] Access Granted.");
+                    } else if (retries > 0) {
+                        console.log("[SECURITY] Auth check pending. Retrying in 500ms... (Retries left: " + retries + ")");
+                        setTimeout(() => attemptAccess(retries - 1), 500);
+                    } else {
+                        console.error("[SECURITY] Access denied. Redirecting to dashboard.");
+                        window.location.replace('coach-dashboard.html?tenant=' + t);
+                    }
+                };
+
+                attemptAccess(2); // Total 1 second of patience
+            })();
+        </script>
 
         <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
             <div class="max-w-4xl mx-auto">
@@ -108,13 +147,30 @@
         </main>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check auth
-            if (sessionStorage.getItem('reconecta_admin_auth') !== 'true') {
-                window.location.href = '/admin.html';
-                return;
-            }
+    <script type="module">
+        import { getTenantMetadata } from './src/firebase_v13.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const tenantId = params.get('tenant') || 'master';
+
+            document.getElementById('back-to-dash').href = `coach-dashboard.html?tenant=${tenantId}`;
+
+            // Load Tropicalization
+            try {
+                const metadata = await getTenantMetadata(tenantId);
+                if (metadata) {
+                    document.getElementById('header-coach-name').textContent = metadata.name || tenantId;
+                    if (metadata.coachPhoto) {
+                        const img = document.getElementById('header-coach-photo');
+                        img.src = metadata.coachPhoto;
+                        img.classList.remove('hidden');
+                        document.getElementById('header-coach-icon').classList.add('hidden');
+                    }
+                    // Update QR default link
+                    document.getElementById('qr-link').value = `https://${tenantId}.portalcoach.com`;
+                }
+            } catch (e) { console.error(e); }
 
             const qrContainer = document.getElementById('qrcode-container');
             const linkInput = document.getElementById('qr-link');
@@ -131,8 +187,8 @@
             });
 
             generateBtn.addEventListener('click', () => {
-                const link = linkInput.value || 'https://reconectacoaching.com.mx';
-                const label = labelInput.value || 'Reconecta Web';
+                const link = linkInput.value || `https://${tenantId}.portalcoach.com`;
+                const label = labelInput.value || 'Mi Portal Coach';
 
                 qrContainer.innerHTML = '';
                 qrcode = new QRCode(qrContainer, {
@@ -153,7 +209,7 @@
                 if (img) {
                     const canvas = qrContainer.querySelector('canvas');
                     const link = document.createElement('a');
-                    link.download = `reconecta-qr-${Date.now()}.png`;
+                    link.download = `portal-qr-${tenantId}-${Date.now()}.png`;
                     link.href = canvas.toDataURL();
                     link.click();
                 }

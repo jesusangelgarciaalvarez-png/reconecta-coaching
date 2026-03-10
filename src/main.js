@@ -1,26 +1,28 @@
 import './index.css'
 import './tracker.js'
+import { initBranding } from './branding.js'
 
-console.log('Bold Empowerment App Initialized');
+console.log('Bold Empowerment App Initialized (SaaS Mode)');
 
-// Simple routing or interactivity can be added here
-document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        // Prevent default for now as we build the flow
-        if (link.getAttribute('href') === '#') e.preventDefault();
-    });
-});
+// 0. Auto-redirect Master Subdomain to Dashboard
+if (window.location.hostname.toLowerCase().includes('master.') &&
+    (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
+    window.location.href = '/master-dashboard';
+}
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Initialize SaaS Branding
+    await initBranding();
 
-// Navigation Menu Logic
-document.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.getElementById('menu-btn');
     const closeBtn = document.getElementById('close-menu');
     const navMenu = document.getElementById('nav-menu');
     const menuLinks = document.querySelectorAll('.menu-link');
 
     const toggleMenu = () => {
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('overflow-hidden');
+        if (navMenu) {
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('overflow-hidden');
+        }
     };
 
     if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
@@ -28,8 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     menuLinks.forEach(link => {
         link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            document.body.classList.remove('overflow-hidden');
+            if (navMenu) {
+                navMenu.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
         });
     });
 });

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin | PortalCoach.com Founders</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#fbbf24',    // Global Founder Gold
+                        dark: '#050505',
+                        panel: 'rgba(255, 255, 255, 0.03)'
+                    },
+                    fontFamily: {
+                        display: ['Newsreader', 'serif'],
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-master {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            box-shadow: 0 20px 80px -10px rgba(251, 191, 36, 0.1);
+        }
+
+        .bg-lux {
+            background:
+                radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.05) 0%, transparent 60%),
+                #050505;
+        }
+    </style>
+</head>
+
+<body class="bg-lux text-white min-h-screen font-sans">
+
+    <!-- MASTER LOGIN OVERLAY -->
+    <div id="master-auth-overlay"
+        class="fixed inset-0 z-[100] bg-dark flex items-center justify-center p-6 transition-opacity duration-500">
+        <div class="glass-master p-12 rounded-[3rem] w-full max-w-md text-center">
+            <div
+                class="w-20 h-20 border-2 border-gold rounded-full flex items-center justify-center bg-gold/5 mx-auto mb-8 shadow-[0_0_30px_rgba(251,191,36,0.2)]">
+                <span class="material-symbols-outlined text-4xl text-gold">lock</span>
+            </div>
+            <h2 class="font-display italic text-4xl mb-2">Acceso Fundador</h2>
+            <p class="text-slate-500 text-sm mb-8 font-bold uppercase tracking-widest">Ingrese su PIN de Seguridad de 6
+                dígitos</p>
+
+            <div class="grid grid-cols-6 gap-2 mb-8" id="pin-inputs">
+                <input type="password" maxlength="1"
+                    class="w-full aspect-square bg-white/5 border border-white/10 rounded-xl text-center text-2xl font-black text-gold focus:outline-none focus:border-gold transition-all">
+                <input type="password" maxlength="1"
+                    class="w-full aspect-square bg-white/5 border border-white/10 rounded-xl text-center text-2xl font-black text-gold focus:outline-none focus:border-gold transition-all">
+                <input type="password" maxlength="1"
+                    class="w-full aspect-square bg-white/5 border border-white/10 rounded-xl text-center text-2xl font-black text-gold focus:outline-none focus:border-gold transition-all">
+                <input type="password" maxlength="1"
+                    class="w-full aspect-square bg-white/5 border border-white/10 rounded-xl text-center text-2xl font-black text-gold focus:outline-none focus:border-gold transition-all">
+                <input type="password" maxlength="1"
+                    class="w-full aspect-square bg-white/5 border border-white/10 rounded-xl text-center text-2xl font-black text-gold focus:outline-none focus:border-gold transition-all">
+                <input type="password" maxlength="1"
+                    class="w-full aspect-square bg-white/5 border border-white/10 rounded-xl text-center text-2xl font-black text-gold focus:outline-none focus:border-gold transition-all">
+            </div>
+
+            <button id="verify-master-btn"
+                class="w-full bg-gold text-dark py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-gold/20 active:scale-95 disabled:opacity-50">
+                VERIFICAR IDENTIDAD
+            </button>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="sticky top-0 z-50 glass-master border-b border-gold/10 p-4 md:px-12 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <div
+                class="w-10 h-10 border border-gold/40 rounded-full flex items-center justify-center bg-gold/5 shadow-[0_0_15px_rgba(251,191,36,0.2)]">
+                <span class="material-symbols-outlined text-gold">verified_user</span>
+            </div>
+            <div>
+                <span class="font-display italic text-2xl font-bold">PortalCoach Founders</span>
+                <span class="block text-[8px] text-gold uppercase tracking-[0.4em] font-black -mt-1">Central de
+                    Administración</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="text-right hidden md:block">
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Estado de Operación</p>
+                <div class="flex items-center gap-2 justify-end">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-xs font-bold text-slate-200">SaaS ONLINE</span>
+                </div>
+            </div>
+            <button id="logout-btn"
+                class="bg-gold/10 hover:bg-gold/20 text-gold px-4 py-2 rounded-xl text-xs font-bold transition-all border border-gold/20">
+                Log Out
+            </button>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-7xl mx-auto p-6 md:p-12">
+
+        <!-- Platform Overview Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="glass-master p-8 rounded-[2rem]">
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Revenue Jesus
+                    (Comisiones)</p>
+                <p class="text-4xl font-bold text-gold" id="total-revenue-founder">$0.00</p>
+                <p class="text-[10px] text-green-400 mt-2 font-black">+15% este mes</p>
+            </div>
+            <div class="glass-master p-8 rounded-[2rem]">
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Coaches Activos</p>
+                <p class="text-4xl font-bold text-white tracking-widest" id="total-coaches">0</p>
+                <p class="text-[10px] text-slate-500 mt-2">En 4 países</p>
+            </div>
+            <div class="glass-master p-8 rounded-[2rem]">
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Comisión de Plataforma
+                </p>
+                <p class="text-4xl font-bold text-white tracking-widest">10%</p>
+                <p class="text-[10px] text-slate-500 mt-2">Promedio global</p>
+            </div>
+            <div class="glass-master p-8 rounded-[2rem]">
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Referidos Pendientes</p>
+                <p class="text-4xl font-bold text-white tracking-widest" id="pending-referrals">$0</p>
+                <p class="text-[10px] text-gold mt-2 underline cursor-pointer">Ver detalle</p>
+            </div>
+        </div>
+
+        <!-- Master View Tabs -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex gap-4">
+                <button
+                    class="bg-gold text-dark px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-xl shadow-gold/10">GESTIÓN
+                    DE COACHES</button>
+            </div>
+            <button id="add-coach-btn"
+                class="bg-white/5 hover:bg-gold hover:text-dark text-gold px-6 py-3 rounded-2xl font-black text-sm transition-all border border-gold/20 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">person_add</span>
+                NUEVO COACH
+            </button>
+        </div>
+
+        <!-- Coaches Table -->
+        <div class="glass-master rounded-[3rem] p-1 overflow-hidden">
+            <div class="p-8 border-b border-gold/10 flex justify-between items-center">
+                <h2 class="font-display italic text-3xl">Directorio de Inquilinos SaaS</h2>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Buscar coach o subdominio..."
+                        class="bg-white/5 border border-white/10 rounded-xl py-2 px-4 text-xs focus:outline-none focus:border-gold">
+                    <button class="bg-gold/10 text-gold p-2 rounded-xl border border-gold/20"><span
+                            class="material-symbols-outlined text-sm">filter_list</span></button>
+                </div>
+            </div>
+
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-white/5">
+                    <tr>
+                        <th class="p-6 text-[10px] text-slate-500 uppercase tracking-widest border-r border-white/5">
+                            Coach / Subdominio</th>
+                        <th class="p-6 text-[10px] text-slate-500 uppercase tracking-widest border-r border-white/5">
+                            Estado</th>
+                        <th class="p-6 text-[10px] text-slate-500 uppercase tracking-widest border-r border-white/5">
+                            Volumen Citas</th>
+                        <th class="p-6 text-[10px] text-slate-500 uppercase tracking-widest border-r border-white/5">Fee
+                            Aplicado</th>
+                        <th class="p-6 text-[10px] text-slate-500 uppercase tracking-widest border-r border-white/5">
+                            Referido Por</th>
+                        <th class="p-6 text-[10px] text-slate-500 uppercase tracking-widest">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="coaches-table-body" class="divide-y divide-white/5">
+                    <!-- Dynamic Loads Here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- EDIT TIERS MODAL -->
+    <div id="edit-tiers-modal"
+        class="fixed inset-0 z-[110] bg-dark/80 backdrop-blur-md hidden flex items-center justify-center p-6">
+        <div class="glass-master p-12 rounded-[3rem] w-full max-w-2xl border-gold/40">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="font-display italic text-3xl text-gold">Personalizar Comisiones</h2>
+                <button onclick="document.getElementById('edit-tiers-modal').classList.add('hidden')"
+                    class="text-slate-500 hover:text-white transition-all">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="tiers-form" class="space-y-8">
+                <input type="hidden" id="edit-tenant-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Tier 1:
+                            Base (%)</label>
+                        <input type="number" step="0.01" id="t1-rate"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-500 italic mt-10">Comisión para volumen inicial.</p>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Tier 2:
+                            Mín Citas</label>
+                        <input type="number" id="t2-min"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Tier 2:
+                            Nueva Tasa (%)</label>
+                        <input type="number" step="0.01" id="t2-rate"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Tier 3:
+                            Mín Citas</label>
+                        <input type="number" id="t3-min"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Tier 3:
+                            Nueva Tasa (%)</label>
+                        <input type="number" step="0.01" id="t3-rate"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="submit"
+                        class="flex-1 bg-gold text-dark py-4 rounded-2xl font-black text-sm shadow-xl shadow-gold/20">GUARDAR
+                        POLÍTICA</button>
+                    <button type="button" onclick="document.getElementById('edit-tiers-modal').classList.add('hidden')"
+                        class="bg-white/5 text-white px-8 rounded-2xl border border-white/10 font-bold hover:bg-white/10 transition-all">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ONBOARDING MODAL -->
+    <div id="onboarding-modal"
+        class="fixed inset-0 z-[110] bg-dark/80 backdrop-blur-md hidden flex items-center justify-center p-6">
+        <div class="glass-master p-12 rounded-[3rem] w-full max-w-lg border-gold/40">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="font-display italic text-3xl text-gold">Registrar Nuevo Coach</h2>
+                <button onclick="document.getElementById('onboarding-modal').classList.add('hidden')"
+                    class="text-slate-500 hover:text-white transition-all">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="onboarding-form" class="space-y-8">
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">ID del
+                        Subdominio (Ej: coach-maria)</label>
+                    <input type="text" id="new-tenant-id" required placeholder="Solo letras, números y guiones"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                    <p class="text-[10px] text-slate-500 mt-2">Este será su URL: <span
+                            class="text-gold">id.portalcoach.com</span></p>
+                </div>
+
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-4 block">Nombre
+                        Completo</label>
+                    <input type="text" id="new-tenant-name" required placeholder="Nombre del Coach o Agencia"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-gold">
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="submit"
+                        class="flex-1 bg-gold text-dark py-4 rounded-2xl font-black text-sm shadow-xl shadow-gold/20">ACTIVAR
+                        ACCESO</button>
+                    <button type="button" onclick="document.getElementById('onboarding-modal').classList.add('hidden')"
+                        class="bg-white/5 text-white px-8 rounded-2xl border border-white/10 font-bold hover:bg-white/10 transition-all">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/src/master-dashboard.js"></script>
+</body>
+
+</html>

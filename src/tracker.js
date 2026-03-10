@@ -16,7 +16,19 @@ function getVisitorId() {
 
 export async function trackVisit() {
     // Don't track admin pages to avoid skewing stats
-    if (window.location.pathname.startsWith('/admin')) return;
+    if (window.location.pathname.includes('/admin')) return;
+
+    // Resolve tenant from URL parameter or subdomain
+    let tenantId = 'master';
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('tenant')) {
+        tenantId = params.get('tenant');
+    } else {
+        const host = window.location.hostname;
+        if (host.includes('.portalcoach.com')) {
+            tenantId = host.split('.')[0];
+        }
+    }
 
     const visitorId = getVisitorId();
     const name = localStorage.getItem(RECONECTA_NAME_KEY) || null;
@@ -29,7 +41,8 @@ export async function trackVisit() {
             body: JSON.stringify({
                 visitorId,
                 path,
-                name
+                name,
+                tenantId
             })
         });
     } catch (e) {

@@ -40,15 +40,13 @@
                 <div class="relative z-10 h-full flex flex-col p-8">
                     <header class="flex justify-between items-center mb-16">
                         <div class="flex items-center gap-4">
-                            <img src="/assets/logo.jpg" alt="Logo Reconecta"
+                            <img id="menu-logo" src="/assets/logo.jpg" alt="Logo"
                                 class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-inner">
                             <div class="flex flex-col text-left">
-                                <span
-                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Reconecta
-                                    Coaching</span>
-                                <span
-                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Transforma
-                                    tu interior, lidera tu vida.</span>
+                                <span id="menu-name"
+                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
+                                <span id="menu-tagline"
+                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
                             </div>
                         </div>
                         <button id="close-menu"
@@ -88,22 +86,21 @@
                                 <span class="not-italic text-primary">en paz.</span>
                             </h1>
                             <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                                <div
+                                <div id="coach-photo-container"
                                     class="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] overflow-hidden border-2 border-primary/30 shadow-2xl flex-shrink-0 animate-fade-in">
-                                    <img src="/assets/betza.jpg" class="w-full h-full object-cover"
-                                        alt="Betzabé - Coach de Bienestar">
+                                    <img id="coach-photo" src="/assets/generic-avatar.png"
+                                        class="w-full h-full object-cover" alt="Coach">
                                 </div>
                                 <div class="space-y-4">
-                                    <p class="text-white text-xl font-bold font-display italic">"Soy Betzabeth"</p>
-                                    <p class="text-slate-300 text-lg font-light leading-relaxed max-w-xl">
-                                        Coach enfocada en acompañar a personas que atraviesan momentos de transición
-                                        personal y desean reconstruir su seguridad emocional con estructura y claridad.
+                                    <p id="coach-greeting" class="text-white text-xl font-bold font-display italic">
+                                        Cargando...</p>
+                                    <p id="coach-bio"
+                                        class="text-slate-300 text-lg font-light leading-relaxed max-w-xl">
+                                        Cargando biografía...
                                     </p>
-                                    <p
+                                    <p id="coach-mission"
                                         class="text-slate-400 text-base font-light leading-relaxed max-w-xl border-l border-primary/30 pl-4">
-                                        Aunque trabajo principalmente con mujeres en procesos de reconstrucción
-                                        personal, mi acompañamiento está abierto a cualquier persona comprometida con su
-                                        crecimiento y liderazgo interior.
+                                        Cargando misión...
                                     </p>
                                 </div>
                             </div>
@@ -120,7 +117,8 @@
                                     <div>
                                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
                                             Ubicación</p>
-                                        <p class="text-white text-sm font-medium">Ciudad de México, México</p>
+                                        <p id="contact-location" class="text-white text-sm font-medium">Ciudad de
+                                            México, México</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4 group">
@@ -132,7 +130,8 @@
                                     <div>
                                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
                                             Teléfono</p>
-                                        <p class="text-white text-sm font-medium">(52) 720 848 4054</p>
+                                        <p id="contact-phone" class="text-white text-sm font-medium">(52) 720 848 4054
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4 group">
@@ -144,7 +143,8 @@
                                     <div>
                                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
                                             WhatsApp</p>
-                                        <p class="text-white text-sm font-medium">(52) 720 848 4054</p>
+                                        <p id="contact-whatsapp" class="text-white text-sm font-medium">(52) 720 848
+                                            4054</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4 group">
@@ -156,8 +156,9 @@
                                     <div>
                                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Correo
                                         </p>
-                                        <p class="text-white text-sm font-medium text-wrap break-all">
-                                            <a href="mailto:tureconectacoaching@gmail.com"
+                                        <p id="contact-email-container"
+                                            class="text-white text-sm font-medium text-wrap break-all">
+                                            <a id="contact-email" href="mailto:tureconectacoaching@gmail.com"
                                                 class="hover:text-primary transition-colors no-underline">tureconectacoaching@gmail.com</a>
                                         </p>
                                     </div>
@@ -165,35 +166,18 @@
                             </div>
                         </div>
 
-                        <!-- Right Column: Focused Video -->
+                        <!-- Right Column: Focused Video or Image -->
                         <div class="flex justify-center lg:justify-end animate-fade-in" style="animation-delay: 0.2s;">
                             <div class="w-full max-w-md lg:w-3/4">
-                                <div
-                                    class="glass-panel p-3 rounded-[2.5rem] border-white/10 shadow-3xl bg-white/5 relative group overflow-hidden">
-                                    <!-- Play Overlay Hint -->
-                                    <div id="video-hint"
-                                        class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/5 transition-opacity group-hover:opacity-0 pointer-events-none">
-                                        <div
-                                            class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center border border-primary/40 mb-3">
-                                            <span
-                                                class="material-symbols-outlined text-primary text-4xl">play_arrow</span>
-                                        </div>
-                                        <p class="text-white text-xs font-bold uppercase tracking-widest px-4">Pasa el
-                                            cursor para ver</p>
-                                    </div>
-
-                                    <div class="aspect-[9/16] rounded-[2rem] overflow-hidden bg-black/60 shadow-inner relative"
-                                        style="-webkit-touch-callout: none; -webkit-user-select: none; user-select: none;">
-                                        <video id="about-video"
-                                            class="w-full h-full object-cover transition-opacity duration-700 pointer-events-auto"
-                                            playsinline loop preload="metadata" poster="/hero_reconecta_v3.png">
-                                            <source src="/reconecta.mp4" type="video/mp4">
-                                        </video>
-                                        <div class="absolute inset-0 z-30 pointer-events-none bg-transparent"></div>
+                                <div id="coach-video-container"
+                                    class="glass-panel p-3 rounded-[2.5rem] border-white/10 shadow-3xl bg-white/5 aspect-[9/16] overflow-hidden flex items-center justify-center">
+                                    <!-- Dynamic Content from branding.js (Video or Image) -->
+                                    <div
+                                        class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin">
                                     </div>
                                 </div>
                                 <p class="text-center mt-6 text-slate-500 text-xs italic font-light tracking-wide">
-                                    Descubre nuestro propósito en 60 segundos.</p>
+                                    Conoce nuestra misión y propósito.</p>
                             </div>
                         </div>
                     </div>
@@ -210,14 +194,14 @@
             <footer class="relative z-10 py-12 border-t border-white/5 bg-black/20">
                 <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div class="flex items-center gap-3">
-                        <img src="/assets/logo.jpg" alt="Logo Reconecta"
+                        <img id="footer-logo" src="/assets/logo.jpg" alt="Logo"
                             class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-inner">
                         <div class="flex flex-col text-left">
-                            <span class="font-display italic text-xl font-bold text-white leading-none">Reconecta
-                                Coaching</span>
-                            <span
-                                class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Transforma
-                                tu interior, lidera tu vida.</span>
+                            <span id="footer-name"
+                                class="font-display italic text-xl font-bold text-white leading-none">Tu Coach</span>
+                            <span id="footer-tagline"
+                                class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Bienestar
+                                y Crecimiento</span>
                         </div>
                     </div>
                     <p class="text-slate-500 text-xs tracking-widest uppercase">© 2026 Reconecta Coaching</p>
@@ -226,6 +210,7 @@
         </div>
     </div>
 
+    <script type="module" src="/src/branding.js"></script>
     <script type="module" src="/src/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

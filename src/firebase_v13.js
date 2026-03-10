@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { tenantId } from "./tenant-resolver.js";
 import {
     getFirestore,
     collection,
@@ -11,6 +12,8 @@ import {
     increment,
     query,
     where,
+    orderBy,
+    limit,
     serverTimestamp,
     deleteDoc,
     arrayUnion,
@@ -40,18 +43,19 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+export const db = getFirestore(app);
 
 /**
- * Manage User - Ultra basic version to avoid blocks
+ * Manage User - Multi-tenant
  */
 export async function manageUser(phone, userData) {
     const cleanPhone = phone.replace(/\D/g, '');
-    const userRef = doc(db, getColl("users"), cleanPhone);
+    const userRef = doc(db, getColl("users"), `${tenantId}_${cleanPhone}`);
     try {
         setDoc(userRef, {
             ...userData,
             phone: cleanPhone,
+            tenant_id: tenantId,
             lastActive: serverTimestamp(),
         }, { merge: true }).catch(() => { });
         return { isFirstTime: false };
@@ -61,20 +65,25 @@ export async function manageUser(phone, userData) {
 }
 
 /**
- * Register a new appointment - BRIDGE MODE v8.1 (Enhanced Debug)
+ * Register a new appointment - BRIDGE v50.0 Multi-Tenant
  */
 export async function createAppointment(appointmentData) {
-    console.log("🚀 BRIDGE MODE v8.1: Iniciando envío al puente...");
+    console.log(`🚀 COACH-BRIDGE v50.0 (${tenantId}): Iniciando envío...`);
 
-    // Controlador de tiempo para no dejar al usuario "pasmado"
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seg de límite
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
         const response = await fetch('/api/save', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(appointmentData),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Tenant-Id': tenantId
+            },
+            body: JSON.stringify({
+                ...appointmentData,
+                tenant_id: tenantId
+            }),
             signal: controller.signal
         });
 
@@ -82,36 +91,31 @@ export async function createAppointment(appointmentData) {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("Error del puente (Servidor):", errorText);
             throw new Error(`Error Servidor (500): ${errorText}`);
         }
 
         const result = await response.json();
-        console.log("✅ Puente respondió con éxito:", result);
         return result;
 
     } catch (err) {
         clearTimeout(timeoutId);
-        if (err.name === 'AbortError') {
-            throw new Error("El servidor tardó demasiado en responder (Timeout).");
-        }
-        console.error("Error de Red/Puente:", err);
+        if (err.name === 'AbortError') throw new Error("Timeout.");
         throw err;
     }
 }
 
 /**
- * Get monthly availability by fetching all documents in 'days' for that range
+ * Get monthly availability - FILTERED BY TENANT
  */
 export async function getMonthlyAvailability(year, month) {
     const daysRef = collection(db, getColl("days"));
     const mStr = (month + 1).toString().padStart(2, '0');
-    const start = `${year}-${mStr}-01`;
-    const end = `${year}-${mStr}-31`;
 
     const q = query(daysRef,
-        where("__name__", ">=", start),
-        where("__name__", "<=", end)
+        where("tenant_id", "==", tenantId),
+        orderBy("__name__"),
+        where("__name__", ">=", `${tenantId}_${year}-${mStr}-01`),
+        where("__name__", "<=", `${tenantId}_${year}-${mStr}-31`)
     );
 
     const querySnapshot = await getDocs(q);
@@ -119,7 +123,7 @@ export async function getMonthlyAvailability(year, month) {
 
     querySnapshot.forEach((docSnap) => {
         const data = docSnap.data();
-        const date = docSnap.id;
+        const date = docSnap.id.split('_')[1];
         if (data.times) {
             data.times.forEach(time => results.push({ date, time }));
         }
@@ -129,10 +133,10 @@ export async function getMonthlyAvailability(year, month) {
 }
 
 /**
- * Get occupied slots
+ * Get occupied slots - FILTERED BY TENANT
  */
 export async function getOccupiedSlots(dateStr) {
-    const dayRef = doc(db, getColl("days"), dateStr);
+    const dayRef = doc(db, getColl("days"), `${tenantId}_${dateStr}`);
     const docSnap = await getDoc(dayRef);
     if (docSnap.exists()) {
         return docSnap.data().times || [];
@@ -141,11 +145,31 @@ export async function getOccupiedSlots(dateStr) {
 }
 
 /**
- * Get an appointment by its 6-digit ID
+ * Toggle slot availability - FILTERED BY TENANT
+ */
+export async function toggleOccupiedSlot(dateStr, time, shouldOccupy) {
+    const dayRef = doc(db, getColl("days"), `${tenantId}_${dateStr}`);
+    try {
+        await setDoc(dayRef, {
+            tenant_id: tenantId,
+            times: shouldOccupy ? arrayUnion(time) : arrayRemove(time)
+        }, { merge: true });
+        return true;
+    } catch (e) {
+        console.error("Error toggling slot:", e);
+        throw e;
+    }
+}
+
+/**
+ * Get an appointment by its 6-digit ID - FILTERED BY TENANT
  */
 export async function getAppointment(appointmentId) {
     const appointmentsRef = collection(db, getColl("appointments"));
-    const q = query(appointmentsRef, where("id", "==", appointmentId));
+    const q = query(appointmentsRef,
+        where("tenant_id", "==", tenantId),
+        where("id", "==", appointmentId)
+    );
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) return null;
@@ -154,13 +178,19 @@ export async function getAppointment(appointmentId) {
 }
 
 /**
- * Delete/Cancel an appointment
+ * Delete/Cancel an appointment - FILTERED BY TENANT
  */
 export async function deleteAppointment(docId, date, time) {
     const appRef = doc(db, getColl("appointments"), docId);
+    const appSnap = await getDoc(appRef);
+
+    if (appSnap.exists() && appSnap.data().tenant_id !== tenantId) {
+        throw new Error("UNAUTHORIZED_ACCESS");
+    }
+
     await deleteDoc(appRef);
     if (date && time) {
-        const dayRef = doc(db, getColl("days"), date);
+        const dayRef = doc(db, getColl("days"), `${tenantId}_${date}`);
         try {
             await updateDoc(dayRef, {
                 times: arrayRemove(time),
@@ -173,15 +203,14 @@ export async function deleteAppointment(docId, date, time) {
 }
 
 /**
- * Decrement visit count for a user (used on valid cancellation)
+ * Decrement visit count for a user - FILTERED BY TENANT
  */
 export async function decrementUserVisit(phone) {
-    if (!phone) return;
     const cleanPhone = phone.replace(/\D/g, '');
-    const userRef = doc(db, getColl("users"), cleanPhone);
+    const userRef = doc(db, getColl("users"), `${tenantId}_${cleanPhone}`);
     try {
         const docSnap = await getDoc(userRef);
-        if (docSnap.exists()) {
+        if (docSnap.exists() && docSnap.data().tenant_id === tenantId) {
             const currentCount = docSnap.data().visitCount || 0;
             const newCount = Math.max(0, currentCount - 1);
             await updateDoc(userRef, {
@@ -195,12 +224,15 @@ export async function decrementUserVisit(phone) {
 }
 
 /**
- * Get all appointments for a user by phone
+ * Get all appointments for a user by phone - FILTERED BY TENANT
  */
 export async function getUserAppointments(phone) {
     const cleanPhone = phone.replace(/\D/g, '');
     const appointmentsRef = collection(db, getColl("appointments"));
-    const q = query(appointmentsRef, where("phone", "==", cleanPhone));
+    const q = query(appointmentsRef,
+        where("phone", "==", cleanPhone),
+        where("tenant_id", "==", tenantId)
+    );
     const querySnapshot = await getDocs(q);
 
     const results = [];
@@ -209,18 +241,46 @@ export async function getUserAppointments(phone) {
     });
     return results;
 }
+
 /**
- * Get monthly promotion text
+ * Get monthly promotion text - Multi-tenant
  */
 export async function getMonthlyPromotion(monthId) {
     try {
-        const promoRef = doc(db, "promotions", monthId);
-        const docSnap = await getDoc(promoRef);
-        if (docSnap.exists()) {
-            return docSnap.data().text;
-        }
+        // 1. Try tenant-specific promo in tenants/{id}/promotions/{monthId}
+        const tenantPromoRef = doc(db, "tenants", tenantId, "promotions", monthId);
+        const snap = await getDoc(tenantPromoRef);
+        if (snap.exists() && snap.data().text) return snap.data().text;
+
+        // 2. Legacy fallback or global promo (optional)
+        const globalPromoRef = doc(db, "promotions", monthId);
+        const globalSnap = await getDoc(globalPromoRef);
+        if (globalSnap.exists()) return globalSnap.data().text;
     } catch (e) {
-        console.error("Error fetching promotion:", e);
+        console.error("Error fetching monthly promotion:", e);
     }
     return null;
+}
+
+/**
+ * Check if a tenant ID is available (not already taken)
+ */
+export async function checkTenantAvailability(candidateId) {
+    const docRef = doc(db, "tenants", candidateId);
+    const snap = await getDoc(docRef);
+    return !snap.exists();
+}
+
+/**
+ * Get Tenant Metadata (Branding, Name, etc.)
+ */
+export async function getTenantMetadata() {
+    try {
+        const tenantRef = doc(db, "tenants", tenantId);
+        const snap = await getDoc(tenantRef);
+        if (snap.exists()) return snap.data();
+    } catch (e) {
+        console.error("Error fetching tenant metadata:", e);
+    }
+    return { name: tenantId === 'master' ? 'Jesus Coach' : tenantId.toUpperCase() };
 }

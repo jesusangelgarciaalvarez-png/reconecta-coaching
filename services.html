@@ -80,7 +80,7 @@
                         momento actual. Cada sesión es un paso hacia tu bienestar.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-2 sm:px-0">
+                <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-2 sm:px-0">
                     <!-- Individual Coaching -->
                     <div class="glass-panel p-6 md:p-8 rounded-[2rem] hover:border-primary/30 transition-all group">
                         <div
@@ -195,7 +195,13 @@
                     </div>
                 </div>
 
-                <div class="mt-12 md:mt-20 glass-panel p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] text-center">
+                <!-- DYNAMIC OVERRIDE -->
+                <div id="coach-services-content"
+                    class="text-slate-300 text-lg leading-relaxed text-center px-6 max-w-2xl mx-auto hidden mt-10">
+                </div>
+
+                <div id="services-footer"
+                    class="mt-12 md:mt-20 glass-panel p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] text-center">
                     <h2 class="font-display italic text-2xl md:text-3xl text-white mb-4">¿No sabes por dónde empezar?
                     </h2>
                     <p class="text-slate-400 text-sm md:text-base mb-8 max-w-lg mx-auto">Ofrecemos una sesión de

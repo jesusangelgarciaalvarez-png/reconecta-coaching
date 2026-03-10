@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Horarios | PortalCoach Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/src/index.css">
+</head>
+
+<body class="bg-[#051414] text-white selection:bg-primary/30">
+    <div id="app" class="min-h-screen flex flex-col pt-24 px-6 pb-20">
+        <!-- Header -->
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+            <a href="#" id="back-to-dash"
+                class="flex items-center gap-2 text-white no-underline hover:text-primary transition-all group">
+                <span
+                    class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
+                <span class="font-display italic text-xl">Panel</span>
+            </a>
+            <h1 class="text-sm font-bold tracking-widest uppercase text-slate-400">Configuración de Agenda</h1>
+            <div class="w-10"></div>
+        </header>
+
+        <main class="max-w-2xl mx-auto w-full">
+            <div class="glass-panel rounded-[2.5rem] p-8 md:p-12 border-white/10 animate-fade-in">
+                <div class="text-center mb-10">
+                    <div
+                        class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
+                        <span class="material-symbols-outlined text-primary text-3xl">schedule</span>
+                    </div>
+                    <h2 class="font-display italic text-3xl md:text-4xl text-white mb-2">Define tu Tiempos</h2>
+                    <p class="text-slate-400 text-sm">Configura los días y el rango de horas en que estarás disponible
+                        para tus clientes.</p>
+                </div>
+
+                <form id="schedule-form" class="space-y-10">
+                    <!-- Working Days -->
+                    <div class="space-y-4">
+                        <label class="text-primary text-[10px] uppercase font-bold tracking-[0.2em] px-2">Días
+                            Laborales</label>
+                        <div class="grid grid-cols-7 gap-2">
+                            <label class="day-check">
+                                <input type="checkbox" name="days" value="1" checked>
+                                <span>LU</span>
+                            </label>
+                            <label class="day-check">
+                                <input type="checkbox" name="days" value="2" checked>
+                                <span>MA</span>
+                            </label>
+                            <label class="day-check">
+                                <input type="checkbox" name="days" value="3" checked>
+                                <span>MI</span>
+                            </label>
+                            <label class="day-check">
+                                <input type="checkbox" name="days" value="4" checked>
+                                <span>JU</span>
+                            </label>
+                            <label class="day-check">
+                                <input type="checkbox" name="days" value="5" checked>
+                                <span>VI</span>
+                            </label>
+                            <label class="day-check is-weekend">
+                                <input type="checkbox" name="days" value="6">
+                                <span>SÁ</span>
+                            </label>
+                            <label class="day-check is-weekend">
+                                <input type="checkbox" name="days" value="0">
+                                <span>DO</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Hours Range -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <label class="text-primary text-[10px] uppercase font-bold tracking-[0.2em] px-2">Hora
+                                Inicio</label>
+                            <select name="startHour"
+                                class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary/50 text-white cursor-pointer">
+                                <option value="7">07:00 AM</option>
+                                <option value="8">08:00 AM</option>
+                                <option value="9" selected>09:00 AM</option>
+                                <option value="10">10:00 AM</option>
+                                <option value="11">11:00 AM</option>
+                                <option value="12">12:00 PM</option>
+                            </select>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-primary text-[10px] uppercase font-bold tracking-[0.2em] px-2">Hora
+                                Fin</label>
+                            <select name="endHour"
+                                class="w-full glass-panel bg-white/5 border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary/50 text-white cursor-pointer">
+                                <option value="13">01:00 PM</option>
+                                <option value="14">02:00 PM</option>
+                                <option value="15">03:00 PM</option>
+                                <option value="16">04:00 PM</option>
+                                <option value="17" selected>05:00 PM</option>
+                                <option value="18">06:00 PM</option>
+                                <option value="19">07:00 PM</option>
+                                <option value="20">08:00 PM</option>
+                                <option value="21">09:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="status-msg" class="hidden text-center py-4 rounded-2xl text-xs font-bold animate-fade-in">
+                    </div>
+
+                    <button type="submit" id="save-btn"
+                        class="w-full bg-primary hover:bg-[#d4a00a] text-[#0a1f1f] py-5 rounded-3xl font-bold text-base transition-all shadow-xl shadow-primary/10 flex items-center justify-center gap-3">
+                        <span class="material-symbols-outlined">save</span>
+                        GUARDAR CONFIGURACIÓN
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .day-check {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .day-check input {
+            display: none;
+        }
+
+        .day-check span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px;
+            width: 100%;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 10px;
+            font-weight: 800;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+
+        .day-check input:checked+span {
+            background: rgba(236, 182, 19, 0.1);
+            border-color: rgba(236, 182, 19, 0.4);
+            color: #ecb613;
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(236, 182, 19, 0.1);
+        }
+
+        .is-weekend span {
+            color: #ef444455;
+        }
+
+        .is-weekend input:checked+span {
+            color: #ef4444;
+            border-color: #ef444444;
+            background: #ef444411;
+        }
+    </style>
+
+    <script type="module">
+        import { getTenantMetadata } from '/src/firebase_v13.js';
+
+        const params = new URLSearchParams(window.location.search);
+        const tenantId = params.get('tenant') || 'master';
+        const form = document.getElementById('schedule-form');
+        const saveBtn = document.getElementById('save-btn');
+        const statusMsg = document.getElementById('status-msg');
+
+        document.getElementById('back-to-dash').href = `/coach-dashboard.html?tenant=${tenantId}`;
+
+        // 1. Initial Load
+        async function loadConfig() {
+            try {
+                const data = await getTenantMetadata(tenantId);
+                if (data && data.schedule) {
+                    const s = data.schedule;
+                    // Days
+                    const dayInputs = form.querySelectorAll('input[name="days"]');
+                    dayInputs.forEach(input => {
+                        input.checked = s.days.includes(parseInt(input.value));
+                    });
+                    // Hours
+                    form.querySelector('select[name="startHour"]').value = s.startHour;
+                    form.querySelector('select[name="endHour"]').value = s.endHour;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="animate-spin material-symbols-outlined">sync</span> GUARDANDO...';
+
+            const days = Array.from(form.querySelectorAll('input[name="days"]:checked')).map(i => parseInt(i.value));
+            const startHour = parseInt(form.querySelector('select[name="startHour"]').value);
+            const endHour = parseInt(form.querySelector('select[name="endHour"]').value);
+
+            const payload = {
+                tenantId: tenantId,
+                schedule: {
+                    days: days,
+                    startHour: startHour,
+                    endHour: endHour
+                }
+            };
+
+            try {
+                const res = await fetch('/api/update-tenant', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    statusMsg.textContent = "¡Configuración guardada correctamente!";
+                    statusMsg.className = "bg-green-500/20 text-green-400 p-4 rounded-2xl block text-center";
+                    setTimeout(() => statusMsg.className = "hidden", 3000);
+                } else {
+                    throw new Error("Error al guardar");
+                }
+            } catch (err) {
+                statusMsg.textContent = "Hubo un problema al guardar. Intenta de nuevo.";
+                statusMsg.className = "bg-red-500/20 text-red-400 p-4 rounded-2xl block text-center";
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<span class="material-symbols-outlined">save</span> GUARDAR CONFIGURACIÓN';
+            }
+        };
+
+        loadConfig();
+    </script>
+</body>
+
+</html>

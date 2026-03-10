@@ -26,6 +26,7 @@ export default async function handler(req, res) {
         const visitBody = {
             fields: {
                 visitorId: { stringValue: String(data.visitorId) },
+                tenantId: { stringValue: String(data.tenantId || 'master') },
                 path: { stringValue: String(data.path) },
                 timestamp: { integerValue: String(timestamp) },
                 date: { stringValue: dateStr },

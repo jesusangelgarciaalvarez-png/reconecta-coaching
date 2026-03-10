@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Manual | Reconecta Admin</title>
+    <title>Agenda Manual | PortalCoach Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -27,7 +27,7 @@
 
         .calendar-day-active {
             border-color: var(--primary) !important;
-            background: rgba(var(--primary-rgb), 0.1);
+            background: rgba(236, 182, 19, 0.1);
         }
 
         .slot-btn {
@@ -61,31 +61,34 @@
     <div id="app">
         <header
             class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
-            <a href="/admin.html" class="flex items-center gap-2 text-white no-underline">
+            <a href="#" id="back-to-dash" class="flex items-center gap-2 text-white no-underline">
                 <span class="material-symbols-outlined">arrow_back</span>
                 <span class="font-display italic text-xl">Volver al Panel</span>
             </a>
             <div class="flex items-center gap-4">
-                <div class="flex flex-col text-right hidden md:flex">
-                    <span class="font-display italic text-lg font-bold text-white leading-none">Reconecta
-                        Coaching</span>
-                    <span class="text-[8px] text-primary uppercase font-bold tracking-widest mt-1 opacity-80">Transforma
-                        tu interior, lidera tu vida.</span>
+                <div class="flex flex-col text-right">
+                    <span id="header-coach-name"
+                        class="font-display italic text-lg font-bold text-white leading-none">Cargando...</span>
+                    <span class="text-[8px] text-yellow-500 uppercase font-bold tracking-widest mt-1">Portal Coach Admin
+                        (v40.0 BOOKING SYNC)</span>
                 </div>
-                <img src="/assets/logo.jpg" alt="Logo Reconecta"
-                    class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-sm shadow-black/50">
+                <div class="w-12 h-12 rounded-full border border-white/10 overflow-hidden bg-white/5">
+                    <img id="header-coach-photo" src="" class="w-full h-full object-cover hidden">
+                    <div id="header-coach-icon" class="w-full h-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-xl">person</span>
+                    </div>
+                </div>
             </div>
         </header>
 
         <main class="relative z-10 min-h-screen pt-32 pb-20 px-6">
             <div class="max-w-6xl mx-auto">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
                     <!-- Left: Calendar Selection -->
                     <div class="lg:col-span-2">
                         <div class="glass-panel p-8 rounded-[2.5rem] border-white/10">
                             <div class="flex justify-between items-center mb-8">
-                                <h2 id="current-month-year" class="font-display italic text-3xl text-white">Marzo 2026
+                                <h2 id="current-month-year" class="font-display italic text-3xl text-white">Cargando...
                                 </h2>
                                 <div class="flex gap-2">
                                     <button id="prev-month"
@@ -96,9 +99,7 @@
                                             class="material-symbols-outlined">chevron_right</span></button>
                                 </div>
                             </div>
-
                             <div class="grid grid-cols-7 gap-2">
-                                <!-- Headers -->
                                 <div class="text-center text-[10px] text-slate-500 font-bold py-2">LUN</div>
                                 <div class="text-center text-[10px] text-slate-500 font-bold py-2">MAR</div>
                                 <div class="text-center text-[10px] text-slate-500 font-bold py-2">MIÉ</div>
@@ -106,10 +107,7 @@
                                 <div class="text-center text-[10px] text-slate-500 font-bold py-2">VIE</div>
                                 <div class="text-center text-[10px] text-red-500/50 font-bold py-2">SÁB</div>
                                 <div class="text-center text-[10px] text-red-500/50 font-bold py-2">DOM</div>
-
-                                <div id="calendar-grid" class="grid grid-cols-7 gap-2 col-span-7">
-                                    <!-- Days injected here -->
-                                </div>
+                                <div id="calendar-grid" class="grid grid-cols-7 gap-2 col-span-7"></div>
                             </div>
                         </div>
                     </div>
@@ -125,40 +123,42 @@
                                     Selecciona un día</h3>
                                 <p class="text-slate-500 text-xs mt-2">Haz clic en un horario para cambiar su estado</p>
                             </div>
-
-                            <div id="slots-container" class="grid grid-cols-2 gap-3">
-                                <!-- Slots injected here -->
-                            </div>
-
+                            <div id="slots-container" class="grid grid-cols-2 gap-3"></div>
                             <div id="status-message" class="mt-8 text-center text-xs text-slate-400 hidden">
                                 <span id="status-text">Actualizando...</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </main>
     </div>
 
     <script type="module">
-        import { getMonthlyAvailability, getOccupiedSlots } from '/src/firebase_v13.js';
+        import { getMonthlyAvailability, getOccupiedSlots, getTenantMetadata, toggleOccupiedSlot } from '/src/firebase_v13.js';
 
-        const PROJECT_ID = "reconecta-ed650";
-        const API_KEY = "AIzaSyAP36MKFxUd37pxaSdsJzBvXmdK7wV1XZM";
-
+        const params = new URLSearchParams(window.location.search);
+        const tenantId = params.get('tenant') || 'master';
         let currentViewDate = new Date();
         let selectedDate = null;
         let monthlyStats = [];
-
         const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check auth
-            if (sessionStorage.getItem('reconecta_admin_auth') !== 'true') {
-                window.location.href = '/admin.html';
-                return;
-            }
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('back-to-dash').href = `coach-dashboard.html?tenant=${tenantId}`;
+
+            try {
+                const metadata = await getTenantMetadata(tenantId);
+                if (metadata) {
+                    document.getElementById('header-coach-name').textContent = metadata.name || tenantId;
+                    if (metadata.coachPhoto) {
+                        const img = document.getElementById('header-coach-photo');
+                        img.src = metadata.coachPhoto;
+                        img.classList.remove('hidden');
+                        document.getElementById('header-coach-icon').classList.add('hidden');
+                    }
+                }
+            } catch (e) { console.error(e); }
 
             init();
 
@@ -176,50 +176,61 @@
             const year = currentViewDate.getFullYear();
             const month = currentViewDate.getMonth();
             document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
-
             try {
                 monthlyStats = await getMonthlyAvailability(year, month);
-                renderCalendar();
-            } catch (e) {
-                console.error(e);
-            }
+                await renderCalendar();
+            } catch (e) { console.error(e); }
         }
 
-        function renderCalendar() {
+        async function renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
-
             const year = currentViewDate.getFullYear();
             const month = currentViewDate.getMonth();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const firstDay = new Date(year, month, 1).getDay();
+            const metadata = await getTenantMetadata(tenantId);
+            const schedule = metadata?.schedule || { days: [1, 2, 3, 4, 5], startHour: 9, endHour: 17 };
 
-            // Monday start adjustment
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
             let startOffset = firstDay === 0 ? 6 : firstDay - 1;
-
             for (let i = 0; i < startOffset; i++) {
                 grid.appendChild(document.createElement('div'));
             }
 
             for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                date.setHours(0, 0, 0, 0);
+                const dayOfWeek = date.getDay();
+                const isPast = date.getTime() < today.getTime();
+                const isConfiguredOff = !schedule.days.includes(dayOfWeek);
                 const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
                 const btn = document.createElement('button');
-                btn.className = `calendar-day-btn class-panel rounded-2xl flex flex-col justify-between ${selectedDate === dateStr ? 'calendar-day-active' : ''}`;
+                btn.className = `calendar-day-btn class-panel rounded-2xl flex flex-col justify-between ${selectedDate === dateStr ? 'calendar-day-active' : 'bg-white/5'}`;
+
+                if (isPast || isConfiguredOff) {
+                    btn.disabled = true;
+                    btn.className += " opacity-20 cursor-not-allowed grayscale scale-95";
+                }
 
                 const occupiedCount = monthlyStats.filter(s => s.date === dateStr).length;
-
                 btn.innerHTML = `
                     <span class="text-white font-bold">${day}</span>
-                    <div class="text-[9px] uppercase tracking-tighter ${occupiedCount >= 9 ? 'text-red-400' : 'text-primary'}">
-                        ${occupiedCount}/9 OCUPADOS
+                    <div class="text-[9px] uppercase tracking-tighter ${occupiedCount >= 10 ? 'text-red-400' : 'text-primary'}">
+                        ${occupiedCount} OCUPADOS
                     </div>
                 `;
 
-                btn.onclick = () => {
-                    selectedDate = dateStr;
-                    renderCalendar();
-                    loadDaySlots(dateStr);
-                };
+                if (!isPast && !isConfiguredOff) {
+                    btn.onclick = () => {
+                        selectedDate = dateStr;
+                        renderCalendar();
+                        loadDaySlots(dateStr);
+                    };
+                }
                 grid.appendChild(btn);
             }
         }
@@ -231,21 +242,25 @@
             container.innerHTML = '<div class="col-span-2 text-center py-8">Cargando...</div>';
 
             try {
+                const metadata = await getTenantMetadata(tenantId);
+                const schedule = metadata?.schedule || { days: [1, 2, 3, 4, 5], startHour: 9, endHour: 17 };
                 const occupied = await getOccupiedSlots(dateStr);
                 container.innerHTML = '';
 
-                const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+                const hours = [];
+                for (let h = schedule.startHour; h <= schedule.endHour; h++) {
+                    hours.push(h);
+                }
+
                 hours.forEach(h => {
                     const time = `${h.toString().padStart(2, '0')}:00`;
                     const isOccupied = occupied.includes(time);
-
                     const btn = document.createElement('div');
                     btn.className = `slot-btn ${isOccupied ? 'slot-occupied' : 'slot-free'}`;
                     btn.innerHTML = `
                         <div class="text-xs font-bold">${h > 12 ? h - 12 : h}:00 ${h >= 12 ? 'PM' : 'AM'}</div>
                         <div class="text-[8px] uppercase mt-1 opacity-70">${isOccupied ? 'OCUPADO' : 'LIBRE'}</div>
                     `;
-
                     btn.onclick = () => toggleSlot(dateStr, time, isOccupied);
                     container.appendChild(btn);
                 });
@@ -259,57 +274,14 @@
             const statusText = document.getElementById('status-text');
             statusMsg.classList.remove('hidden');
             statusText.textContent = "Actualizando...";
-
             try {
-                const docUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/days/${date}?key=${API_KEY}`;
-
-                // Get current times
-                const getResp = await fetch(docUrl);
-                let currentTimes = [];
-                if (getResp.ok) {
-                    const data = await getResp.json();
-                    if (data.fields && data.fields.times && data.fields.times.arrayValue) {
-                        currentTimes = data.fields.times.arrayValue.values?.map(v => v.stringValue) || [];
-                    }
-                }
-
-                if (currentStatus) {
-                    // Libertar: remove from array
-                    currentTimes = currentTimes.filter(t => t !== time);
-                } else {
-                    // Ocupar: add to array
-                    if (!currentTimes.includes(time)) currentTimes.push(time);
-                }
-
-                // Patch
-                const body = {
-                    fields: {
-                        times: {
-                            arrayValue: {
-                                values: currentTimes.map(t => ({ stringValue: t }))
-                            }
-                        }
-                    }
-                };
-
-                const patchResp = await fetch(docUrl, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-
-                if (patchResp.ok) {
-                    statusText.textContent = "¡Actualizado con éxito!";
-                    setTimeout(() => statusMsg.classList.add('hidden'), 2000);
-                    init(); // Reload calendar stats
-                    loadDaySlots(date); // Reload slots
-                } else {
-                    throw new Error("Failed to patch");
-                }
-
+                await toggleOccupiedSlot(date, time, !currentStatus);
+                statusText.textContent = "¡Actualizado!";
+                setTimeout(() => statusMsg.classList.add('hidden'), 2000);
+                init();
+                loadDaySlots(date);
             } catch (err) {
-                statusText.textContent = "Error al actualizar";
-                console.error(err);
+                statusText.textContent = "Error";
             }
         }
     </script>

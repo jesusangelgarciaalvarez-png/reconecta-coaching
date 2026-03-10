@@ -5,9 +5,10 @@ import {
     getOccupiedSlots,
     getMonthlyPromotion
 } from './firebase_v13.js';
+import { tenantId } from './tenant-resolver.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('--- RECONECTA BOOKING ENGINE v4.0 (REBUILD) ---');
+    console.log(`--- PORTALCOACH SaaS ENGINE v5.0 (${tenantId}) ---`);
 
     // DOM Elements
     const elements = {
@@ -42,8 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Validation
     const missing = Object.entries(elements).filter(([k, v]) => !v).map(([k]) => k);
     if (missing.length > 0) {
-        console.error('Missing DOM elements:', missing);
-        return;
+        console.warn('SaaS Engine: Optional/Missing DOM elements:', missing);
     }
 
     // State
@@ -51,22 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentViewDate = new Date(now);
     let selectedDate = null;
     let selectedTime = null;
-    let monthlyAppointmentsCache = {}; // Array of {date, time}
-    let is90MinPromo = false; // Flag for 90-minute sessions that block 120 min
-    let isFriendPromo = false; // Flag for bring-a-friend promotions
+    let monthlyAppointmentsCache = {};
+    let is90MinPromo = false;
+    let isFriendPromo = false;
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
     /**
      * Initializes the calendar with stats
      */
-    async function initCalendar(retryCount = 0) {
+    async function initCalendar() {
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
         const cacheKey = `${year}-${month}`;
 
-        // OPTIMISTIC INIT: Initialize cache with an empty array if it doesn't exist
-        // This ensures loadTimeSlots is ALWAYS instant even if Firebase is struggling
         if (!monthlyAppointmentsCache[cacheKey]) {
             monthlyAppointmentsCache[cacheKey] = [];
         }
@@ -74,19 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendarShell();
 
         try {
-            console.log(`Background fetch for ${cacheKey}...`);
-
-            const statsPromise = getMonthlyAvailability(year, month);
-            const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 12000));
-
-            const appointments = await Promise.race([statsPromise, timeout]);
+            const appointments = await getMonthlyAvailability(year, month);
             monthlyAppointmentsCache[cacheKey] = appointments;
-            console.log(`Availability loaded for ${cacheKey}:`, appointments.length);
-
-            renderCalendarShell(); // Update shell with real dots
+            renderCalendarShell();
         } catch (e) {
             console.warn("Background availability engine error:", e);
-            // We already have [] in cache, so we just let the user book anyway
         }
     }
 
@@ -101,20 +91,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (promo) {
             elements.promoText.textContent = promo;
             elements.promoBanner.classList.remove('hidden');
-            // Check if it's the 90-minute promotion
             is90MinPromo = promo.toLowerCase().includes('90 min');
-            console.log("Promo status: 90min =", is90MinPromo);
 
             // Detect Friend Promo
             isFriendPromo = promo.toLowerCase().includes('amiga') || promo.toLowerCase().includes('recomienda');
             if (isFriendPromo && elements.friendPromoContainer) {
                 elements.friendPromoContainer.classList.remove('hidden');
-                console.log("Friend promo ACTIVE");
             }
         }
     }
 
-    function renderCalendarShell() {
+    async function renderCalendarShell() {
+        if (!elements.calendarGrid) return;
         const year = currentViewDate.getFullYear();
         const month = currentViewDate.getMonth();
         const today = new Date();
@@ -125,8 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        // Adjust empty slots for Monday-start (JS: 0=Sun, 6=Sat)
         let startOffset = firstDay === 0 ? 6 : firstDay - 1;
 
         for (let i = 0; i < startOffset; i++) {
@@ -136,30 +122,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const cacheKey = `${year}-${month}`;
         const monthAppointments = monthlyAppointmentsCache[cacheKey] || [];
 
+        const metadata = await getTenantMetadata(tenantId);
+        const schedule = metadata?.schedule || { days: [1, 2, 3, 4, 5], startHour: 9, endHour: 17 };
+
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
+            date.setHours(0, 0, 0, 0); // Strict normalization
+
+            const dayOfWeek = date.getDay();
             const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-            const isPast = date < today;
+            const isConfiguredOff = !schedule.days.includes(dayOfWeek);
+            const isPast = date.getTime() < today.getTime();
             const isSelected = selectedDate === dateStr;
 
             const btn = document.createElement('button');
             btn.className = `h-12 w-full rounded-2xl text-xs font-bold transition-all flex flex-col items-center justify-center relative border border-transparent `;
 
-            if (isWeekend || isPast) {
-                btn.className += "opacity-20 cursor-not-allowed text-slate-500 scale-90";
+            if (isConfiguredOff || isPast) {
+                btn.disabled = true;
+                btn.className += "opacity-20 cursor-not-allowed text-slate-500 scale-90 grayscale";
                 btn.textContent = day;
             } else {
                 btn.className += isSelected ? "v-grid-day-active shadow-lg" : "text-white hover:bg-white/5 border-white/5";
                 btn.innerHTML = `<span>${day}</span>`;
 
-                // Availability Dot
                 const count = monthAppointments.filter(a => a.date === dateStr).length;
                 const dot = document.createElement('span');
 
-                // 9 slots total (9am to 5pm starting times)
                 let colorClass = 'bg-green-500';
-                if (count >= 9) colorClass = 'bg-red-500 shadow-[0_0_8px_red]';
+                if (count >= 10) colorClass = 'bg-red-500 shadow-[0_0_8px_red]';
                 else if (count > 0) colorClass = 'bg-yellow-500';
 
                 dot.className = `w-1.5 h-1.5 rounded-full mt-1.5 ${colorClass} transition-colors`;
@@ -167,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 btn.onclick = (e) => {
                     e.preventDefault();
-                    if (count >= 9) return;
+                    if (count >= 10) return;
                     selectedDate = dateStr;
                     selectedTime = null;
                     renderCalendarShell();
@@ -179,30 +170,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadTimeSlots(dateStr) {
+        if (!elements.timeSlotsContainer) return;
         elements.timeSection.classList.remove('hidden');
         elements.timeSlotsContainer.innerHTML = '';
-
-        // Hide form while slot selection is pending
         elements.formSection.classList.add('hidden');
 
         try {
-            // OPTIMIZATION: Filter locally from month cache for "Instant" feel
-            const year = currentViewDate.getFullYear();
-            const month = currentViewDate.getMonth();
-            const cacheKey = `${year}-${month}`;
+            const metadata = await getTenantMetadata(tenantId);
+            const schedule = metadata?.schedule || { days: [1, 2, 3, 4, 5], startHour: 9, endHour: 17 };
 
-            let occupied = [];
-            if (monthlyAppointmentsCache[cacheKey]) {
-                occupied = monthlyAppointmentsCache[cacheKey]
-                    .filter(a => a.date === dateStr)
-                    .map(a => a.time);
-            } else {
-                // Fallback if cache is missing (should not happen normally)
-                occupied = await getOccupiedSlots(dateStr);
+            const occupied = await getOccupiedSlots(dateStr);
+            const hours = [];
+            for (let h = schedule.startHour; h <= schedule.endHour; h++) {
+                hours.push(h);
             }
 
-            const hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
-            hours.forEach((h, index) => {
+            hours.forEach((h) => {
                 const time = `${h.toString().padStart(2, '0')}:00`;
                 let isTaken = occupied.includes(time);
 
@@ -211,8 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const nextH = h + 1;
                     const nextTime = `${nextH.toString().padStart(2, '0')}:00`;
                     const isNextTaken = occupied.includes(nextTime);
-                    // If next hour is out of range or taken, this hour is effectively taken
-                    if (h === 17 || isNextTaken) {
+                    // If next hour is out of range (past endHour) or taken, this hour is effectively taken
+                    if (h === schedule.endHour || isNextTaken) {
                         isTaken = true;
                     }
                 }
@@ -221,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.className = `p-4 rounded-xl text-xs font-bold transition-all border ${isTaken ? 'opacity-20 cursor-not-allowed border-transparent' : 'glass-panel hover:bg-primary/20 hover:border-primary/50 text-white border-white/10'}`;
 
                 if (selectedTime === time) btn.classList.add('time-slot-selected');
-
                 btn.innerHTML = `<span>${h > 12 ? h - 12 : h}:00 ${h >= 12 ? 'PM' : 'AM'}</span>`;
 
                 if (!isTaken) {
@@ -230,8 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.querySelectorAll('#time-slots-container button').forEach(b => b.classList.remove('time-slot-selected'));
                         btn.classList.add('time-slot-selected');
                         elements.formSection.classList.remove('hidden');
-
-                        // Scroll to form smoothly
                         elements.formSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     };
                 } else {
@@ -240,11 +220,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements.timeSlotsContainer.appendChild(btn);
             });
         } catch (err) {
-            elements.timeSlotsContainer.innerHTML = '<div class="col-span-3 text-center text-red-400 py-6 text-xs">Ocurrió un error al cargar. Por favor intenta de nuevo.</div>';
+            elements.timeSlotsContainer.innerHTML = '<div class="col-span-3 text-center text-red-400 py-6 text-xs">Error.</div>';
         }
     }
 
-    // Navigation Events
     elements.prevMonthBtn.onclick = (e) => {
         e.preventDefault();
         currentViewDate.setMonth(currentViewDate.getMonth() - 1);
@@ -264,106 +243,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const phone = elements.phoneInput.value.trim();
 
         if (!name || !email || !phone || !selectedDate || !selectedTime) {
-            elements.errorMsg.textContent = "Por favor completa todos tus datos y selecciona fecha y hora.";
+            elements.errorMsg.textContent = "Completa tus datos.";
             elements.errorMsg.classList.remove('hidden');
             return;
         }
 
         elements.errorMsg.classList.add('hidden');
         elements.confirmBtn.disabled = true;
-        elements.confirmBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> PROCESANDO...</span>';
+        elements.confirmBtn.innerHTML = 'CALCULANDO...';
+
+        const checkData = {
+            id: Math.random().toString(36).substring(2, 9).toUpperCase(),
+            tenant_id: tenantId,
+            name: name,
+            phone: phone.replace(/\D/g, ''),
+            email: email,
+            date: selectedDate,
+            time: selectedTime,
+            previewOnly: true
+        };
 
         try {
-            // INSTEAD OF SAVING DIRECTLY, SHOW CHECKOUT
-            console.log("CHECKOUT-FLOW: Pre-calculating price...");
-            elements.confirmBtn.disabled = true;
-            elements.confirmBtn.textContent = 'Calculando tarifa...';
+            const response = await fetch('/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Tenant-Id': tenantId
+                },
+                body: JSON.stringify({ ...checkData, doubleSlot: is90MinPromo })
+            });
+            const result = await response.json();
 
-            const checkData = {
-                id: Math.random().toString(36).substring(2, 9).toUpperCase(),
-                name: elements.nameInput.value,
-                phone: elements.phoneInput.value.replace(/\D/g, ''),
-                email: elements.emailInput.value,
-                date: selectedDate,
-                time: selectedTime,
-                friendPhone: elements.friendPhoneInput ? elements.friendPhoneInput.value.replace(/\D/g, '') : null,
-                doubleSlot: is90MinPromo
-            };
-
-            try {
-                // Call API with a dummy flag to only get price
-                const response = await fetch('/api/save', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...checkData, previewOnly: true })
-                });
-                const result = await response.json();
-
-                if (result.success || result.finalPrice !== undefined) {
-                    const base = 600; // Expected from admin
-                    const final = result.finalPrice;
-
-                    elements.checkoutBase.textContent = `$${base}.00`;
-                    elements.checkoutTotal.textContent = `$${final}.00`;
-
-                    if (final < base) {
-                        elements.checkoutDiscountRow.classList.remove('hidden');
-                        elements.checkoutDiscountAmount.textContent = `-$${(base - final).toFixed(2)}`;
-                    } else {
-                        elements.checkoutDiscountRow.classList.add('hidden');
-                    }
-
-                    elements.checkoutModal.classList.remove('hidden');
-                } else {
-                    throw new Error("Failed to calculate price");
-                }
-            } catch (err) {
-                console.error("Checkout Error:", err);
-                elements.errorMsg.textContent = 'Error al conectar con el servidor. Intenta de nuevo.';
-                elements.errorMsg.classList.remove('hidden');
-            } finally {
-                elements.confirmBtn.disabled = false;
-                elements.confirmBtn.textContent = 'Confirmar Reserva';
+            if (result.success || result.finalPrice !== undefined) {
+                const final = result.finalPrice;
+                elements.checkoutBase.textContent = `$${final}.00`;
+                elements.checkoutTotal.textContent = `$${final}.00`;
+                elements.checkoutModal.classList.remove('hidden');
             }
         } catch (err) {
-            console.error("DEBUG BOOKING FAILURE:", err);
-
-            let technicalInfo = "NO_DATA";
-            if (err.message && err.message.includes("Error Servidor (500): ")) {
-                try {
-                    const parts = err.message.split("Error Servidor (500): ");
-                    technicalInfo = parts[1];
-                } catch (e) { }
-            } else {
-                technicalInfo = JSON.stringify({ message: err.message, stack: err.stack });
-            }
-
-            // CAMBIO RADICAL: Mensaje enorme para que no se corte
-            elements.errorMsg.style.display = "block";
-            elements.errorMsg.style.whiteSpace = "pre-wrap";
-            elements.errorMsg.style.textAlign = "left";
-            elements.errorMsg.style.fontSize = "12px";
-            elements.errorMsg.style.background = "#000";
-            elements.errorMsg.style.border = "2px solid red";
-            elements.errorMsg.style.padding = "20px";
-            elements.errorMsg.style.color = "#ff3333";
-            elements.errorMsg.style.width = "100%";
-            elements.errorMsg.style.maxHeight = "400px";
-            elements.errorMsg.style.overflowY = "auto";
-
-            elements.errorMsg.innerHTML = `
-                <div style="font-weight:bold; margin-bottom:10px;">⚠️ ERROR DE GOOGLE (LÉEME COMPLETO):</div>
-                <div style="font-family:monospace; line-height:1.4;">
-                ${technicalInfo}
-                </div>
-                <div style="margin-top:15px; color:white; font-size:10px;">
-                Toma captura de este CUADRO NEGRO completo.
-                </div>
-            `;
-
-            elements.errorMsg.classList.remove('hidden');
+            console.error("Checkout Error:", err);
+        } finally {
             elements.confirmBtn.disabled = false;
-            elements.confirmBtn.innerHTML = 'REPROBAR (MOTOR v13)';
+            elements.confirmBtn.textContent = 'Confirmar Reserva';
         }
     };
 
@@ -371,47 +292,49 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.payBtn) {
         elements.payBtn.onclick = async () => {
             elements.payBtn.disabled = true;
-            elements.payBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Procesando...';
+            elements.payBtn.innerHTML = 'PROCESANDO...';
 
             const appointmentId = Math.random().toString(36).substring(2, 9).toUpperCase();
-            const meetLink = "https://meet.google.com/hbm-pivc-mvy";
-
             const finalData = {
                 id: appointmentId,
+                tenant_id: tenantId,
                 name: elements.nameInput.value,
                 email: elements.emailInput.value,
                 phone: elements.phoneInput.value.replace(/\D/g, ''),
                 date: selectedDate,
-                time: selectedTime,
-                friendPhone: elements.friendPhoneInput ? elements.friendPhoneInput.value.replace(/\D/g, '') : null,
-                doubleSlot: is90MinPromo,
-                meetLink: meetLink
+                time: selectedTime
             };
 
             try {
                 const response = await fetch('/api/save', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(finalData)
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Tenant-Id': tenantId
+                    },
+                    body: JSON.stringify({ ...finalData, doubleSlot: is90MinPromo })
                 });
 
                 if (response.ok) {
                     const result = await response.json();
-                    sessionStorage.setItem('lastBooking', JSON.stringify({ ...finalData, isFree: result.finalPrice === 0 }));
-                    window.location.href = `/success.html?id=${appointmentId}&name=${encodeURIComponent(finalData.name)}&date=${finalData.date}&time=${finalData.time}&msg=${encodeURIComponent('Pago confirmado')}`;
-                } else {
-                    throw new Error("Final save failed");
+
+                    // PHASE 2: STRIPE REDIRECT (SANDBOX)
+                    if (result.checkoutUrl) {
+                        console.log("Redirecting to Stripe Sandbox:", result.checkoutUrl);
+                        window.location.href = result.checkoutUrl;
+                        return;
+                    }
+
+                    window.location.href = `/success.html?id=${appointmentId}&name=${encodeURIComponent(finalData.name)}&date=${finalData.date}&time=${finalData.time}`;
                 }
             } catch (err) {
-                console.error("Payment Error:", err);
-                alert("Hubo un error al procesar tu reserva. Por favor intenta de nuevo.");
+                alert("Error.");
                 elements.payBtn.disabled = false;
                 elements.payBtn.textContent = 'Pagar y Agendar';
             }
         };
     }
 
-    // Modern Phone Formatter
     if (elements.phoneInput) {
         elements.phoneInput.addEventListener('input', (e) => {
             let input = e.target.value.replace(/\D/g, '');
@@ -425,8 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Launch
-    // Start everything
     initPromotion();
     initCalendar();
 });

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Marca | PortalCoach Admin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#2dd4bf', dark: '#0a0a0a' },
+                    fontFamily: { display: ['Newsreader', 'serif'], sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .bg-mesh {
+            background: radial-gradient(circle at 100% 0%, rgba(45, 212, 191, 0.1) 0%, transparent 50%), #0a0a0a;
+        }
+
+        .theme-option.selected .theme-border {
+            border-color: #2dd4bf;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-mesh text-white min-h-screen font-sans p-6 md:p-12">
+
+    <!-- Header Navigation -->
+    <header class="max-w-4xl mx-auto mb-12 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <button onclick="history.back()"
+                class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+            </button>
+            <div>
+                <h1 class="font-display italic text-3xl">Configuración de Marca</h1>
+                <p class="text-[10px] text-primary uppercase font-bold tracking-widest">v36.0 BRAND ENGINE</p>
+            </div>
+        </div>
+        <div class="w-12 h-12 rounded-full border border-white/10 overflow-hidden bg-white/5">
+            <img id="header-coach-photo" src="/assets/logo.jpg" class="w-full h-full object-cover hidden">
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto space-y-8">
+        <!-- Brand Identity Card -->
+        <section class="glass p-8 md:p-10 rounded-[3rem] grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div
+                class="flex flex-col items-center justify-center text-center space-y-6 border-b md:border-b-0 md:border-r border-white/5 pb-10 md:pb-0 md:pr-10">
+                <div class="relative group">
+                    <div
+                        class="w-32 h-32 rounded-full border-4 border-primary/20 bg-white/5 flex items-center justify-center overflow-hidden">
+                        <span class="material-symbols-outlined text-4xl text-slate-600"
+                            id="photo-placeholder">add_a_photo</span>
+                        <img src="" class="w-full h-full object-cover hidden" id="photo-preview">
+                    </div>
+                    <input type="file" id="photo-upload" class="hidden" accept="image/*">
+                    <button onclick="document.getElementById('photo-upload').click()"
+                        class="absolute bottom-0 right-0 bg-primary text-dark p-2 rounded-full shadow-lg hover:scale-110 transition-all">
+                        <span class="material-symbols-outlined text-sm">edit</span>
+                    </button>
+                </div>
+                <div>
+                    <h3 class="font-display italic text-xl">Tu Foto de Perfil</h3>
+                    <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-widest">Se verá en el inicio y en citas
+                    </p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-2 block">Nombre del
+                        Portal</label>
+                    <input type="text" id="brand-name" placeholder="Ej: Maria Yoga & Mind"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary transition-all">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-2 block">Slogan /
+                        Tagline</label>
+                    <input type="text" id="brand-tagline" placeholder="Tu transformación comienza hoy"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-primary transition-all">
+                </div>
+                <div class="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/10">
+                    <div>
+                        <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-1">Color
+                            de Marca</label>
+                        <p class="text-[9px] text-slate-400 italic">Define los botones de tu sitio</p>
+                    </div>
+                    <input type="color" id="brand-color" class="w-12 h-12 bg-transparent border-none cursor-pointer">
+                </div>
+            </div>
+        </section>
+
+        <!-- Deep Bio & Media -->
+        <section class="glass p-8 md:p-10 rounded-[3rem] space-y-8">
+            <h2 class="font-display italic text-2xl text-white">Biografía y Multimedia</h2>
+
+            <div>
+                <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-3 block">Video de
+                    Presentación (YouTube URL)</label>
+                <div class="relative">
+                    <span class="absolute left-6 top-4 material-symbols-outlined text-slate-400">play_circle</span>
+                    <input type="text" id="brand-video" placeholder="https://youtube.com/watch?v=..."
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:border-primary transition-all">
+                </div>
+                <p class="text-[9px] text-slate-500 mt-2 italic">Aparecerá en tu sección "Sobre Mi" para generar
+                    confianza inmediata.</p>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-3 block">Biografía
+                    Extendida</label>
+                <textarea id="brand-bio" placeholder="Cuéntale al mundo quién eres y cómo puedes ayudarles..."
+                    class="w-full bg-white/5 border border-white/10 rounded-2xl py-6 px-6 text-sm focus:outline-none focus:border-primary transition-all h-48"></textarea>
+            </div>
+        </section>
+
+        <!-- Visual Theme Selector -->
+        <section class="glass p-8 md:p-10 rounded-[3rem] space-y-8">
+            <h2 class="font-display italic text-2xl text-white">Estética Global (Tema)</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="theme-selector">
+                <!-- Nature -->
+                <div class="theme-option cursor-pointer" data-theme="nature">
+                    <div
+                        class="theme-border aspect-video rounded-2xl border-2 border-transparent overflow-hidden transition-all shadow-xl">
+                        <img src="/assets/themes/nature.png" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] text-center mt-2 uppercase tracking-widest text-slate-400">Bosque</p>
+                </div>
+                <!-- Premium -->
+                <div class="theme-option cursor-pointer" data-theme="premium">
+                    <div
+                        class="theme-border aspect-video rounded-2xl border-2 border-transparent overflow-hidden transition-all shadow-xl">
+                        <img src="/assets/themes/premium.png" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] text-center mt-2 uppercase tracking-widest text-slate-400">Noche</p>
+                </div>
+                <!-- Sunset -->
+                <div class="theme-option cursor-pointer" data-theme="sunset">
+                    <div
+                        class="theme-border aspect-video rounded-2xl border-2 border-transparent overflow-hidden transition-all shadow-xl">
+                        <img src="/assets/themes/sunset.png" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] text-center mt-2 uppercase tracking-widest text-slate-400">Ocaso</p>
+                </div>
+                <!-- Cosmic -->
+                <div class="theme-option cursor-pointer" data-theme="cosmic">
+                    <div
+                        class="theme-border aspect-video rounded-2xl border-2 border-transparent overflow-hidden transition-all shadow-xl">
+                        <img src="/assets/themes/cosmic.png" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] text-center mt-2 uppercase tracking-widest text-slate-400">Cosmos</p>
+                </div>
+                <!-- Zen -->
+                <div class="theme-option cursor-pointer" data-theme="zen">
+                    <div
+                        class="theme-border aspect-video rounded-2xl border-2 border-transparent overflow-hidden transition-all shadow-xl">
+                        <img src="/assets/themes/zen.png" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] text-center mt-2 uppercase tracking-widest text-slate-400">Zen</p>
+                </div>
+                <!-- Executive -->
+                <div class="theme-option cursor-pointer" data-theme="executive">
+                    <div
+                        class="theme-border aspect-video rounded-2xl border-2 border-transparent overflow-hidden transition-all shadow-xl">
+                        <img src="/assets/themes/executive.png" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-[10px] text-center mt-2 uppercase tracking-widest text-slate-400">Líder</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Save Button -->
+        <div class="pb-20">
+            <button id="save-btn"
+                class="w-full bg-primary text-dark py-6 rounded-3xl font-black text-lg shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined">auto_awesome</span>
+                PUBLICAR CAMBIOS EN MI PORTAL
+            </button>
+        </div>
+    </main>
+
+    <!-- Success Message Toast -->
+    <div id="toast"
+        class="fixed bottom-10 left-1/2 -translate-x-1/2 glass border-primary/30 py-4 px-8 rounded-2xl text-primary font-bold hidden animate-bounce z-[100]">
+        ¡Portal actualizado con éxito! ✨
+    </div>
+
+    <script type="module">
+        import { getTenantMetadata } from '/src/firebase_v13.js';
+        import { tenantId } from '/src/tenant-resolver.js';
+
+        let selectedTheme = 'nature';
+        const photoPreview = document.getElementById('photo-preview');
+        const photoPlaceholder = document.getElementById('photo-placeholder');
+        const saveBtn = document.getElementById('save-btn');
+
+        async function init() {
+            try {
+                const metadata = await getTenantMetadata();
+
+                // Set fields
+                document.getElementById('brand-name').value = metadata.name || '';
+                document.getElementById('brand-tagline').value = metadata.tagline || '';
+                document.getElementById('brand-color').value = metadata.themeColor || '#2dd4bf';
+                document.getElementById('brand-video').value = metadata.videoUrl || '';
+                document.getElementById('brand-bio').value = metadata.bio || '';
+
+                if (metadata.coachPhoto) {
+                    photoPreview.src = metadata.coachPhoto;
+                    photoPreview.classList.remove('hidden');
+                    photoPlaceholder.classList.add('hidden');
+                    document.getElementById('header-coach-photo').src = metadata.coachPhoto;
+                    document.getElementById('header-coach-photo').classList.remove('hidden');
+                }
+
+                // Theme selection
+                selectedTheme = metadata.theme || 'nature';
+                updateThemeUI();
+
+            } catch (e) {
+                console.error("Init Error", e);
+            }
+        }
+
+        function updateThemeUI() {
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                if (opt.dataset.theme === selectedTheme) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+        }
+
+        // Theme Click
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.onclick = () => {
+                selectedTheme = opt.dataset.theme;
+                updateThemeUI();
+            };
+        });
+
+        // Photo Upload Pre-render
+        document.getElementById('photo-upload').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (re) => {
+                    photoPreview.src = re.target.result;
+                    photoPreview.classList.remove('hidden');
+                    photoPlaceholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Save Action
+        saveBtn.onclick = async () => {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> PUBLICANDO...';
+
+            const data = {
+                name: document.getElementById('brand-name').value,
+                tagline: document.getElementById('brand-tagline').value,
+                themeColor: document.getElementById('brand-color').value,
+                videoUrl: document.getElementById('brand-video').value,
+                bio: document.getElementById('brand-bio').value,
+                coachPhoto: photoPreview.src, // Base64
+                theme: selectedTheme
+            };
+
+            try {
+                const res = await fetch('/api/update-tenant', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Tenant-Id': tenantId },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    const toast = document.getElementById('toast');
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 3000);
+                } else {
+                    alert("Error al guardar cambios");
+                }
+            } catch (err) {
+                alert("Error de conexión");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<span class="material-symbols-outlined">auto_awesome</span> PUBLICAR CAMBIOS EN MI PORTAL';
+            }
+        };
+
+        init();
+    </script>
+
+</body>
+
+</html>
