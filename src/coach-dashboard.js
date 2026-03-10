@@ -161,7 +161,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.brandingForm.colonia.value = metadata.colonia || '';
         elements.brandingForm.state.value = metadata.state || '';
         elements.brandingForm.zip.value = metadata.zipCode || '';
-        elements.brandingForm.accentColor.value = metadata.accentColor || '#2dd4bf';
+
+        const accentColor = metadata.accentColor || '#2dd4bf';
+        elements.brandingForm.accentColor.value = accentColor;
+
+        // Update Color Preview
+        const colorPreview = document.getElementById('color-preview');
+        const colorHex = document.getElementById('color-hex-display');
+        if (colorPreview) colorPreview.style.backgroundColor = accentColor;
+        if (colorHex) colorHex.textContent = accentColor.toUpperCase();
 
         // Stripe State (Sandbox Mode Override)
         elements.stripeStatusText.textContent = "Sandbox Mode Active";
@@ -180,6 +188,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cleaned.length <= 6) return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
         return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
     };
+
+    if (elements.brandingForm.accentColor) {
+        elements.brandingForm.accentColor.addEventListener('input', (e) => {
+            const color = e.target.value;
+            const preview = document.getElementById('color-preview');
+            const hex = document.getElementById('color-hex-display');
+            if (preview) {
+                preview.style.backgroundColor = color;
+                preview.style.boxShadow = `0 0 20px ${color}4D`; // 30% opacity glow
+            }
+            if (hex) hex.textContent = color.toUpperCase();
+        });
+    }
 
     if (elements.brandingForm.phone) {
         elements.brandingForm.phone.addEventListener('input', (e) => {
