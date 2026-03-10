@@ -183,6 +183,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.stripeLogo.classList.remove('grayscale', 'opacity-50');
         if (elements.connectStripeBtn) elements.connectStripeBtn.textContent = "Ver Sandbox";
 
+        // --- DRAFT RESTORAL ---
+        const draft = localStorage.getItem(`pc_draft_${tenantId}`);
+        if (draft) {
+            console.log("[DASHBOARD] Restoring local draft...");
+            const d = JSON.parse(draft);
+            if (d.name) elements.brandingForm.name.value = d.name;
+            if (d.tagline) elements.brandingForm.tagline.value = d.tagline;
+            if (d.phone) elements.brandingForm.phone.value = d.phone;
+            if (d.email) elements.brandingForm.email.value = d.email;
+            if (d.street) elements.brandingForm.street.value = d.street;
+            if (d.colonia) elements.brandingForm.colonia.value = d.colonia;
+            if (d.state) elements.brandingForm.state.value = d.state;
+            if (d.zip) elements.brandingForm.zip.value = d.zip;
+            if (d.accentColor) {
+                elements.brandingForm.accentColor.value = d.accentColor;
+                if (colorPreview) colorPreview.style.backgroundColor = d.accentColor;
+                if (colorHex) colorHex.textContent = d.accentColor.toUpperCase();
+            }
+            if (d.coachPhoto) {
+                elements.brandingForm.photoPreview.src = d.coachPhoto;
+                elements.brandingForm.photoPreview.classList.remove('hidden');
+                elements.brandingForm.photoIcon.classList.add('hidden');
+            }
+        }
+
     } catch (e) {
         console.error("Dashboard Load Error:", e);
     }
@@ -220,6 +245,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 };
             };
         });
+    };
+
+    // --- AUTO-DRAFTING ---
+    const saveDraft = () => {
+        const d = {
+            name: elements.brandingForm.name.value,
+            tagline: elements.brandingForm.tagline.value,
+            phone: elements.brandingForm.phone.value,
+            email: elements.brandingForm.email.value,
+            street: elements.brandingForm.street.value,
+            colonia: elements.brandingForm.colonia.value,
+            state: elements.brandingForm.state.value,
+            zip: elements.brandingForm.zip.value,
+            accentColor: elements.brandingForm.accentColor.value,
+            coachPhoto: elements.brandingForm.photoPreview.src
+        };
+        localStorage.setItem(`pc_draft_${tenantId}`, JSON.stringify(d));
+        console.log("[DASHBOARD] Local draft updated.");
     };
 
     // Phone Formatting Logic
@@ -271,15 +314,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 elements.brandingForm.photoPreview.src = compressedBase64;
                 elements.brandingForm.photoPreview.classList.remove('hidden');
                 elements.brandingForm.photoIcon.classList.add('hidden');
+                saveDraft(); // Save draft after photo processing
             } catch (err) {
                 console.error("Compression Error:", err);
                 alert("Error al procesar la imagen.");
             }
 
-            elements.brandingForm.saveBtn.disabled = false;
             elements.brandingForm.saveBtn.textContent = 'Publicar Identidad';
         }
     };
+
+    const inputs = [
+        elements.brandingForm.name, elements.brandingForm.tagline,
+        elements.brandingForm.phone, elements.brandingForm.email,
+        elements.brandingForm.street, elements.brandingForm.colonia,
+        elements.brandingForm.state, elements.brandingForm.zip,
+        elements.brandingForm.accentColor
+    ];
+    inputs.forEach(input => {
+        if (input) input.addEventListener('input', saveDraft);
+    });
 
     elements.brandingForm.saveBtn.onclick = async () => {
         elements.brandingForm.saveBtn.disabled = true;
@@ -296,7 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             accentColor: elements.brandingForm.accentColor.value,
             coachPhoto: elements.brandingForm.photoPreview.src
         };
-        console.log("[DASHBOARD] Saving branding data:", data);
+        console.log("[DASHBOARD] Saving branding data to Cloud...", data);
         try {
             const resp = await fetch('/api/update-tenant', {
                 method: 'POST',
@@ -305,13 +359,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             const result = await resp.json();
             if (result.success) {
-                alert("¡Perfil actualizado con éxito!");
+                localStorage.removeItem(`pc_draft_${tenantId}`); // Success! Clear the local draft
+                alert("¡Perfil actualizado con éxito en la nube!");
             } else {
                 throw new Error(result.error || "Server error");
             }
         } catch (e) {
             console.error("Save Error:", e);
-            alert("Error al guardar: " + e.message);
+            alert("Error al guardar en la nube: " + e.message);
         }
         elements.brandingForm.saveBtn.disabled = false;
         elements.brandingForm.saveBtn.textContent = 'Publicar Identidad';

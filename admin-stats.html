@@ -343,8 +343,7 @@
 
             document.getElementById('count-today').textContent = todayVisits;
             document.getElementById('count-month').textContent = monthVisits;
-            document.getElementById('count-total').textContent = visits.length;
-            document.getElementById('revenue-month').textContent = `$${monthRevenue}`;
+            document.getElementById('revenue-month').textContent = `$${monthRevenue.toLocaleString()}`;
 
             // Populating moved stats
             document.getElementById('gross-revenue').textContent = `$${monthRevenue.toLocaleString()}`;
