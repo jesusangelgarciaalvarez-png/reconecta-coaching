@@ -79,10 +79,14 @@ async function applyBranding() {
     // 1. Apply Theme / Colors from Tenant Metadata
     const themeKey = metadata.theme || 'nature';
     const theme = THEMES[themeKey] || THEMES.nature;
+    const primary = metadata.accentColor || theme.primary;
 
-    document.documentElement.style.setProperty('--primary-color', metadata.accentColor || theme.primary);
+    document.documentElement.style.setProperty('--primary-color', primary);
     document.documentElement.style.setProperty('--bg-color-top', theme.gradientTop);
     document.documentElement.style.setProperty('--bg-color-bottom', theme.gradientBottom);
+
+    // 1.1 Contrast Protection (Dynamic Overlays)
+    applyContrastProtection(primary);
 
     // 1.1 Fetch Site Config for Typography (Website Builder)
     try {
@@ -216,6 +220,43 @@ async function applyBranding() {
     if (metadata.name) {
         document.title = `${document.title.split('|')[0]} | ${metadata.name}`;
     }
+}
+
+function applyContrastProtection(primary) {
+    // Add internal style for better text legibility on dynamic backgrounds
+    const styleId = 'contrast-protection-style';
+    let style = document.getElementById(styleId);
+    if (!style) {
+        style = document.createElement('style');
+        style.id = styleId;
+        document.head.appendChild(style);
+    }
+
+    style.textContent = `
+        #hero-title { 
+            text-shadow: 0 4px 60px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.4); 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        #hero-subtitle { 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 1px border-white/5;
+        }
+        #brand-name {
+            text-shadow: 0 2px 15px rgba(0,0,0,0.6);
+        }
+        .hero-zoom-crop {
+            filter: brightness(0.7) contrast(1.1);
+        }
+        /* Dynamic Header Protection */
+        header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+        }
+    `;
 }
 
 // Global accessibility

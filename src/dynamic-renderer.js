@@ -5,13 +5,14 @@
 
 const DYNAMIC_CONFIG = {
     fixedButtons: [
-        { id: 'mision', label: 'Conócenos', icon: 'visibility' },
-        { id: 'reservar', label: 'Reservar Sesión', icon: 'event', url: '/reservar.html' },
+        { id: 'conocenos', label: 'Conócenos', icon: 'visibility', pageId: 'mision' },
+        { id: 'reservar', label: 'Reservar Cita', icon: 'event', url: '/reservar.html' },
         { id: 'cancelar', label: 'Cancelar Cita', icon: 'event_busy', url: '/cancel.html', colorClass: 'group-hover:bg-red-400 group-hover:text-white' }
     ],
     dynamicButtons: [
-        { id: 'servicios', label: 'Nuestros Servicios', icon: 'hub' },
-        { id: 'metodo', label: 'Nuestro Método', icon: 'spa' }
+        { id: 'mision', label: 'Misión', icon: 'center_focus_strong' },
+        { id: 'servicios', label: 'Servicios', icon: 'hub' },
+        { id: 'metodo', label: 'Método', icon: 'spa' }
     ]
 };
 
@@ -52,23 +53,28 @@ function renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitl
     navGrid.innerHTML = '';
     const paginas = config.paginas || {};
 
-    // 1. Conócenos (Fixed - Mission)
+    // 1. Conócenos (Fixed - Points to Misión content by default)
     addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
 
-    // 2. Nuestros Servicios (Dynamic)
+    // 2. Misión (Dynamic - Only if has rich content)
+    if (paginas.mision?.secciones?.length > 1) { // If more than 1 section, show separate Mission
+        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+    }
+
+    // 3. Servicios (Dynamic)
     if (paginas.servicios?.secciones?.length > 0) {
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[0], () => showDynamicPage('servicios', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[1], () => showDynamicPage('servicios', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
     }
 
-    // 3. Nuestro Método (Dynamic)
+    // 4. Método (Dynamic)
     if (paginas.metodo?.secciones?.length > 0) {
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[1], () => showDynamicPage('metodo', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[2], () => showDynamicPage('metodo', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
     }
 
-    // 4. Reservar (Fixed - External Link)
+    // 5. Reservar Cita (Fixed)
     addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[1], null, DYNAMIC_CONFIG.fixedButtons[1].url);
 
-    // 5. Cancelar (Fixed - External Link)
+    // 6. Cancelar Cita (Fixed)
     addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[2], null, DYNAMIC_CONFIG.fixedButtons[2].url);
 }
 
