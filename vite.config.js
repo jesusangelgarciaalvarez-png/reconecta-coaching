@@ -96,6 +96,8 @@ export default defineConfig({
                 coachDashboard: resolve(__dirname, 'coach-dashboard.html'),
                 masterDashboard: resolve(__dirname, 'master-dashboard.html'),
                 onboard: resolve(__dirname, 'onboard.html'),
+                adminBuilder: resolve(__dirname, 'admin-builder.html'),
+                publicSite: resolve(__dirname, 'public-site.html'),
             },
         },
     },
