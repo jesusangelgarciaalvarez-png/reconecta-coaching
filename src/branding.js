@@ -101,6 +101,8 @@ async function applyBranding() {
             const siteRes = await fetch(`/api/sitios?subdominio=${subdomain}`);
             if (siteRes.ok) {
                 const siteConfig = await siteRes.json();
+
+                // Typography
                 if (siteConfig.configuracion_visual?.tipografia) {
                     const font = siteConfig.configuracion_visual.tipografia;
                     document.body.style.fontFamily = `'${font}', sans-serif`;
@@ -113,6 +115,29 @@ async function applyBranding() {
                         document.head.appendChild(link);
                     }
                 }
+
+                // Dynamic Features from Home (Inicio)
+                const inicioSecs = siteConfig.paginas?.inicio?.secciones || [];
+
+                // 1. Hero Inicio
+                const heroHome = inicioSecs.find(s => s.tipo === 'hero_home');
+                if (heroHome) {
+                    const heroTitleEl = document.getElementById('hero-title');
+                    const heroSubEl = document.getElementById('hero-subtitle');
+                    if (heroTitleEl) heroTitleEl.innerHTML = heroHome.titulo.replace(/\n/g, '<br>');
+                    if (heroSubEl) heroSubEl.textContent = heroHome.contenido;
+                }
+
+                // 2. Características
+                const features = inicioSecs.filter(s => s.tipo === 'caracteristica_home');
+                features.forEach((feat, idx) => {
+                    if (idx < 3) {
+                        const titleEl = document.getElementById(`feature-${idx + 1}-title`);
+                        const descEl = document.getElementById(`feature-${idx + 1}-desc`);
+                        if (titleEl) titleEl.textContent = feat.titulo;
+                        if (descEl) descEl.textContent = feat.contenido;
+                    }
+                });
             }
         }
     } catch (e) {
