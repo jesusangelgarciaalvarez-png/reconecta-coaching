@@ -17,25 +17,25 @@ export default async function handler(req, res) {
     const fields = {};
     const fieldPaths = [];
 
-    if (body.pin) {
+    if (body.pin !== undefined) {
         fields.pin = { stringValue: String(body.pin) };
         fieldPaths.push('pin');
     }
 
-    if (body.price) {
+    if (body.price !== undefined) {
         fields.price = { stringValue: String(body.price) };
         fieldPaths.push('price');
     }
-    if (body.name) {
-        fields.name = { stringValue: body.name };
+    if (body.name !== undefined) {
+        fields.name = { stringValue: body.name || "" };
         fieldPaths.push('name');
     }
     if (body.stripeEnabled !== undefined) {
         fields.stripeEnabled = { booleanValue: body.stripeEnabled };
         fieldPaths.push('stripeEnabled');
     }
-    if (body.status) {
-        fields.status = { stringValue: body.status };
+    if (body.status !== undefined) {
+        fields.status = { stringValue: body.status || "" };
         fieldPaths.push('status');
     }
 
@@ -44,8 +44,8 @@ export default async function handler(req, res) {
         fields.tagline = { stringValue: body.tagline || "" };
         fieldPaths.push('tagline');
     }
-    if (body.heroTitle) {
-        fields.heroTitle = { stringValue: body.heroTitle };
+    if (body.heroTitle !== undefined) {
+        fields.heroTitle = { stringValue: body.heroTitle || "" };
         fieldPaths.push('heroTitle');
     }
     if (body.videoUrl !== undefined) {
@@ -68,49 +68,49 @@ export default async function handler(req, res) {
         fields.coachMission = { stringValue: body.coachMission || "" };
         fieldPaths.push('coachMission');
     }
-    if (body.location) {
-        fields.location = { stringValue: body.location };
+    if (body.location !== undefined) {
+        fields.location = { stringValue: body.location || "" };
         fieldPaths.push('location');
     }
-    if (body.phone) {
-        fields.phone = { stringValue: body.phone };
+    if (body.phone !== undefined) {
+        fields.phone = { stringValue: body.phone || "" };
         fieldPaths.push('phone');
     }
-    if (body.email) {
-        fields.email = { stringValue: body.email };
+    if (body.email !== undefined) {
+        fields.email = { stringValue: body.email || "" };
         fieldPaths.push('email');
     }
     // New Address Fields
-    if (body.street) {
-        fields.street = { stringValue: body.street };
+    if (body.street !== undefined) {
+        fields.street = { stringValue: body.street || "" };
         fieldPaths.push('street');
     }
-    if (body.colonia) {
-        fields.colonia = { stringValue: body.colonia };
+    if (body.colonia !== undefined) {
+        fields.colonia = { stringValue: body.colonia || "" };
         fieldPaths.push('colonia');
     }
-    if (body.state) {
-        fields.state = { stringValue: body.state };
+    if (body.state !== undefined) {
+        fields.state = { stringValue: body.state || "" };
         fieldPaths.push('state');
     }
-    if (body.zipCode) {
-        fields.zipCode = { stringValue: body.zipCode };
+    if (body.zipCode !== undefined) {
+        fields.zipCode = { stringValue: body.zipCode || "" };
         fieldPaths.push('zipCode');
     }
-    if (body.theme) {
-        fields.theme = { stringValue: body.theme };
+    if (body.theme !== undefined) {
+        fields.theme = { stringValue: body.theme || "" };
         fieldPaths.push('theme');
     }
-    if (body.accentColor) {
-        fields.accentColor = { stringValue: body.accentColor };
+    if (body.accentColor !== undefined) {
+        fields.accentColor = { stringValue: body.accentColor || "" };
         fieldPaths.push('accentColor');
     }
-    if (body.logoUrl) {
-        fields.logoUrl = { stringValue: body.logoUrl };
+    if (body.logoUrl !== undefined) {
+        fields.logoUrl = { stringValue: body.logoUrl || "" };
         fieldPaths.push('logoUrl');
     }
-    if (body.coachPhoto) {
-        fields.coachPhoto = { stringValue: body.coachPhoto };
+    if (body.coachPhoto !== undefined) {
+        fields.coachPhoto = { stringValue: body.coachPhoto || "" };
         fieldPaths.push('coachPhoto');
     }
 

@@ -103,21 +103,22 @@
         }
 
         .premium-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+            /* Brighter for contrast */
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 1.25rem;
             padding: 1rem 1.5rem;
             font-size: 0.875rem;
             color: white;
             transition: all 0.3s;
             width: 100%;
+            outline: none;
         }
 
         .premium-input:focus {
-            outline: none;
+            background: rgba(255, 255, 255, 0.2);
             border-color: #2dd4bf;
-            background: rgba(45, 212, 191, 0.05);
-            box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.1);
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.3);
         }
 
         /* PIN Overlay Styles */
@@ -180,8 +181,8 @@
 
 <body class="bg-mesh min-h-screen text-slate-200 font-sans selection:bg-primary/30">
     <div
-        style="background: #eab308; color: #000000; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-        DASHBOARD v43.1 - SCROLL & PERSISTENCE FIX
+        style="background: #eab308; color: #000000; text-align: center; font-family: monospace; font-size: 11px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+        DASHBOARD v43.2 - PERSISTENCE & CONTRAST BOOST
     </div>
 
     <!-- Fixed Dynamic Background Layer -->

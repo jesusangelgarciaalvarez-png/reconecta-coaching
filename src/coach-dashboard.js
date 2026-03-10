@@ -187,6 +187,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Dashboard Load Error:", e);
     }
 
+    // --- PHOTO OPTIMIZATION HELPER ---
+    const compressImage = async (file, maxWidth = 800, maxHeight = 800, quality = 0.7) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+            };
+        });
+    };
+
     // Phone Formatting Logic
     const formatPhone = (val) => {
         const cleaned = ('' + val).replace(/\D/g, '');
@@ -225,17 +260,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Handlers
-    elements.brandingForm.photoInput.onchange = (e) => {
+    elements.brandingForm.photoInput.onchange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (re) => {
-                const base64 = re.target.result;
-                elements.brandingForm.photoPreview.src = base64;
+            elements.brandingForm.saveBtn.disabled = true;
+            elements.brandingForm.saveBtn.textContent = 'Procesando Imagen...';
+
+            try {
+                const compressedBase64 = await compressImage(file);
+                elements.brandingForm.photoPreview.src = compressedBase64;
                 elements.brandingForm.photoPreview.classList.remove('hidden');
                 elements.brandingForm.photoIcon.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+                console.error("Compression Error:", err);
+                alert("Error al procesar la imagen.");
+            }
+
+            elements.brandingForm.saveBtn.disabled = false;
+            elements.brandingForm.saveBtn.textContent = 'Publicar Identidad';
         }
     };
 
