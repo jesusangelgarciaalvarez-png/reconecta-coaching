@@ -174,25 +174,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Phone Formatting Logic
     const formatPhone = (val) => {
-        if (!val) return '';
         const cleaned = ('' + val).replace(/\D/g, '');
-        const match = cleaned.match(/^(\d{2,3})(\d{3,4})(\d{4})$/);
-        if (match) {
-            return `(${match[1]}) ${match[2]}-${match[3]}`;
-        }
-        return cleaned;
+        if (cleaned.length === 0) return '';
+        if (cleaned.length <= 2) return cleaned;
+        if (cleaned.length <= 6) return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+        return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
     };
 
     if (elements.brandingForm.phone) {
         elements.brandingForm.phone.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val.length > 10) val = val.substring(0, 10);
+            const cursorPosition = e.target.selectionStart;
+            const oldValue = e.target.value;
+            const formatted = formatPhone(oldValue);
 
-            // Apply formatting as they type if it's full length
-            if (val.length === 10) {
-                e.target.value = formatPhone(val);
-            } else {
-                e.target.value = val;
+            e.target.value = formatted;
+
+            // Simple cursor logic for better UX
+            if (cursorPosition < oldValue.length) {
+                e.target.setSelectionRange(cursorPosition, cursorPosition);
             }
         });
     }
@@ -224,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             colonia: elements.brandingForm.colonia.value,
             state: elements.brandingForm.state.value,
             zipCode: elements.brandingForm.zip.value,
-            accentColor: elements.brandingForm.accentColor.textContent,
+            accentColor: elements.brandingForm.accentColor.value,
             coachPhoto: elements.brandingForm.photoPreview.src
         };
         try {
