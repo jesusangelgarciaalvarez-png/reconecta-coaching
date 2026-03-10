@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando... | PortalCoach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: 'var(--primary-color, #fbbf24)', dark: '#030712' },
+                    fontFamily: { display: ['Newsreader', 'serif'], sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --primary-color: #fbbf24;
+        }
+
+        body {
+            background-color: #030712;
+            color: #cbd5e1;
+        }
+
+        #contenedor-secciones {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            #contenedor-secciones {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+
+            /* Hero always takes full width */
+            #contenedor-secciones>section {
+                grid-column: 1 / -1;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans selection:bg-primary/30">
+    <main id="contenedor-secciones" class="py-12 px-6">
+        <!-- Render Engine will inject components here -->
+        <div class="flex items-center justify-center min-h-[50vh]">
+            <span class="material-symbols-outlined animate-spin text-4xl text-primary">sync</span>
+        </div>
+    </main>
+    <script src="/src/render-engine.js" type="module"></script>
+</body>
+
+</html>

@@ -14,8 +14,8 @@
             "destination": "/api/$1"
         },
         {
-            "source": "/(.*)",
-            "destination": "/$1"
+            "source": "/((?!api/|master-dashboard|admin|reservar|success|src/|assets/|public/|.*\\.).*)",
+            "destination": "/public-site.html"
         }
     ]
 }
