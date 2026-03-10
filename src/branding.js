@@ -71,7 +71,13 @@ async function applyBranding() {
         phone: "(55) 0000 0000",
         email: "hola@portalcoach.com",
         videoPlaceholder: "/assets/generic-coaching.jpg",
-        coachPhotoPlaceholder: "/assets/generic-avatar.png"
+        coachPhotoPlaceholder: "/assets/generic-avatar.png",
+        feature1Title: "Resiliencia",
+        feature1Desc: "Herramientas prácticas para navegar los desafíos diarios con fortaleza interna y calma.",
+        feature2Title: "Claridad Mental",
+        feature2Desc: "Libera el ruido mental y encuentra el enfoque necesario para tomar las mejores decisiones.",
+        feature3Title: "Atención Plena",
+        feature3Desc: "Prácticas de meditación y presencia para reducir el ruido mental y conectar con el presente."
     };
 
     if (!metadata) return;
@@ -157,7 +163,13 @@ async function applyBranding() {
         '#contact-email': metadata.email || defaults.email,
         '#brand-location': metadata.location || defaults.location,
         '#brand-phone': metadata.phone || defaults.phone,
-        '#brand-email': metadata.email || defaults.email
+        '#brand-email': metadata.email || defaults.email,
+        '#feature-1-title': metadata.feature1Title || defaults.feature1Title,
+        '#feature-1-desc': metadata.feature1Desc || defaults.feature1Desc,
+        '#feature-2-title': metadata.feature2Title || defaults.feature2Title,
+        '#feature-2-desc': metadata.feature2Desc || defaults.feature2Desc,
+        '#feature-3-title': metadata.feature3Title || defaults.feature3Title,
+        '#feature-3-desc': metadata.feature3Desc || defaults.feature3Desc
     };
 
     Object.entries(textMappings).forEach(([selector, value]) => {
@@ -180,7 +192,7 @@ async function applyBranding() {
     }
 
     // 4. Photos & Videos
-    const photoElements = document.querySelectorAll('#coach-photo, #checkout-coach-photo, #brand-logo, #menu-logo');
+    const photoElements = document.querySelectorAll('#coach-photo, #home-coach-photo, #checkout-coach-photo, #brand-logo, #menu-logo');
     photoElements.forEach(img => {
         const id = img.id;
         if (id === 'coach-photo' || id === 'checkout-coach-photo') {
