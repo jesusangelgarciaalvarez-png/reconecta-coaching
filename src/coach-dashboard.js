@@ -178,42 +178,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.stripeLogo.classList.remove('grayscale', 'opacity-50');
         if (elements.connectStripeBtn) elements.connectStripeBtn.textContent = "Ver Sandbox";
 
-        // --- DRAFT RESTORAL ---
-        const draft = localStorage.getItem(`pc_draft_${tenantId}`);
-        if (draft) {
-            console.log("[DASHBOARD] Restoring local draft...");
-            const d = JSON.parse(draft);
-            if (d.name) elements.brandingForm.name.value = d.name;
-            if (d.tagline) elements.brandingForm.tagline.value = d.tagline;
-            if (d.phone) elements.brandingForm.phone.value = d.phone;
-            if (d.email) elements.brandingForm.email.value = d.email;
-            if (d.street) elements.brandingForm.street.value = d.street;
-            if (d.colonia) elements.brandingForm.colonia.value = d.colonia;
-            if (d.state) elements.brandingForm.state.value = d.state;
-            if (d.zipCode || d.zip) elements.brandingForm.zip.value = d.zipCode || d.zip;
-            if (d.theme) {
-                window.selectedTheme = d.theme;
-                updateThemeUI(d.theme);
-            }
-            if (d.coachPhoto) {
-                elements.brandingForm.photoPreview.src = d.coachPhoto;
-                elements.brandingForm.photoPreview.classList.remove('hidden');
-                elements.brandingForm.photoIcon.classList.add('hidden');
-            }
-        }
-
-        // Theme Selection Handlers
-        const themeOptions = document.querySelectorAll('.theme-option');
-        if (themeOptions.length > 0) {
-            themeOptions.forEach(opt => {
-                opt.onclick = (e) => {
-                    console.log("[DASHBOARD] Theme selected:", opt.dataset.theme);
-                    window.selectedTheme = opt.dataset.theme;
-                    updateThemeUI(window.selectedTheme);
-                    saveDraft();
-                };
-            });
-        }
 
     } catch (e) {
         console.error("Dashboard Load Error:", e);
@@ -339,9 +303,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (input) input.addEventListener('input', saveDraft);
     });
 
+    // --- UI LISTENERS (v43.7) ---
+    // 1. Theme Selection
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(opt => {
+        opt.onclick = () => {
+            console.log("[DASHBOARD] Theme selected:", opt.dataset.theme);
+            window.selectedTheme = opt.dataset.theme;
+            updateThemeUI(window.selectedTheme);
+            saveDraft();
+        };
+    });
+
+    // 2. Draft Restoral (Moved here for better timing)
+    const restoreDraft = () => {
+        const draft = localStorage.getItem(`pc_draft_${tenantId}`);
+        if (draft) {
+            console.log("[DASHBOARD] Restoring local draft...");
+            const d = JSON.parse(draft);
+            if (d.name) elements.brandingForm.name.value = d.name;
+            if (d.tagline) elements.brandingForm.tagline.value = d.tagline;
+            if (d.phone) elements.brandingForm.phone.value = d.phone;
+            if (d.email) elements.brandingForm.email.value = d.email;
+            if (d.street) elements.brandingForm.street.value = d.street;
+            if (d.colonia) elements.brandingForm.colonia.value = d.colonia;
+            if (d.state) elements.brandingForm.state.value = d.state;
+            if (d.zipCode || d.zip) elements.brandingForm.zip.value = d.zipCode || d.zip;
+            if (d.theme) {
+                window.selectedTheme = d.theme;
+                updateThemeUI(d.theme);
+            }
+            if (d.coachPhoto) {
+                elements.brandingForm.photoPreview.src = d.coachPhoto;
+                elements.brandingForm.photoPreview.classList.remove('hidden');
+                elements.brandingForm.photoIcon.classList.add('hidden');
+            }
+        }
+    };
+    restoreDraft();
+
+    // 3. Publish Button
     elements.brandingForm.saveBtn.onclick = async () => {
         elements.brandingForm.saveBtn.disabled = true;
-        elements.brandingForm.saveBtn.textContent = 'Guardando...';
+        const originalText = elements.brandingForm.saveBtn.innerHTML;
+        elements.brandingForm.saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Guardando...';
+
         const data = {
             name: elements.brandingForm.name.value,
             tagline: elements.brandingForm.tagline.value,
@@ -354,7 +360,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             theme: window.selectedTheme || 'nature',
             coachPhoto: elements.brandingForm.photoPreview.src
         };
-        console.log("[DASHBOARD] Saving branding data to Cloud...", data);
+
         try {
             const resp = await fetch('/api/update-tenant', {
                 method: 'POST',
@@ -363,17 +369,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             const result = await resp.json();
             if (result.success) {
-                localStorage.removeItem(`pc_draft_${tenantId}`); // Success! Clear the local draft
+                localStorage.removeItem(`pc_draft_${tenantId}`);
                 alert("¡Perfil actualizado con éxito en la nube!");
             } else {
                 throw new Error(result.error || "Server error");
             }
         } catch (e) {
             console.error("Save Error:", e);
-            alert("Error al guardar en la nube: " + e.message);
+            alert("Error al guardar: " + e.message);
         }
         elements.brandingForm.saveBtn.disabled = false;
-        elements.brandingForm.saveBtn.textContent = 'Publicar Identidad';
+        elements.brandingForm.saveBtn.innerHTML = originalText;
     };
 
     elements.savePriceBtn.onclick = async () => {
