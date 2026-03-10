@@ -76,13 +76,38 @@ async function applyBranding() {
 
     if (!metadata) return;
 
-    // 1. Apply Theme / Colors
+    // 1. Apply Theme / Colors from Tenant Metadata
     const themeKey = metadata.theme || 'nature';
     const theme = THEMES[themeKey] || THEMES.nature;
 
     document.documentElement.style.setProperty('--primary-color', metadata.accentColor || theme.primary);
     document.documentElement.style.setProperty('--bg-color-top', theme.gradientTop);
     document.documentElement.style.setProperty('--bg-color-bottom', theme.gradientBottom);
+
+    // 1.1 Fetch Site Config for Typography (Website Builder)
+    try {
+        const subdomain = window.location.hostname.split('.')[0];
+        if (subdomain !== 'www' && subdomain !== 'localhost') {
+            const siteRes = await fetch(`/api/sitios?subdominio=${subdomain}`);
+            if (siteRes.ok) {
+                const siteConfig = await siteRes.json();
+                if (siteConfig.configuracion_visual?.tipografia) {
+                    const font = siteConfig.configuracion_visual.tipografia;
+                    document.body.style.fontFamily = `'${font}', sans-serif`;
+
+                    // Preload if necessary (Editorial/Luxury fonts)
+                    if (['Newsreader', 'Playfair Display'].includes(font)) {
+                        const link = document.createElement('link');
+                        link.href = `https://fonts.googleapis.com/css2?family=${font.replace(' ', '+')}:ital,wght@0,400;0,700;1,400&display=swap`;
+                        link.rel = 'stylesheet';
+                        document.head.appendChild(link);
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.log("Using default typography");
+    }
 
     // Update Backgrounds
     const heroBgs = document.querySelectorAll('.hero-zoom-crop, .faded-bg');
