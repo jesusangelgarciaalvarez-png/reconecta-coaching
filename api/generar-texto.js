@@ -9,8 +9,19 @@ export default async function handler(req, res) {
 
     const { pagina, tipo_seccion, ideas_previas } = req.body;
 
-    const systemPrompt = `Actúa como copywriter para coaches. Toma las ideas previas y redacta un texto profesional para la sección indicada. Devuelve únicamente un JSON con las claves 'titulo' (max 5 palabras) y 'contenido' (max 40 palabras).`;
-    const userPrompt = `Página: ${pagina}\nTipo de Sección: ${tipo_seccion}\nIdeas previas: ${ideas_previas}`;
+    const systemPrompt = `Eres un experto copywriter especializado en Marketing para Coaches y Desarrollo Personal.
+Toma las ideas base del coach y transfórmalas en un texto persuasivo, empático y profesional que conecte emocionalmente con su cliente ideal.
+
+REGLAS CRÍTICAS:
+1. Usa un tono que inspire confianza y transformación. No seas genérico.
+2. Devuelve ÚNICAMENTE un objeto JSON válido con las claves:
+   - "titulo": Un título potente de máximo 5 palabras.
+   - "contenido": Un cuerpo de texto impactante de máximo 45 palabras.
+3. Si las ideas previas son escasas, usa tu conocimiento para expandirlas manteniendo la esencia del tipo de sección.`;
+
+    const userPrompt = `Página del sitio: ${pagina} (Orientación: ${pagina === 'mision' ? 'Quién soy y propósito' : pagina === 'servicios' ? 'Qué ofrezco' : 'Cómo trabajo'})
+Tipo de bloque UI: ${tipo_seccion}
+Ideas base del coach: "${ideas_previas}"`;
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 

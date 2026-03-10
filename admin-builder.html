@@ -171,26 +171,63 @@
         };
         let activePage = 'mision';
 
+        // --- NEW: PERSISTENCE LOGIC ---
+        function saveToLocal() {
+            const dataToSave = {
+                paginas: currentState,
+                configuracion_visual: { tipografia: fontSelect.value },
+                timestamp: Date.now()
+            };
+            localStorage.setItem(`builder_draft_${tenantId}`, JSON.stringify(dataToSave));
+            console.log("Draft saved locally");
+        }
+
+        function loadFromLocal() {
+            const saved = localStorage.getItem(`builder_draft_${tenantId}`);
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return null;
+        }
+        // ------------------------------
+
         async function loadInitialData() {
+            const localDraft = loadFromLocal();
+
             try {
                 const res = await fetch(`/api/sitios?subdominio=${tenantId}`);
                 if (res.ok) {
-                    const data = await res.json();
-                    if (data.paginas) currentState = data.paginas;
-                    if (data.configuracion_visual) {
-                        fontSelect.value = data.configuracion_visual.tipografia || 'Outfit';
-                        updateFontPreview();
+                    const onlineData = await res.json();
+
+                    // If local draft is newer or online is empty, use draft? 
+                    // For now, prioritize online but if draft exists, maybe merge or warn.
+                    // Simple approach: Use online, but if online fails, use draft.
+                    if (onlineData.paginas) currentState = onlineData.paginas;
+                    if (onlineData.configuracion_visual) {
+                        fontSelect.value = onlineData.configuracion_visual.tipografia || 'Outfit';
                     }
-                    renderSections();
                 }
             } catch (e) {
-                console.log("No existing data found:", e);
-                renderSections();
+                console.log("Offline or no data, checking draft:", e);
+                if (localDraft) {
+                    currentState = localDraft.paginas;
+                    fontSelect.value = localDraft.configuracion_visual?.tipografia || 'Outfit';
+                }
             }
+
+            // If local draft exists and is present, prioritize it for "unsaved work"
+            if (localDraft && localDraft.paginas) {
+                currentState = localDraft.paginas;
+                fontSelect.value = localDraft.configuracion_visual?.tipografia || 'Outfit';
+            }
+
+            updateFontPreview();
+            renderSections();
         }
 
         function updateFontPreview() {
             fontPreview.style.fontFamily = `'${fontSelect.value}', sans-serif`;
+            saveToLocal();
         }
         fontSelect.onchange = updateFontPreview;
 
@@ -206,12 +243,13 @@
                 card.querySelector('.section-title').value = sec.titulo;
                 card.querySelector('.section-content').value = sec.contenido;
 
-                card.querySelector('.section-type').onchange = (e) => sec.tipo = e.target.value;
-                card.querySelector('.section-title').oninput = (e) => sec.titulo = e.target.value;
-                card.querySelector('.section-content').oninput = (e) => sec.contenido = e.target.value;
+                card.querySelector('.section-type').onchange = (e) => { sec.tipo = e.target.value; saveToLocal(); };
+                card.querySelector('.section-title').oninput = (e) => { sec.titulo = e.target.value; saveToLocal(); };
+                card.querySelector('.section-content').oninput = (e) => { sec.contenido = e.target.value; saveToLocal(); };
 
                 card.querySelector('.remove-section').onclick = () => {
                     currentState[activePage].secciones.splice(idx, 1);
+                    saveToLocal();
                     renderSections();
                 };
 
@@ -237,6 +275,7 @@
                             card.querySelector('.section-content').value = data.contenido;
                             sec.titulo = data.titulo;
                             sec.contenido = data.contenido;
+                            saveToLocal();
                         }
                     } catch (e) {
                         alert("Error de IA: " + e.message);
@@ -260,6 +299,7 @@
                         titulo: '',
                         contenido: ''
                     });
+                    saveToLocal();
                     renderSections();
                 };
                 container.appendChild(addBtn);
@@ -276,6 +316,11 @@
         });
 
         document.getElementById('save-all').onclick = async () => {
+            const btn = document.getElementById('save-all');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> PUBLICANDO...';
+
             const finalData = {
                 subdominio: tenantId,
                 configuracion_visual: {
@@ -284,19 +329,33 @@
                 paginas: currentState
             };
 
+            console.log("Publishing data:", finalData);
+
             try {
-                const res = await fetch(`/api/sitios/${tenantId}`, {
+                // Corrected API endpoint for PUT/PATCH based on handler logic
+                const res = await fetch(`/api/sitios?subdominio=${tenantId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(finalData)
                 });
+
                 if (res.ok) {
                     const toast = document.getElementById('toast');
                     toast.classList.remove('hidden');
+                    localStorage.removeItem(`builder_draft_${tenantId}`); // Clear draft on successful publish
+                    console.log("Publish successful, draft cleared.");
                     setTimeout(() => toast.classList.add('hidden'), 3000);
+                } else {
+                    const errData = await res.json();
+                    console.error("Server Error:", errData);
+                    alert("Error del servidor: " + (errData.message || "Fallo desconocido"));
                 }
             } catch (e) {
-                alert("Error al guardar: " + e.message);
+                console.error("Fetch Error:", e);
+                alert("Error de conexión al publicar: " + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         };
 
