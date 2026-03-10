@@ -92,8 +92,8 @@
                 </div>
             </div>
 
-            <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pb-20">
-                <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-20 md:pt-32 pb-16 md:pb-24 text-center">
+            <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pb-10">
+                <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-8 md:pb-12 text-center">
                     <div
                         class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase mb-6 md:mb-8">
                         <span class="relative flex h-2 w-2">
@@ -108,11 +108,19 @@
                         Cargando...
                     </h1>
                     <p id="hero-subtitle"
-                        class="text-slate-300 text-base md:text-xl font-light leading-relaxed mb-8 md:mb-10 max-w-lg mx-auto px-2">
+                        class="text-slate-300 text-base md:text-xl font-light leading-relaxed mb-6 md:mb-8 max-w-lg mx-auto px-2">
                         Cargando...
                     </p>
+
+                    <!-- Coach Photo on Home -->
+                    <div id="home-coach-photo-container"
+                        class="mb-6 md:mb-8 transition-all duration-1000 transform hover:scale-105">
+                        <img id="home-coach-photo" src="/assets/generic-avatar.png"
+                            class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto border-2 border-primary/30 shadow-2xl shadow-primary/10">
+                    </div>
+
                     <div id="dynamic-nav-grid"
-                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full mt-12 transition-all duration-700">
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full mt-4 transition-all duration-700">
                         <!-- Buttons will be injected here by dynamic-renderer.js -->
                         <div class="col-span-full py-20 text-center opacity-50 animate-pulse">Configurando tu espacio...
                         </div>
@@ -133,41 +141,47 @@
             </main>
         </div>
     </div>
-    <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-16 md:py-24 pb-32 sm:pb-24">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+    <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-16 pb-24 sm:pb-16">
+        <div id="features-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             <!-- Feature 1 -->
             <div class="glass-panel p-5 md:p-6 rounded-[2rem] group hover:bg-white/5 transition-all">
-                <div class="aspect-square rounded-2xl overflow-hidden mb-6">
+                <div class="aspect-video rounded-2xl overflow-hidden mb-4">
                     <img src="/assets/resilience.png"
                         class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                         alt="Resiliencia">
                 </div>
-                <h3 class="font-display text-xl md:text-2xl text-white mb-3 italic">Resiliencia</h3>
-                <p class="text-slate-400 text-sm md:text-base leading-relaxed">Herramientas prácticas para navegar los
+                <h3 id="feature-1-title" class="font-display text-xl md:text-2xl text-white mb-2 italic">Resiliencia
+                </h3>
+                <p id="feature-1-desc" class="text-slate-400 text-sm md:text-base leading-relaxed">Herramientas
+                    prácticas para navegar los
                     desafíos diarios con fortaleza interna y calma.</p>
             </div>
 
             <!-- Feature 2: Claridad Mental -->
-            <div class="glass-panel p-5 md:p-6 rounded-[2rem] group hover:bg-white/5 transition-all sm:translate-y-8">
-                <div class="aspect-square rounded-2xl overflow-hidden mb-6">
+            <div class="glass-panel p-5 md:p-6 rounded-[2rem] group hover:bg-white/5 transition-all">
+                <div class="aspect-video rounded-2xl overflow-hidden mb-4">
                     <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=1200"
                         class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                         alt="Claridad Mental">
                 </div>
-                <h3 class="font-display text-xl md:text-2xl text-white mb-3 italic">Claridad Mental</h3>
-                <p class="text-slate-400 text-sm md:text-base leading-relaxed">Libera el ruido mental y encuentra el
+                <h3 id="feature-2-title" class="font-display text-xl md:text-2xl text-white mb-2 italic">Claridad Mental
+                </h3>
+                <p id="feature-2-desc" class="text-slate-400 text-sm md:text-base leading-relaxed">Libera el ruido
+                    mental y encuentra el
                     enfoque necesario para tomar las mejores decisiones.</p>
             </div>
 
             <!-- Feature 3 -->
             <div class="glass-panel p-5 md:p-6 rounded-[2rem] group hover:bg-white/5 transition-all">
-                <div class="aspect-square rounded-2xl overflow-hidden mb-6">
+                <div class="aspect-video rounded-2xl overflow-hidden mb-4">
                     <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200"
                         class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                         alt="Atención Plena">
                 </div>
-                <h3 class="font-display text-xl md:text-2xl text-white mb-3 italic">Atención Plena</h3>
-                <p class="text-slate-400 text-sm md:text-base leading-relaxed">Prácticas de meditación y presencia para
+                <h3 id="feature-3-title" class="font-display text-xl md:text-2xl text-white mb-2 italic">Atención Plena
+                </h3>
+                <p id="feature-3-desc" class="text-slate-400 text-sm md:text-base leading-relaxed">Prácticas de
+                    meditación y presencia para
                     reducir el ruido mental y conectar con el presente.</p>
             </div>
 
