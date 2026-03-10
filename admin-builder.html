@@ -61,6 +61,12 @@
                 <span class="text-[10px] text-slate-500 uppercase font-black tracking-widest">Subdominio Activo</span>
                 <span id="display-subdomain" class="text-primary font-bold text-sm">cargando...</span>
             </div>
+            <button id="magic-fill"
+                class="bg-white/5 border border-white/10 text-white px-6 py-2 rounded-xl font-bold text-sm hover:bg-white/10 transition-all flex items-center gap-2 group">
+                <span
+                    class="material-symbols-outlined text-sm group-hover:rotate-12 transition-transform">magic_button</span>
+                ESTRUCTURA MÁGICA
+            </button>
             <button id="save-all"
                 class="bg-primary text-dark px-6 py-2 rounded-xl font-bold text-sm hover:scale-105 transition-all flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">save</span> PUBLICAR SITIO
@@ -139,6 +145,26 @@
                     <textarea
                         class="section-content w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm min-h-[120px] focus:outline-none focus:border-primary transition-all"
                         placeholder="Contenido o descripción..."></textarea>
+
+                    <!-- IA Suggestion Overlay (Hidden by Default) -->
+                    <div
+                        class="ai-suggestion-overlay hidden absolute inset-0 bg-dark/95 backdrop-blur-sm rounded-2xl p-6 flex flex-col justify-between border border-primary/30 z-10 animate-fade-in">
+                        <div class="flex flex-col gap-2">
+                            <span class="text-[9px] text-primary uppercase font-black tracking-widest">Sugerencia de
+                                IA</span>
+                            <h4 class="suggestion-title text-base font-display italic text-white leading-tight">...</h4>
+                            <p
+                                class="suggestion-content text-xs text-slate-300 leading-relaxed overflow-y-auto max-h-[80px]">
+                                ...</p>
+                        </div>
+                        <div class="flex gap-2 mt-4">
+                            <button
+                                class="apply-suggestion flex-1 bg-primary text-dark py-2 rounded-lg text-[10px] font-bold uppercase transition-all hover:scale-[1.02]">Aplicar</button>
+                            <button
+                                class="reject-suggestion flex-1 bg-white/5 text-white py-2 rounded-lg text-[10px] font-bold uppercase border border-white/10 hover:bg-white/10 transition-all">Descartar</button>
+                        </div>
+                    </div>
+
                     <button
                         class="ai-improve absolute bottom-4 right-4 bg-white/10 hover:bg-primary hover:text-dark px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2">
                         <span class="material-symbols-outlined text-[14px]">auto_awesome</span> MEJORAR CON IA
@@ -170,6 +196,21 @@
             metodo: { secciones: [] }
         };
         let activePage = 'mision';
+
+        const MAGIC_TEMPLATES = {
+            mision: [
+                { id: 1, tipo: 'hero', titulo: 'Tu camino hacia la plenitud comienza aquí', contenido: 'Acompaño a personas valientes que están listas para reencontrarse con su esencia y construir una vida alineada con su propósito más profundo.' },
+                { id: 2, tipo: 'texto_simple', titulo: 'Mi Compromiso Contigo', contenido: 'Mi misión es crear un espacio seguro de escucha y transformación, donde cada sesión sea un paso firme hacia tu paz interior y seguridad personal.' }
+            ],
+            servicios: [
+                { id: 3, tipo: 'tarjeta_servicio', titulo: 'Coaching Individual', contenido: 'Sesiones personalizadas de 60 minutos enfocadas en desbloquear tu potencial y superar los miedos que te detienen hoy.' },
+                { id: 4, tipo: 'tarjeta_servicio', titulo: 'Terapia de Pareja', contenido: 'Reconstruye la comunicación y el afecto en tu relación a través de herramientas prácticas y empatía guiada.' }
+            ],
+            metodo: [
+                { id: 5, tipo: 'paso', titulo: 'Descubrimiento', contenido: 'Identificamos las raíces de tus bloqueos y definimos metas claras para tu proceso de cambio.' },
+                { id: 6, tipo: 'paso', titulo: 'Acción Consciente', contenido: 'Implementamos hábitos y herramientas diarias que transforman tu mentalidad desde la primera semana.' }
+            ]
+        };
 
         // --- NEW: PERSISTENCE LOGIC ---
         function saveToLocal() {
@@ -255,9 +296,11 @@
 
                 card.querySelector('.ai-improve').onclick = async () => {
                     const btn = card.querySelector('.ai-improve');
+                    const overlay = card.querySelector('.ai-suggestion-overlay');
                     const originalText = btn.innerHTML;
+
                     btn.disabled = true;
-                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[14px]">sync</span> MEJORANDO...';
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[14px]">sync</span> GENERANDO...';
 
                     try {
                         const res = await fetch('/api/generar-texto', {
@@ -266,16 +309,28 @@
                             body: JSON.stringify({
                                 pagina: activePage,
                                 tipo_seccion: sec.tipo,
-                                ideas_previas: sec.contenido
+                                ideas_previas: card.querySelector('.section-content').value || sec.contenido
                             })
                         });
                         const data = await res.json();
-                        if (data.titulo) {
-                            card.querySelector('.section-title').value = data.titulo;
-                            card.querySelector('.section-content').value = data.contenido;
-                            sec.titulo = data.titulo;
-                            sec.contenido = data.contenido;
-                            saveToLocal();
+
+                        if (data.titulo && data.contenido) {
+                            overlay.querySelector('.suggestion-title').textContent = data.titulo;
+                            overlay.querySelector('.suggestion-content').textContent = data.contenido;
+                            overlay.classList.remove('hidden');
+
+                            overlay.querySelector('.apply-suggestion').onclick = () => {
+                                card.querySelector('.section-title').value = data.titulo;
+                                card.querySelector('.section-content').value = data.contenido;
+                                sec.titulo = data.titulo;
+                                sec.contenido = data.contenido;
+                                overlay.classList.add('hidden');
+                                saveToLocal();
+                            };
+
+                            overlay.querySelector('.reject-suggestion').onclick = () => {
+                                overlay.classList.add('hidden');
+                            };
                         }
                     } catch (e) {
                         alert("Error de IA: " + e.message);
@@ -356,6 +411,21 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
+            }
+        };
+
+        document.getElementById('magic-fill').onclick = () => {
+            if (confirm("Se reemplazará tu contenido actual por una estructura sugerida de alta calidad. ¿Continuar?")) {
+                currentState = JSON.parse(JSON.stringify(MAGIC_TEMPLATES));
+                saveToLocal();
+                renderSections();
+                const toast = document.getElementById('toast');
+                toast.textContent = "¡Estructura mágica aplicada! ✨";
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                    toast.textContent = "¡Cambios guardados con éxito! ✨";
+                }, 3000);
             }
         };
 
