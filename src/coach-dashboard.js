@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             photoInput: document.getElementById('photo-upload'),
             photoPreview: document.getElementById('profile-preview-img'),
             photoIcon: document.getElementById('profile-preview-icon'),
-            accentColor: document.getElementById('accent-color-input'),
+            themeSelector: document.getElementById('theme-selector'),
             saveBtn: document.getElementById('save-branding-btn'),
             previewPortalBtn: document.getElementById('preview-portal-btn')
         }
@@ -169,14 +169,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             elements.brandingForm.photoIcon.classList.add('hidden');
         }
 
-        const accentColor = metadata.accentColor || '#2dd4bf';
-        elements.brandingForm.accentColor.value = accentColor;
-
-        // Update Color Preview
-        const colorPreview = document.getElementById('color-preview');
-        const colorHex = document.getElementById('color-hex-display');
-        if (colorPreview) colorPreview.style.backgroundColor = accentColor;
-        if (colorHex) colorHex.textContent = accentColor.toUpperCase();
+        const currentTheme = metadata.theme || 'nature';
+        window.selectedTheme = currentTheme;
+        updateThemeUI(currentTheme);
 
         // Stripe State (Sandbox Mode Override)
         elements.stripeStatusText.textContent = "Sandbox Mode Active";
@@ -196,10 +191,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (d.colonia) elements.brandingForm.colonia.value = d.colonia;
             if (d.state) elements.brandingForm.state.value = d.state;
             if (d.zip) elements.brandingForm.zip.value = d.zip;
-            if (d.accentColor) {
-                elements.brandingForm.accentColor.value = d.accentColor;
-                if (colorPreview) colorPreview.style.backgroundColor = d.accentColor;
-                if (colorHex) colorHex.textContent = d.accentColor.toUpperCase();
+            if (d.theme) {
+                window.selectedTheme = d.theme;
+                updateThemeUI(d.theme);
             }
             if (d.coachPhoto) {
                 elements.brandingForm.photoPreview.src = d.coachPhoto;
@@ -207,6 +201,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 elements.brandingForm.photoIcon.classList.add('hidden');
             }
         }
+
+        // Theme Selection Handlers
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.onclick = () => {
+                window.selectedTheme = opt.dataset.theme;
+                updateThemeUI(window.selectedTheme);
+                saveDraft();
+            };
+        });
 
     } catch (e) {
         console.error("Dashboard Load Error:", e);
@@ -247,6 +250,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
+    function updateThemeUI(theme) {
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            if (opt.dataset.theme === theme) {
+                opt.classList.add('selected');
+            } else {
+                opt.classList.remove('selected');
+            }
+        });
+    }
+
     // --- AUTO-DRAFTING ---
     const saveDraft = () => {
         const d = {
@@ -258,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             colonia: elements.brandingForm.colonia.value,
             state: elements.brandingForm.state.value,
             zip: elements.brandingForm.zip.value,
-            accentColor: elements.brandingForm.accentColor.value,
+            theme: window.selectedTheme || 'nature',
             coachPhoto: elements.brandingForm.photoPreview.src
         };
         localStorage.setItem(`pc_draft_${tenantId}`, JSON.stringify(d));
@@ -274,18 +287,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6, 10)}`;
     };
 
-    if (elements.brandingForm.accentColor) {
-        elements.brandingForm.accentColor.addEventListener('input', (e) => {
-            const color = e.target.value;
-            const preview = document.getElementById('color-preview');
-            const hex = document.getElementById('color-hex-display');
-            if (preview) {
-                preview.style.backgroundColor = color;
-                preview.style.boxShadow = `0 0 20px ${color}4D`; // 30% opacity glow
-            }
-            if (hex) hex.textContent = color.toUpperCase();
-        });
-    }
 
     if (elements.brandingForm.phone) {
         elements.brandingForm.phone.addEventListener('input', (e) => {
@@ -328,8 +329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.brandingForm.name, elements.brandingForm.tagline,
         elements.brandingForm.phone, elements.brandingForm.email,
         elements.brandingForm.street, elements.brandingForm.colonia,
-        elements.brandingForm.state, elements.brandingForm.zip,
-        elements.brandingForm.accentColor
+        elements.brandingForm.state, elements.brandingForm.zip
     ];
     inputs.forEach(input => {
         if (input) input.addEventListener('input', saveDraft);
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             colonia: elements.brandingForm.colonia.value,
             state: elements.brandingForm.state.value,
             zipCode: elements.brandingForm.zip.value,
-            accentColor: elements.brandingForm.accentColor.value,
+            theme: window.selectedTheme || 'nature',
             coachPhoto: elements.brandingForm.photoPreview.src
         };
         console.log("[DASHBOARD] Saving branding data to Cloud...", data);
