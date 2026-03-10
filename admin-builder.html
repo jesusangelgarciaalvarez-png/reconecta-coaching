@@ -198,24 +198,30 @@
         let activePage = 'mision';
 
         const MAGIC_TEMPLATES = {
-            mision: [
-                { id: 1, tipo: 'hero', titulo: 'Reconecta con tu esencia y vive con propósito', contenido: 'Acompaño a personas en procesos de cambio para que recuperen su seguridad, sanen sus vínculos y construyan una vida alineada con sus valores más profundos.' },
-                { id: 2, tipo: 'texto_simple', titulo: 'Mi Transformación Personal', contenido: 'Después de años de búsqueda, descubrí que la paz no es la ausencia de conflictos, sino la capacidad de habitarlos con consciencia. Hoy, mi misión es guiarte en ese mismo camino.' },
-                { id: 3, tipo: 'tarjeta_servicio', titulo: 'Espacio Seguro', contenido: 'Un entorno libre de juicios donde cada palabra cuenta y cada silencio es una oportunidad para el autoconocimiento.' },
-                { id: 4, tipo: 'texto_simple', titulo: '¿Por qué trabajar conmigo?', contenido: 'Porque entiendo que el crecimiento no es lineal y que cada proceso es único. Mi enfoque combina la empatía profunda con herramientas prácticas de acción.' }
-            ],
-            servicios: [
-                { id: 5, tipo: 'tarjeta_servicio', titulo: 'Coaching de Vida', contenido: 'Desbloquea los patrones que te detienen y diseña un plan de vida que te entusiasme cada mañana.' },
-                { id: 6, tipo: 'tarjeta_servicio', titulo: 'Gestión Emocional', contenido: 'Aprende a navegar tus emociones sin que ellas te dominen, recuperando el equilibrio y la calma.' },
-                { id: 7, tipo: 'tarjeta_servicio', titulo: 'Relaciones Conscientes', contenido: 'Sana tus vínculos y aprende a establecer límites saludables que fortalezcan tu autoestima.' },
-                { id: 8, tipo: 'tarjeta_servicio', titulo: 'Mentoría de Propósito', contenido: 'Encuentra claridad sobre tu camino profesional y personal alineando tus talentos con tu misión.' }
-            ],
-            metodo: [
-                { id: 9, tipo: 'paso', titulo: 'Claridad Inicial', contenido: 'Identificamos los bloqueos invisibles que están frenando tu crecimiento y definimos el norte de tu transformación.' },
-                { id: 10, tipo: 'paso', titulo: 'Desprogramación', contenido: 'Cuestionamos las creencias limitantes que has heredado para dar espacio a una nueva narrativa personal.' },
-                { id: 11, tipo: 'paso', titulo: 'Integración', contenido: 'Practicamos herramientas de presencia y gestión que puedes aplicar desde el primer día en tu vida cotidiana.' },
-                { id: 12, tipo: 'paso', titulo: 'Poder Personal', contenido: 'Consolidamos tu nueva identidad, permitiéndote tomar decisiones desde la seguridad y no desde el miedo.' }
-            ]
+            mision: {
+                secciones: [
+                    { id: 1, tipo: 'hero', titulo: 'Reconecta con tu esencia y vive con propósito', contenido: 'Acompaño a personas en procesos de cambio para que recuperen su seguridad, sanen sus vínculos y construyan una vida alineada con sus valores más profundos.' },
+                    { id: 2, tipo: 'texto_simple', titulo: 'Mi Transformación Personal', contenido: 'Después de años de búsqueda, descubrí que la paz no es la ausencia de conflictos, sino la capacidad de habitarlos con consciencia. Hoy, mi misión es guiarte en ese mismo camino.' },
+                    { id: 3, tipo: 'tarjeta_servicio', titulo: 'Espacio Seguro', contenido: 'Un entorno libre de juicios donde cada palabra cuenta y cada silencio es una oportunidad para el autoconocimiento.' },
+                    { id: 4, tipo: 'texto_simple', titulo: '¿Por qué trabajar conmigo?', contenido: 'Porque entiendo que el crecimiento no es lineal y que cada proceso es único. Mi enfoque combina la empatía profunda con herramientas prácticas de acción.' }
+                ]
+            },
+            servicios: {
+                secciones: [
+                    { id: 5, tipo: 'tarjeta_servicio', titulo: 'Coaching de Vida', contenido: 'Desbloquea los patrones que te detienen y diseña un plan de vida que te entusiasme cada mañana.' },
+                    { id: 6, tipo: 'tarjeta_servicio', titulo: 'Gestión Emocional', contenido: 'Aprende a navegar tus emociones sin que ellas te dominen, recuperando el equilibrio y la calma.' },
+                    { id: 7, tipo: 'tarjeta_servicio', titulo: 'Relaciones Conscientes', contenido: 'Sana tus vínculos y aprende a establecer límites saludables que fortalezcan tu autoestima.' },
+                    { id: 8, tipo: 'tarjeta_servicio', titulo: 'Mentoría de Propósito', contenido: 'Encuentra claridad sobre tu camino profesional y personal alineando tus talentos con tu misión.' }
+                ]
+            },
+            metodo: {
+                secciones: [
+                    { id: 9, tipo: 'paso', titulo: 'Claridad Inicial', contenido: 'Identificamos los bloqueos invisibles que están frenando tu crecimiento y definimos el norte de tu transformación.' },
+                    { id: 10, tipo: 'paso', titulo: 'Desprogramación', contenido: 'Cuestionamos las creencias limitantes que has heredado para dar espacio a una nueva narrativa personal.' },
+                    { id: 11, tipo: 'paso', titulo: 'Integración', contenido: 'Practicamos herramientas de presencia y gestión que puedes aplicar desde el primer día en tu vida cotidiana.' },
+                    { id: 12, tipo: 'paso', titulo: 'Poder Personal', contenido: 'Consolidamos tu nueva identidad, permitiéndote tomar decisiones desde la seguridad y no desde el miedo.' }
+                ]
+            }
         };
 
         // --- NEW: PERSISTENCE LOGIC ---
