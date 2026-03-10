@@ -14,8 +14,8 @@
 
 body {
   @apply text-slate-200 font-sans antialiased;
-  background-color: var(--bg-color-bottom, #0a1f1f);
-  background-image: radial-gradient(circle at top right, var(--bg-color-top, #1a3a3c), var(--bg-color-bottom, #0a1f1f));
+  background-color: var(--bg-color-bottom, #030712);
+  background-image: radial-gradient(circle at top right, var(--bg-color-top, #020617), var(--bg-color-bottom, #030712));
   background-attachment: fixed;
   min-height: 100vh;
 }
