@@ -99,10 +99,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     const setupCardSchedule = document.getElementById('setup-card-schedule');
     const setupCardPromos = document.getElementById('setup-card-promos');
+    const setupCardBuilder = document.getElementById('setup-card-builder');
 
     if (setupCardSchedule) setupCardSchedule.onclick = goToSchedule;
     if (setupCardPromos) {
         setupCardPromos.onclick = () => window.location.href = `admin-promos.html?tenant=${tenantId}`;
+    }
+    if (setupCardBuilder) {
+        setupCardBuilder.onclick = () => window.location.href = `admin-builder.html?tenant=${tenantId}`;
     }
 
     // 1. Load Metadata

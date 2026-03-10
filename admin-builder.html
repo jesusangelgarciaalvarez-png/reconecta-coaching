@@ -240,11 +240,8 @@
         });
 
         document.getElementById('save-all').onclick = async () => {
-            const subdomain = document.getElementById('subdomain').value.trim();
-            if (!subdomain) return alert("Ingresa un subdominio");
-
             const finalData = {
-                subdominio: subdomain,
+                subdominio: tenantId,
                 configuracion_visual: {
                     color_primario: document.getElementById('main-color').value,
                     tipografia: document.getElementById('main-font').value,
@@ -253,7 +250,7 @@
             };
 
             try {
-                const res = await fetch(`/api/sitios/${subdomain}`, {
+                const res = await fetch(`/api/sitios/${tenantId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(finalData)
@@ -268,7 +265,7 @@
             }
         };
 
-        renderSections();
+        loadInitialData();
     </script>
 </body>
 
