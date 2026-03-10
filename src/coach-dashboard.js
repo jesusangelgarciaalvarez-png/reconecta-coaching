@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (d.street) elements.brandingForm.street.value = d.street;
             if (d.colonia) elements.brandingForm.colonia.value = d.colonia;
             if (d.state) elements.brandingForm.state.value = d.state;
-            if (d.zip) elements.brandingForm.zip.value = d.zip;
+            if (d.zipCode || d.zip) elements.brandingForm.zip.value = d.zipCode || d.zip;
             if (d.theme) {
                 window.selectedTheme = d.theme;
                 updateThemeUI(d.theme);
@@ -203,13 +203,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Theme Selection Handlers
-        document.querySelectorAll('.theme-option').forEach(opt => {
-            opt.onclick = () => {
-                window.selectedTheme = opt.dataset.theme;
-                updateThemeUI(window.selectedTheme);
-                saveDraft();
-            };
-        });
+        const themeOptions = document.querySelectorAll('.theme-option');
+        if (themeOptions.length > 0) {
+            themeOptions.forEach(opt => {
+                opt.onclick = (e) => {
+                    console.log("[DASHBOARD] Theme selected:", opt.dataset.theme);
+                    window.selectedTheme = opt.dataset.theme;
+                    updateThemeUI(window.selectedTheme);
+                    saveDraft();
+                };
+            });
+        }
 
     } catch (e) {
         console.error("Dashboard Load Error:", e);
