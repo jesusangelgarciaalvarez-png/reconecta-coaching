@@ -222,6 +222,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.theme-option').forEach(opt => {
             if (opt.dataset.theme === theme) {
                 opt.classList.add('selected');
+                // Instant Feedback in Dashboard
+                const colors = {
+                    'nature': '#10b981',
+                    'premium': '#fbbf24',
+                    'sunset': '#fb7185',
+                    'cosmic': '#a855f7',
+                    'zen': '#6b7280',
+                    'executive': '#1e40af'
+                };
+                document.documentElement.style.setProperty('--primary-color', colors[theme] || '#1e40af');
             } else {
                 opt.classList.remove('selected');
             }

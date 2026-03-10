@@ -9,32 +9,44 @@ const THEMES = {
     'nature': {
         bg: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560',
         primary: '#10b981', // Emerald
-        accent: '#064e3b'
+        accent: '#064e3b',
+        gradientTop: '#1a3a3c',
+        gradientBottom: '#0a1f1f'
     },
     'premium': {
         bg: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&q=80&w=2560',
         primary: '#fbbf24', // Amber/Gold
-        accent: '#000000'
+        accent: '#000000',
+        gradientTop: '#1a1a1a',
+        gradientBottom: '#000000'
     },
     'sunset': {
         bg: 'https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?auto=format&fit=crop&q=80&w=2560',
         primary: '#fb7185', // Rose
-        accent: '#4c0519'
+        accent: '#4c0519',
+        gradientTop: '#4c0519',
+        gradientBottom: '#1a0208'
     },
     'cosmic': {
         bg: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?auto=format&fit=crop&q=80&w=2560',
         primary: '#a855f7', // Purple
-        accent: '#1e1b4b'
+        accent: '#1e1b4b',
+        gradientTop: '#1e1b4b',
+        gradientBottom: '#020617'
     },
     'zen': {
         bg: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=2560',
         primary: '#6b7280', // Gray
-        accent: '#f9fafb'
+        accent: '#f9fafb',
+        gradientTop: '#374151',
+        gradientBottom: '#111827'
     },
     'executive': {
         bg: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2560',
         primary: '#1e40af', // Blue
-        accent: '#0f172a'
+        accent: '#0f172a',
+        gradientTop: '#1e3a8a',
+        gradientBottom: '#030712'
     }
 };
 
@@ -67,7 +79,10 @@ async function applyBranding() {
     // 1. Apply Theme / Colors
     const themeKey = metadata.theme || 'nature';
     const theme = THEMES[themeKey] || THEMES.nature;
+
     document.documentElement.style.setProperty('--primary-color', metadata.accentColor || theme.primary);
+    document.documentElement.style.setProperty('--bg-color-top', theme.gradientTop);
+    document.documentElement.style.setProperty('--bg-color-bottom', theme.gradientBottom);
 
     // Update Backgrounds
     const heroBgs = document.querySelectorAll('.hero-zoom-crop, .faded-bg');

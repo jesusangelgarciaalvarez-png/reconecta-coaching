@@ -222,7 +222,7 @@
 <body class="bg-mesh min-h-screen text-slate-200 font-sans selection:bg-primary/30">
     <div
         style="background: #2563eb; color: #ffffff; text-align: center; font-family: monospace; font-size: 11px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-        DASHBOARD v43.7 - UI & PERSISTENCE FINAL
+        DASHBOARD v43.8 - THEME SYNC & STYLE HARMONY
     </div>
 
     <!-- Fixed Dynamic Background Layer -->
@@ -630,10 +630,15 @@
         </div>
 
         <!-- ADMINISTRATION SECTION (Operations) -->
-        <div id="admin-section" class="hidden space-y-12 animate-fade-in">
+        <div id="admin-section" class="hidden space-y-12 animate-fade-in relative z-10">
             <div class="text-center mb-16">
-                <h2 class="font-display italic text-5xl text-white mb-4">Operación Diaria</h2>
-                <p class="text-slate-400 max-w-xl mx-auto">Gestiona tus citas manuales, revisa estadísticas y genera
+                <div
+                    class="inline-block px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-4">
+                    Módulo de Gestión
+                </div>
+                <h2 class="font-display italic text-6xl text-white mb-4">Operación Diaria</h2>
+                <p class="text-slate-400 max-w-xl mx-auto text-lg leading-relaxed">Gestiona tus citas manuales, revisa
+                    estadísticas y genera
                     material QR.</p>
             </div>
 

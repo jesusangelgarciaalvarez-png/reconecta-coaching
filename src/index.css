@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #ecb613;
-  /* Muted Gold */
+  --color-primary: var(--primary-color, #ecb613);
+  /* Muted Gold fallback */
   --color-teal-soft: #2d6a6d;
   --color-teal-deep: #1a3a3c;
   --color-glass: rgba(255, 255, 255, 0.1);
@@ -13,8 +13,10 @@
 }
 
 body {
-  @apply bg-[#0a1f1f] text-slate-200 font-sans antialiased;
-  background: radial-gradient(circle at top right, #1a3a3c, #0a1f1f);
+  @apply text-slate-200 font-sans antialiased;
+  background-color: var(--bg-color-bottom, #0a1f1f);
+  background-image: radial-gradient(circle at top right, var(--bg-color-top, #1a3a3c), var(--bg-color-bottom, #0a1f1f));
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
