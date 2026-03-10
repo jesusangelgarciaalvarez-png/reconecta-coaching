@@ -32,11 +32,13 @@
     </script>
     <style>
         .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            /* Increased opacity for contrast */
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            /* Brighter border */
+            box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.6);
         }
 
         .stat-card:hover {
@@ -48,35 +50,42 @@
         .bg-mesh {
             background-color: #0a0a0a;
             position: relative;
-            overflow: hidden;
         }
 
-        /* Dynamic Animated Background */
-        .bg-mesh::before,
-        .bg-mesh::after {
-            content: "";
+        /* Fixed background animated layer to allow body scrolling */
+        .bg-dynamic-layer {
             position: fixed;
-            width: 800px;
-            height: 800px;
-            border-radius: 50%;
-            filter: blur(120px);
+            inset: 0;
             z-index: -1;
-            opacity: 0.15;
-            animation: moveGlow 20s infinite alternate;
+            overflow: hidden;
+            pointer-events: none;
         }
 
-        .bg-mesh::before {
+        .bg-dynamic-layer::before,
+        .bg-dynamic-layer::after {
+            content: "";
+            position: absolute;
+            width: 80vw;
+            height: 80vw;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.18;
+            /* Brighter glow for better life */
+            animation: moveGlow 25s infinite alternate;
+        }
+
+        .bg-dynamic-layer::before {
             background: radial-gradient(circle, #2dd4bf, transparent);
-            top: -200px;
-            left: -200px;
+            top: -20%;
+            left: -20%;
         }
 
-        .bg-mesh::after {
+        .bg-dynamic-layer::after {
             background: radial-gradient(circle, #fbbf24, transparent);
-            bottom: -200px;
-            right: -200px;
-            animation-duration: 25s;
-            animation-delay: -5s;
+            bottom: -20%;
+            right: -20%;
+            animation-duration: 30s;
+            animation-delay: -7s;
         }
 
         @keyframes moveGlow {
@@ -172,8 +181,11 @@
 <body class="bg-mesh min-h-screen text-slate-200 font-sans selection:bg-primary/30">
     <div
         style="background: #eab308; color: #000000; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-        DASHBOARD v43.0 - PREMIUM REDESIGN
+        DASHBOARD v43.1 - SCROLL & PERSISTENCE FIX
     </div>
+
+    <!-- Fixed Dynamic Background Layer -->
+    <div class="bg-dynamic-layer"></div>
 
     <!-- PIN Access Overlay -->
     <div id="pin-overlay" class="hidden">

@@ -162,6 +162,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.brandingForm.state.value = metadata.state || '';
         elements.brandingForm.zip.value = metadata.zipCode || '';
 
+        // Photo Initialization
+        if (metadata.coachPhoto) {
+            elements.brandingForm.photoPreview.src = metadata.coachPhoto;
+            elements.brandingForm.photoPreview.classList.remove('hidden');
+            elements.brandingForm.photoIcon.classList.add('hidden');
+        }
+
         const accentColor = metadata.accentColor || '#2dd4bf';
         elements.brandingForm.accentColor.value = accentColor;
 
@@ -247,14 +254,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             accentColor: elements.brandingForm.accentColor.value,
             coachPhoto: elements.brandingForm.photoPreview.src
         };
+        console.log("[DASHBOARD] Saving branding data:", data);
         try {
-            await fetch('/api/update-tenant', {
+            const resp = await fetch('/api/update-tenant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-Tenant-Id': tenantId },
                 body: JSON.stringify(data)
             });
-            alert("¡Perfil actualizado!");
-        } catch (e) { alert("Error al guardar."); }
+            const result = await resp.json();
+            if (result.success) {
+                alert("¡Perfil actualizado con éxito!");
+            } else {
+                throw new Error(result.error || "Server error");
+            }
+        } catch (e) {
+            console.error("Save Error:", e);
+            alert("Error al guardar: " + e.message);
+        }
         elements.brandingForm.saveBtn.disabled = false;
         elements.brandingForm.saveBtn.textContent = 'Publicar Identidad';
     };
