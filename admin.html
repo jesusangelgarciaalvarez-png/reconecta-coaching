@@ -36,10 +36,10 @@
         }
 
         .pin-input:focus {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
             outline: none;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
             transform: scale(1.05);
         }
 
@@ -103,13 +103,13 @@
 
         .premium-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.2);
+            border-color: rgba(251, 191, 36, 0.4);
+            box-shadow: 0 20px 40px -10px rgba(251, 191, 36, 0.2);
         }
     </style>
 </head>
 
-<body class="bg-mesh min-h-screen text-slate-200 font-sans selection:bg-primary/30 overflow-x-hidden">
+<body class="bg-mesh min-h-screen text-slate-200 font-sans selection:bg-amber-500/30 overflow-x-hidden">
     <!-- Dynamic Background Layer -->
     <div class="bg-dynamic-layer"></div>
 
@@ -118,13 +118,13 @@
             class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center backdrop-blur-xl border-b border-white/5 bg-black/20">
             <div class="flex items-center gap-5">
                 <div
-                    class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/40">
-                    <span class="material-symbols-outlined text-primary">terminal</span>
+                    class="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/40">
+                    <span class="material-symbols-outlined text-amber-500">terminal</span>
                 </div>
                 <div class="flex flex-col">
                     <span class="font-display italic text-2xl font-bold text-white leading-none">Admin Operation</span>
-                    <span class="text-[10px] text-primary uppercase font-bold tracking-[0.2em] mt-1 opacity-80">SaaS
-                        Management Module</span>
+                    <span class="text-[10px] text-amber-500 uppercase font-bold tracking-[0.2em] mt-1 opacity-80">SaaS
+                        Management Module v43.12</span>
                 </div>
             </div>
             <a href="/" class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
@@ -135,7 +135,7 @@
         <!-- PIN Login Section -->
         <main id="login-section" class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
             <div class="glass-panel p-10 rounded-[3rem] max-w-md w-full text-center border-white/10">
-                <span class="material-symbols-outlined text-primary text-5xl mb-6">lock</span>
+                <span class="material-symbols-outlined text-amber-500 text-5xl mb-6">lock</span>
                 <h1 class="font-display italic text-3xl text-white mb-2">Acceso Administrativo</h1>
                 <p class="text-slate-400 mb-8 font-light">Ingresa el PIN de 6 dígitos para continuar</p>
 
@@ -164,17 +164,17 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- QR Generator Card -->
                     <a href="/admin-qr.html"
-                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-primary/50 transition-all duration-500 no-underline">
+                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-amber-500/50 transition-all duration-500 no-underline">
                         <div class="aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
-                            <img src="/assets/admin_qr.png"
+                            <img src="/assets/admin_qr_v43.png"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 alt="Generador QR">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
                         <div class="flex items-center gap-4 mb-4">
                             <div
-                                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/30">
-                                <span class="material-symbols-outlined text-primary">qr_code_2</span>
+                                class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                <span class="material-symbols-outlined text-amber-500">qr_code_2</span>
                             </div>
                             <h3 class="font-display italic text-2xl text-white">Material QR</h3>
                         </div>
@@ -184,17 +184,17 @@
 
                     <!-- Statistics Card -->
                     <a href="/admin-stats.html"
-                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-primary/50 transition-all duration-500 no-underline">
+                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-amber-500/50 transition-all duration-500 no-underline">
                         <div class="aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
-                            <img src="/assets/admin_stats.png"
+                            <img src="/assets/admin_stats_v43.png"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 alt="Estadísticas">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
                         <div class="flex items-center gap-4 mb-4">
                             <div
-                                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/30">
-                                <span class="material-symbols-outlined text-primary">analytics</span>
+                                class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                <span class="material-symbols-outlined text-amber-500">analytics</span>
                             </div>
                             <h3 class="font-display italic text-2xl text-white">Dashboard</h3>
                         </div>
@@ -204,17 +204,17 @@
 
                     <!-- Booking Card -->
                     <a href="/admin-booking.html"
-                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-primary/50 transition-all duration-500 no-underline">
+                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-amber-500/50 transition-all duration-500 no-underline">
                         <div class="aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
-                            <img src="/assets/admin_booking.png"
+                            <img src="/assets/admin_booking_v43.png"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 alt="Gestión de Citas">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
                         <div class="flex items-center gap-4 mb-4">
                             <div
-                                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/30">
-                                <span class="material-symbols-outlined text-primary">calendar_month</span>
+                                class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                <span class="material-symbols-outlined text-amber-500">calendar_month</span>
                             </div>
                             <h3 class="font-display italic text-2xl text-white">Agenda Manual</h3>
                         </div>
@@ -224,17 +224,17 @@
 
                     <!-- Promotions Card -->
                     <a href="/admin-promos.html"
-                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-primary/50 transition-all duration-500 no-underline">
+                        class="glass-panel premium-card p-6 rounded-[3rem] border-white/10 hover:border-amber-500/50 transition-all duration-500 no-underline">
                         <div class="aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative">
-                            <img src="/assets/admin_promos.png"
+                            <img src="/assets/admin_promos_v43.png"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 alt="Gestión de Promociones">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
                         <div class="flex items-center gap-4 mb-4">
                             <div
-                                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/30">
-                                <span class="material-symbols-outlined text-primary">campaign</span>
+                                class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                <span class="material-symbols-outlined text-amber-500">campaign</span>
                             </div>
                             <h3 class="font-display italic text-2xl text-white">Promociones</h3>
                         </div>
