@@ -140,17 +140,39 @@ async function applyBranding() {
                     const count = pieSecs.length;
                     gridEl.className = `grid grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
 
-                    const qualityPool = [
-                        'photo-1506126613408-eca07ce68773', // Meditation/Zen
-                        'photo-1499750310107-5fef28a66643', // Focus/Journaling
-                        'photo-1441974231531-c6227db76b6e', // Nature/Serenity
-                        'photo-1544367567-0f2fcb009e0b', // Yoga/Peace
-                        'photo-1518063319789-7215e6946c1c', // Forest/Path
-                        'photo-1508672019048-805c876b67e2'  // Spa/Relax
+                    const smartPool = {
+                        'paz': 'photo-1506126613408-eca07ce68773',
+                        'serenidad': 'photo-1506126613408-eca07ce68773',
+                        'meditacion': 'photo-1506126613408-eca07ce68773',
+                        'resiliencia': 'photo-1518063319789-7215e6946c1c',
+                        'fuerza': 'photo-1518063319789-7215e6946c1c',
+                        'camino': 'photo-1518063319789-7215e6946c1c',
+                        'claridad': 'photo-1499750310107-5fef28a66643',
+                        'mental': 'photo-1499750310107-5fef28a66643',
+                        'enfoque': 'photo-1499750310107-5fef28a66643',
+                        'autoestima': 'photo-1441974231531-c6227db76b6e',
+                        'amor': 'photo-1441974231531-c6227db76b6e',
+                        'ser': 'photo-1441974231531-c6227db76b6e'
+                    };
+
+                    const fallbackPool = [
+                        'photo-1544367567-0f2fcb009e0b',
+                        'photo-1508672019048-805c876b67e2',
+                        'photo-1470813740244-df37b8c1edcb'
                     ];
 
                     pieSecs.forEach((feat, idx) => {
-                        const imgId = qualityPool[idx % qualityPool.length];
+                        const text = (feat.titulo + ' ' + (feat.image_keyword || '')).toLowerCase();
+                        let imgId = fallbackPool[idx % fallbackPool.length];
+
+                        // Match keyword to pool
+                        for (const [key, id] of Object.entries(smartPool)) {
+                            if (text.includes(key)) {
+                                imgId = id;
+                                break;
+                            }
+                        }
+
                         const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;
 
                         const cardHtml = `
