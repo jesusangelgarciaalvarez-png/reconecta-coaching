@@ -170,10 +170,20 @@ async function applyBranding() {
                         const defaultId = massivePool[idx % massivePool.length];
                         const fallbackId = massivePool[(idx + 10) % massivePool.length];
 
+                        // --- EMERALD SHIELD REPAIR (v52.7) ---
+                        const BROKEN_ID = 'photo-1447752875215-b2761acb3c5d';
+                        const STABLE_ID = 'photo-1506744038136-46273834b3fb';
+
                         // Priority: 1. Manual selection (Unsplash ID) | 2. Default pool
                         let imgId = defaultId;
                         if (feat.image_keyword && feat.image_keyword.startsWith('photo-')) {
                             imgId = feat.image_keyword;
+                        }
+
+                        // Surgical repair for the black image ID
+                        if (imgId === BROKEN_ID) {
+                            console.log("[REPAIR] Intercepted broken image ID, swapping for Yosemite stable.");
+                            imgId = STABLE_ID;
                         }
 
                         const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;
