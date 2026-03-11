@@ -30,7 +30,7 @@
             <!-- REBUILD BANNER VERIFICATION -->
             <div
                 style="background: #eab308; color: #000000; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-                REBUILD v49.6 - EMERGENCY FIX (Photo & Sync)
+                REBUILD v49.9 - PRODUCTION DEFINITIVE (Dynamic Grid)
             </div>
 
             <header
@@ -142,60 +142,12 @@
         </div>
     </div>
     <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-10 pb-20 sm:pb-12">
-        <div id="features-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            <!-- Feature 1 -->
-            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all">
-                <div class="aspect-video rounded-xl overflow-hidden mb-3">
-                    <img src="/assets/resilience.png"
-                        class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                        alt="Resiliencia">
-                </div>
-                <h3 id="feature-1-title" class="font-display text-sm md:text-base text-white mb-1 italic">Resiliencia
-                </h3>
-                <p id="feature-1-desc" class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">
-                    Herramientas prácticas para navegar los desafíos diarios con fortaleza interna y calma.</p>
-            </div>
-
-            <!-- Feature 2 -->
-            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all lg:translate-y-4">
-                <div class="aspect-video rounded-xl overflow-hidden mb-3">
-                    <img src="/assets/claridad.png"
-                        class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                        alt="Claridad Mental">
-                </div>
-                <h3 id="feature-2-title" class="font-display text-sm md:text-base text-white mb-1 italic">Claridad
-                    Mental</h3>
-                <p id="feature-2-desc" class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">Libera
-                    el ruido mental y encuentra el enfoque necesario para tomar las mejores decisiones.</p>
-            </div>
-
-            <!-- Feature 3 -->
-            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all">
-                <div class="aspect-video rounded-xl overflow-hidden mb-3">
-                    <img src="/assets/atencion.png"
-                        class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                        alt="Atención Plena">
-                </div>
-                <h3 id="feature-3-title" class="font-display text-sm md:text-base text-white mb-1 italic">Atención Plena
-                </h3>
-                <p id="feature-3-desc" class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">
-                    Prácticas de meditación y presencia para reducir el ruido mental y conectar con el presente.</p>
-            </div>
-
-            <!-- Feature 4 -->
-            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all lg:translate-y-4">
-                <div class="aspect-video rounded-xl overflow-hidden mb-3">
-                    <img src="/assets/autoestima.png"
-                        class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                        alt="Autoestima">
-                </div>
-                <h3 id="feature-4-title" class="font-display text-sm md:text-base text-white mb-1 italic">Autoestima
-                </h3>
-                <p id="feature-4-desc" class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">Un viaje
-                    profundo para redescubrir tu valor y hablarte con la compasión que mereces.</p>
+        <div id="features-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 transition-all duration-700">
+            <!-- Dynamic features will be injected here by branding.js -->
+            <div class="col-span-full py-10 text-center opacity-30 animate-pulse text-xs tracking-widest uppercase">
+                Cargando experiencias...
             </div>
         </div>
-    </div>
     </div>
     <script type="module" src="/src/branding.js"></script>
     <script type="module" src="/src/dynamic-renderer.js"></script>

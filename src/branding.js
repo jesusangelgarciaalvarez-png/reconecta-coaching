@@ -116,6 +116,21 @@ async function applyBranding() {
                     }
                 }
 
+                // Dynamic Features from Site Config
+                const pieSecs = siteConfig.paginas?.pie_pagina?.secciones || [];
+                const inicioSecs = siteConfig.paginas?.inicio?.secciones || [];
+
+                // 1. Hero Inicio
+                const heroHome = inicioSecs.find(s => s.tipo === 'hero_home');
+                if (heroHome) {
+                    const heroTitleEl = document.getElementById('hero-title');
+                    const heroSubEl = document.getElementById('hero-subtitle');
+                    const heroTaglineEl = document.getElementById('hero-tagline');
+                    if (heroTitleEl) heroTitleEl.innerHTML = heroHome.titulo.replace(/\n/g, '<br>');
+                    if (heroSubEl) heroSubEl.textContent = heroHome.contenido;
+                    if (heroTaglineEl && heroHome.tagline) heroTaglineEl.textContent = heroHome.tagline;
+                }
+
                 // 2. Características (Pie de Página - Dinámico)
                 const gridEl = document.getElementById('features-grid');
                 if (gridEl) {
