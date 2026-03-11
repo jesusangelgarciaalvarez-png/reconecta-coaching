@@ -22,6 +22,7 @@ async function initDynamicRenderer() {
     const backBtn = document.getElementById('back-to-home');
     const heroTitle = document.getElementById('hero-title');
     const heroSubtitle = document.getElementById('hero-subtitle');
+    const coachPhoto = document.getElementById('home-coach-photo-container');
 
     if (!navGrid) return;
 
@@ -39,36 +40,36 @@ async function initDynamicRenderer() {
         if (!res.ok) throw new Error("Sitio no configurado");
         const config = await res.json();
 
-        renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitle);
-        setupBackNavigation(navGrid, subpageContainer, heroTitle, heroSubtitle, backBtn);
+        renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto);
+        setupBackNavigation(navGrid, subpageContainer, heroTitle, heroSubtitle, backBtn, coachPhoto);
 
     } catch (err) {
         console.error("[DYNAMIC RENDERER ERROR]:", err);
         // Fallback: Render only fixed buttons if fetch fails
-        renderButtons({ paginas: {} }, navGrid, subpageContainer, heroTitle, heroSubtitle);
+        renderButtons({ paginas: {} }, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto);
     }
 }
 
-function renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitle) {
+function renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto) {
     navGrid.innerHTML = '';
     const paginas = config.paginas || {};
 
     // 1. Conócenos (Fixed - Points to Misión content by default)
-    addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+    addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
 
     // 2. Misión (Dynamic - Only if has rich content)
     if (paginas.mision?.secciones?.length > 1) { // If more than 1 section, show separate Mission
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
     }
 
     // 3. Servicios (Dynamic)
     if (paginas.servicios?.secciones?.length > 0) {
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[1], () => showDynamicPage('servicios', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[1], () => showDynamicPage('servicios', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
     }
 
     // 4. Método (Dynamic)
     if (paginas.metodo?.secciones?.length > 0) {
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[2], () => showDynamicPage('metodo', config, navGrid, subpageContainer, heroTitle, heroSubtitle));
+        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[2], () => showDynamicPage('metodo', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
     }
 
     // 5. Reservar Cita (Fixed)
@@ -97,15 +98,17 @@ function addLink(container, btn, onClick, url = null) {
     container.appendChild(el);
 }
 
-function showDynamicPage(pageId, config, navGrid, subpageContainer, heroTitle, heroSubtitle) {
-    // Hide Hero and Nav Grid
+function showDynamicPage(pageId, config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto) {
+    // Hide Hero, Nav Grid and Photo
     heroTitle.classList.add('opacity-0', 'scale-95');
     heroSubtitle.classList.add('opacity-0', 'scale-95');
+    if (coachPhoto) coachPhoto.classList.add('opacity-0', 'scale-95');
     navGrid.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
 
     setTimeout(() => {
         heroTitle.classList.add('hidden');
         heroSubtitle.classList.add('hidden');
+        if (coachPhoto) coachPhoto.classList.add('hidden');
         navGrid.classList.add('hidden');
 
         // Render Page Content
@@ -125,17 +128,19 @@ function showDynamicPage(pageId, config, navGrid, subpageContainer, heroTitle, h
     }, 400);
 }
 
-function setupBackNavigation(navGrid, subpageContainer, heroTitle, heroSubtitle, backBtn) {
+function setupBackNavigation(navGrid, subpageContainer, heroTitle, heroSubtitle, backBtn, coachPhoto) {
     backBtn.onclick = () => {
         subpageContainer.classList.add('hidden');
 
         heroTitle.classList.remove('hidden');
         heroSubtitle.classList.remove('hidden');
+        if (coachPhoto) coachPhoto.classList.remove('hidden');
         navGrid.classList.remove('hidden');
 
         setTimeout(() => {
             heroTitle.classList.remove('opacity-0', 'scale-95');
             heroSubtitle.classList.remove('opacity-0', 'scale-95');
+            if (coachPhoto) coachPhoto.classList.remove('opacity-0', 'scale-95');
             navGrid.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
         }, 50);
     };
