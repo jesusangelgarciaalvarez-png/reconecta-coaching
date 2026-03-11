@@ -143,8 +143,8 @@ async function applyBranding() {
                     // MASSIVE POOL (Hand-picked premium UNIQUE IDs)
                     const massivePool = [
                         'photo-1506126613408-eca07ce68773', 'photo-1441974231531-c6227db76b6e', 'photo-1470813740244-df37b8c1edcb',
-                        'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2', 'photo-1528319725582-ddc0b6a22ff7',
-                        'photo-1552508744-1696d446496b', 'photo-1533038590840-1cde6e668a91', 'photo-1526506118085-60cf8714f825',
+                        'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2', 'photo-1444703686981-a3abbc4d4fe3',
+                        'photo-1552508744-1696d446496b', 'photo-1533038590840-1cde6e668a91', 'photo-1490730141103-6cac27aaab94',
                         'photo-1517836357463-d25dfeac3438', 'photo-1511497584788-8767fe7d98b1', 'photo-1501854140801-50d01698950b',
                         'photo-1499750310107-5fef28a66643', 'photo-1456324504439-367921cd3d44', 'photo-1501503060808-b5ed15eaf4ad',
                         'photo-1484480974693-6ca0a78fb36b', 'photo-1550684848-fac1c5b4e853', 'photo-1557683316-973673baf926',
@@ -170,7 +170,7 @@ async function applyBranding() {
                         const defaultId = massivePool[idx % massivePool.length];
                         const fallbackId = massivePool[(idx + 10) % massivePool.length];
 
-                        // --- EMERALD & NUCLEAR SHIELD (v52.9) ---
+                        // --- EMERALD & NUCLEAR SHIELD (v53.0) ---
                         const STABLE_YOSEMITE = 'photo-1506744038136-46273834b3fb';
 
                         // Priority: 1. Manual selection (Unsplash ID) | 2. Default pool
