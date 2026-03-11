@@ -116,7 +116,8 @@ async function applyBranding() {
                     }
                 }
 
-                // Dynamic Features from Home (Inicio)
+                // Dynamic Features from Pie de Página
+                const pieSecs = siteConfig.paginas?.pie_pagina?.secciones || [];
                 const inicioSecs = siteConfig.paginas?.inicio?.secciones || [];
 
                 // 1. Hero Inicio
@@ -124,22 +125,26 @@ async function applyBranding() {
                 if (heroHome) {
                     const heroTitleEl = document.getElementById('hero-title');
                     const heroSubEl = document.getElementById('hero-subtitle');
+                    const heroTaglineEl = document.getElementById('hero-tagline');
                     if (heroTitleEl) heroTitleEl.innerHTML = heroHome.titulo.replace(/\n/g, '<br>');
                     if (heroSubEl) heroSubEl.textContent = heroHome.contenido;
+                    if (heroTaglineEl && heroHome.tagline) heroTaglineEl.textContent = heroHome.tagline;
                 }
 
-                // 2. Características
-                const features = inicioSecs.filter(s => s.tipo === 'caracteristica_home');
-                features.forEach((feat, idx) => {
-                    if (idx < 3) {
+                // 2. Características (Pie de Página)
+                pieSecs.forEach((feat, idx) => {
+                    if (idx < 4) {
                         const titleEl = document.getElementById(`feature-${idx + 1}-title`);
                         const descEl = document.getElementById(`feature-${idx + 1}-desc`);
-                        const imgEl = document.querySelector(`#feature-${idx + 1}-title`)?.closest('.glass-panel')?.querySelector('img');
+                        const container = document.getElementById(`feature-${idx + 1}-title`)?.closest('.glass-panel');
+                        const imgEl = container?.querySelector('img');
 
                         if (titleEl) titleEl.textContent = feat.titulo;
                         if (descEl) descEl.textContent = feat.contenido;
                         if (imgEl && feat.image_keyword) {
-                            imgEl.src = `https://source.unsplash.com/featured/?${feat.image_keyword}`;
+                            imgEl.src = `https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200&sig=${feat.image_keyword}`;
+                        } else if (imgEl && feat.image_url) {
+                            imgEl.src = feat.image_url;
                         }
                     }
                 });
@@ -199,7 +204,9 @@ async function applyBranding() {
         '#feature-2-title': metadata.feature2Title || defaults.feature2Title,
         '#feature-2-desc': metadata.feature2Desc || defaults.feature2Desc,
         '#feature-3-title': metadata.feature3Title || defaults.feature3Title,
-        '#feature-3-desc': metadata.feature3Desc || defaults.feature3Desc
+        '#feature-3-desc': metadata.feature3Desc || defaults.feature3Desc,
+        '#feature-4-title': metadata.feature4Title || (defaults.feature4Title || "Autoestima"),
+        '#feature-4-desc': metadata.feature4Desc || (defaults.feature4Desc || "Tu valor personal.")
     };
 
     Object.entries(textMappings).forEach(([selector, value]) => {
