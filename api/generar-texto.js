@@ -50,10 +50,15 @@ Ideas base del coach: "${ideas_previas}"`;
         const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (rawText) {
-            // Clean markdown blocks if present
-            const cleanText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-            const parsed = JSON.parse(cleanText);
-            return res.status(200).json(parsed);
+            // Stronger cleaning: find first { and last }
+            const start = rawText.indexOf('{');
+            const end = rawText.lastIndexOf('}');
+            if (start !== -1 && end !== -1) {
+                const cleanText = rawText.substring(start, end + 1);
+                const parsed = JSON.parse(cleanText);
+                return res.status(200).json(parsed);
+            }
+            return res.status(500).json({ error: "Invalid JSON format from AI", raw: rawText });
         } else {
             return res.status(500).json({ error: "IA failed to generate content", details: data });
         }

@@ -428,7 +428,7 @@
                                     const kwInput = card.querySelector('.section-keyword');
                                     const kwPreview = card.querySelector('.keyword-preview');
                                     if (kwInput) kwInput.value = data.image_keyword;
-                                    if (kwPreview) kwPreview.src = `https://source.unsplash.com/featured/?${data.image_keyword}`;
+                                    if (kwPreview) kwPreview.src = `https://loremflickr.com/400/300/${data.image_keyword},coaching?lock=preview`;
                                 }
 
                                 overlay.classList.add('hidden');
