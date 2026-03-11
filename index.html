@@ -28,118 +28,116 @@
                     style="-webkit-user-select: none; user-select: none;">
             </div>
             <!-- REBUILD BANNER VERIFICATION -->
-            <div
-                style="background: #eab308; color: #000000; text-align: center; font-family: monospace; font-size: 10px; padding: 4px; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; font-weight: bold;">
-                REBUILD v51.0 - GOLDEN SYNC (Definitive Alignment & Images)
-            </div>
-
-            <header
-                class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
-                <div class="flex items-center gap-4">
-                    <img id="brand-logo" src="/assets/logo.jpg" alt="Logo Reconecta"
-                        class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-sm shadow-black/50">
-                    <div class="flex flex-col">
-                        <span id="brand-name"
-                            class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
-                        <span id="brand-tagline"
-                            class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
-                    </div>
-                </div>
-                <button id="menu-btn"
-                    class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
-                    <span class="material-symbols-outlined text-white">menu</span>
-                </button>
-            </header>
-
-            <!-- Navigation Menu Overlay -->
-            <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
-                <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop"
-                    style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560'); -webkit-user-select: none; user-select: none;">
-                </div>
-                <div class="relative z-10 h-full flex flex-col p-8">
-                    <header class="flex justify-between items-center mb-16">
-                        <div class="flex items-center gap-4">
-                            <img id="menu-logo" src="/assets/logo.jpg" alt="Logo Reconecta"
-                                class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-inner">
-                            <div class="flex flex-col text-left">
-                                <span id="menu-name"
-                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
-                                <span id="menu-tagline"
-                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
-                            </div>
-                        </div>
-                        <button id="close-menu"
-                            class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
-                            <span class="material-symbols-outlined text-white">close</span>
-                        </button>
-                    </header>
-                    <nav class="flex flex-col gap-6">
-                        <a href="/" class="menu-link animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
-                        <a href="/quienes-somos.html" class="menu-link animate-fade-in"
-                            style="animation-delay: 0.15s;">Conócenos</a>
-                        <a href="/services.html" class="menu-link animate-fade-in"
-                            style="animation-delay: 0.2s;">Nuestros Servicios</a>
-                        <a href="/metodo.html" class="menu-link animate-fade-in" style="animation-delay: 0.25s;">Nuestro
-                            Método</a>
-                        <a href="/reservar.html" class="menu-link animate-fade-in"
-                            style="animation-delay: 0.3s;">Reservar Sesión</a>
-                        <a href="/cancel.html" class="menu-link animate-fade-in"
-                            style="animation-delay: 0.35s;">Cancelar Cita</a>
-                    </nav>
-                    <footer class="mt-auto py-10 border-t border-white/10">
-                        <p class="text-slate-500 text-xs tracking-widest uppercase">© 2026 Reconecta Coaching</p>
-                    </footer>
-                </div>
-            </div>
-
-            <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pb-10">
-                <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-8 md:pb-12 text-center">
-                    <div
-                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase mb-6 md:mb-8">
-                        <span class="relative flex h-2 w-2">
-                            <span
-                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                        </span>
-                        Tu espacio de transformación
-                    </div>
-                    <h1 id="hero-title"
-                        class="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.1] md:leading-tight">
-                        Cargando...
-                    </h1>
-                    <p id="hero-subtitle"
-                        class="text-slate-300 text-base md:text-xl font-light leading-relaxed mb-6 md:mb-8 max-w-lg mx-auto px-2">
-                        Cargando...
-                    </p>
-
-                    <!-- Coach Photo on Home -->
-                    <div id="home-coach-photo-container"
-                        class="mb-6 md:mb-8 transition-all duration-1000 transform hover:scale-105">
-                        <img id="home-coach-photo" src="/assets/generic-avatar.png"
-                            class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto border-2 border-primary/30 shadow-2xl shadow-primary/10">
-                    </div>
-
-                    <div id="dynamic-nav-grid"
-                        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-3 w-full mt-4 transition-all duration-700">
-                        <!-- Buttons will be injected here by dynamic-renderer.js -->
-                        <div class="col-span-full py-20 text-center opacity-50 animate-pulse">Configurando tu espacio...
-                        </div>
-                    </div>
-
-                    <!-- Sub-page Content Container (Hidden by default) -->
-                    <div id="subpage-container" class="hidden w-full max-w-5xl mx-auto mt-6 animate-fade-in">
-                        <button id="back-to-home"
-                            class="mb-12 flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-bold uppercase tracking-widest">
-                            <span class="material-symbols-outlined text-sm">arrow_back</span> Volver al Inicio
-                        </button>
-                        <div id="contenedor-secciones" class="grid grid-cols-1 gap-8">
-                            <!-- Dynamic sections will be injected here -->
-                        </div>
-                    </div>
-                </div>
-
-            </main>
+            REBUILD v51.1 - DEFINITIVE PURPLE SYNC (Alignment & Images)
         </div>
+
+        <header
+            class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10 bg-black/10">
+            <div class="flex items-center gap-4">
+                <img id="brand-logo" src="/assets/logo.jpg" alt="Logo Reconecta"
+                    class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-sm shadow-black/50">
+                <div class="flex flex-col">
+                    <span id="brand-name"
+                        class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
+                    <span id="brand-tagline"
+                        class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
+                </div>
+            </div>
+            <button id="menu-btn"
+                class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                <span class="material-symbols-outlined text-white">menu</span>
+            </button>
+        </header>
+
+        <!-- Navigation Menu Overlay -->
+        <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
+            <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop"
+                style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560'); -webkit-user-select: none; user-select: none;">
+            </div>
+            <div class="relative z-10 h-full flex flex-col p-8">
+                <header class="flex justify-between items-center mb-16">
+                    <div class="flex items-center gap-4">
+                        <img id="menu-logo" src="/assets/logo.jpg" alt="Logo Reconecta"
+                            class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-inner">
+                        <div class="flex flex-col text-left">
+                            <span id="menu-name"
+                                class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
+                            <span id="menu-tagline"
+                                class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
+                        </div>
+                    </div>
+                    <button id="close-menu"
+                        class="bg-white/5 hover:bg-white/10 p-2 rounded-full border border-white/10 transition-colors">
+                        <span class="material-symbols-outlined text-white">close</span>
+                    </button>
+                </header>
+                <nav class="flex flex-col gap-6">
+                    <a href="/" class="menu-link animate-fade-in" style="animation-delay: 0.1s;">Inicio</a>
+                    <a href="/quienes-somos.html" class="menu-link animate-fade-in"
+                        style="animation-delay: 0.15s;">Conócenos</a>
+                    <a href="/services.html" class="menu-link animate-fade-in" style="animation-delay: 0.2s;">Nuestros
+                        Servicios</a>
+                    <a href="/metodo.html" class="menu-link animate-fade-in" style="animation-delay: 0.25s;">Nuestro
+                        Método</a>
+                    <a href="/reservar.html" class="menu-link animate-fade-in" style="animation-delay: 0.3s;">Reservar
+                        Sesión</a>
+                    <a href="/cancel.html" class="menu-link animate-fade-in" style="animation-delay: 0.35s;">Cancelar
+                        Cita</a>
+                </nav>
+                <footer class="mt-auto py-10 border-t border-white/10">
+                    <p class="text-slate-500 text-xs tracking-widest uppercase">© 2026 Reconecta Coaching</p>
+                </footer>
+            </div>
+        </div>
+
+        <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pb-10">
+            <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-8 md:pb-12 text-center">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase mb-6 md:mb-8">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </span>
+                    Tu espacio de transformación
+                </div>
+                <h1 id="hero-title"
+                    class="font-display italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.1] md:leading-tight">
+                    Cargando...
+                </h1>
+                <p id="hero-subtitle"
+                    class="text-slate-300 text-base md:text-xl font-light leading-relaxed mb-6 md:mb-8 max-w-lg mx-auto px-2">
+                    Cargando...
+                </p>
+
+                <!-- Coach Photo on Home -->
+                <div id="home-coach-photo-container"
+                    class="mb-6 md:mb-8 transition-all duration-1000 transform hover:scale-105">
+                    <img id="home-coach-photo" src="/assets/generic-avatar.png"
+                        class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto border-2 border-primary/30 shadow-2xl shadow-primary/10">
+                </div>
+
+                <div id="dynamic-nav-grid"
+                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-3 w-full mt-4 transition-all duration-700">
+                    <!-- Buttons will be injected here by dynamic-renderer.js -->
+                    <div class="col-span-full py-20 text-center opacity-50 animate-pulse">Configurando tu espacio...
+                    </div>
+                </div>
+
+                <!-- Sub-page Content Container (Hidden by default) -->
+                <div id="subpage-container" class="hidden w-full max-w-5xl mx-auto mt-6 animate-fade-in">
+                    <button id="back-to-home"
+                        class="mb-12 flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-bold uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span> Volver al Inicio
+                    </button>
+                    <div id="contenedor-secciones" class="grid grid-cols-1 gap-8">
+                        <!-- Dynamic sections will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
     </div>
     <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-10 pb-20 sm:pb-12">
         <div id="features-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 transition-all duration-700">
