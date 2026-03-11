@@ -1,5 +1,5 @@
 /**
- * PORTALCOACH.COM SaaS BRIDGE v50.0 - B2B MULTI-TENANT ARCHITECTURE
+ * PORTALCOACH.COM SaaS BRIDGE v51.0 - B2B MULTI-TENANT ARCHITECTURE
  * Handles Coaching/Medical bookings with strict data isolation.
  */
 export default async function handler(req, res) {
@@ -167,7 +167,7 @@ export default async function handler(req, res) {
                 status: { stringValue: "SCHEDULED" },
                 timestamp: { integerValue: String(Date.now()) },
                 visitNumber: { integerValue: String(visitCount) },
-                systemInfo: { stringValue: `PORTALCOACH-B2B-v50.0-${tenantId}` }
+                systemInfo: { stringValue: `PORTALCOACH-B2B-v51.0-${tenantId}` }
             }
         };
 

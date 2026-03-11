@@ -68,7 +68,7 @@ export async function manageUser(phone, userData) {
  * Register a new appointment - BRIDGE v50.0 Multi-Tenant
  */
 export async function createAppointment(appointmentData) {
-    console.log(`🚀 COACH-BRIDGE v50.0 (${tenantId}): Iniciando envío...`);
+    console.log(`🚀 COACH-BRIDGE v51.0 (${tenantId}): Iniciando envío...`);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 12000);
