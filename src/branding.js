@@ -140,39 +140,39 @@ async function applyBranding() {
                     const count = pieSecs.length;
                     gridEl.className = `grid grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
 
-                    const smartPool = {
-                        'paz': 'photo-1506126613408-eca07ce68773',
-                        'serenidad': 'photo-1506126613408-eca07ce68773',
-                        'meditacion': 'photo-1506126613408-eca07ce68773',
-                        'resiliencia': 'photo-1552508744-1696d446496b',
-                        'fuerza': 'photo-1552508744-1696d446496b',
-                        'fortaleza': 'photo-1552508744-1696d446496b',
-                        'camino': 'photo-1511497584788-8767fe7d98b1',
-                        'bosque': 'photo-1511497584788-8767fe7d98b1',
-                        'claridad': 'photo-1499750310107-5fef28a66643',
-                        'mental': 'photo-1499750310107-5fef28a66643',
-                        'enfoque': 'photo-1499750310107-5fef28a66643',
-                        'autoestima': 'photo-1441974231531-c6227db76b6e',
-                        'amor': 'photo-1441974231531-c6227db76b6e',
-                        'ser': 'photo-1441974231531-c6227db76b6e'
+                    // PREMIUM POOLS by category
+                    const pools = {
+                        zen: ['photo-1506126613408-eca07ce68773', 'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2', 'photo-1528319725582-ddc0b6a22ff7'],
+                        strength: ['photo-1552508744-1696d446496b', 'photo-1533038590840-1cde6e668a91', 'photo-1526506118085-60cf8714f825', 'photo-1517836357463-d25dfeac3438'],
+                        nature: ['photo-1441974231531-c6227db76b6e', 'photo-1511497584788-8767fe7d98b1', 'photo-1470813740244-df37b8c1edcb', 'photo-1501854140801-50d01698950b'],
+                        mind: ['photo-1499750310107-5fef28a66643', 'photo-1456324504439-367921cd3d44', 'photo-1501503060808-b5ed15eaf4ad', 'photo-1484480974693-6ca0a78fb36b'],
+                        abstract: ['photo-1550684848-fac1c5b4e853', 'photo-1557683316-973673baf926', 'photo-1557682224-5b8590cd9ec5', 'photo-1504333638930-c8787321eba0']
                     };
 
-                    const fallbackPool = [
-                        'photo-1441974231531-c6227db76b6e',
-                        'photo-1506126613408-eca07ce68773',
-                        'photo-1470813740244-df37b8c1edcb'
-                    ];
-
+                    const usedIds = new Set();
                     pieSecs.forEach((feat, idx) => {
                         const text = (feat.titulo + ' ' + (feat.image_keyword || '')).toLowerCase();
-                        let imgId = fallbackPool[idx % fallbackPool.length];
+                        let category = 'abstract';
 
-                        for (const [key, id] of Object.entries(smartPool)) {
-                            if (text.includes(key)) {
-                                imgId = id;
-                                break;
+                        if (text.includes('paz') || text.includes('medita') || text.includes('serenidad')) category = 'zen';
+                        else if (text.includes('fuerza') || text.includes('resilien') || text.includes('fortaleza')) category = 'strength';
+                        else if (text.includes('bosque') || text.includes('camino') || text.includes('naturaleza') || text.includes('autoestima')) category = 'nature';
+                        else if (text.includes('clari') || text.includes('mental') || text.includes('enfoque')) category = 'mind';
+
+                        const pool = pools[category];
+                        let imgId = pool[idx % pool.length];
+
+                        // COLLISION PREVENTION: If already used, try sequential fallback from all pools
+                        if (usedIds.has(imgId)) {
+                            const allIds = Object.values(pools).flat();
+                            for (const id of allIds) {
+                                if (!usedIds.has(id)) {
+                                    imgId = id;
+                                    break;
+                                }
                             }
                         }
+                        usedIds.add(imgId);
 
                         const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;
 
@@ -181,7 +181,7 @@ async function applyBranding() {
                                 <div class="aspect-video rounded-xl overflow-hidden mb-3 bg-white/5">
                                     <img src="${finalImgUrl}"
                                         onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; this.onerror=null;"
-                                        class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 brightness-[1.1] contrast-[1.05]"
                                         alt="${feat.titulo || 'Feature'}">
                                 </div>
                                 <h3 class="font-display text-sm md:text-base text-white mb-1 italic">${feat.titulo || ''}</h3>
