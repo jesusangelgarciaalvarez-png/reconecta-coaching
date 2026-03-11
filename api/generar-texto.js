@@ -14,11 +14,12 @@ Toma las ideas base del coach y transfórmalas en un texto persuasivo, empático
 
 REGLAS CRÍTICAS:
 1. Usa un tono que inspire confianza y transformación. No seas genérico.
-2. Devuelve ÚNICAMENTE un objeto JSON válido con las claves:
-   - "titulo": Un título potente. Si la sección es "caracteristica_home", el título DEBE tener MÁXIMO 3 PALABRAS (Ej: "Paz Interior", "Liderazgo Consciente").
-   - "contenido": Un cuerpo de texto impactante de máximo 45 palabras.
+2. Devuelve UNICAMENTE el objeto JSON sin bloques de código markdown, sin prefijos y sin sufijos. 
+3. Formato JSON requerido:
+   - "titulo": Máximo 3 palabras (impactante).
+   - "contenido": Máximo 50 palabras (enriquecido y profesional).
    - "image_keyword": Una sola palabra en inglés que describa el concepto visual (Ej: "mountain", "calm", "path").
-3. Si las ideas previas son escasas, usa tu conocimiento para expandirlas manteniendo la esencia del tipo de sección.`;
+4. Si las ideas previas son escasas, usa tu conocimiento para expandirlas manteniendo la esencia del tipo de sección.`;
 
     const orientation = pagina === 'mision' ? 'Quién soy y propósito' :
         pagina === 'servicios' ? 'Qué ofrezco' :
@@ -49,7 +50,9 @@ Ideas base del coach: "${ideas_previas}"`;
         const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (rawText) {
-            const parsed = JSON.parse(rawText);
+            // Clean markdown blocks if present
+            const cleanText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(cleanText);
             return res.status(200).json(parsed);
         } else {
             return res.status(500).json({ error: "IA failed to generate content", details: data });
