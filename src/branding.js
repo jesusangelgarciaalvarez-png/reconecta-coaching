@@ -141,25 +141,19 @@ async function applyBranding() {
                     gridEl.className = `grid grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
 
                     pieSecs.forEach((feat, idx) => {
-                        const translateClass = (idx % 2 === 1) ? 'lg:translate-y-4' : '';
-                        const imgUrl = feat.image_url || (feat.image_keyword
-                            ? `https://images.unsplash.com/photo-random-featured?${feat.image_keyword}&sig=${idx}`
-                            : `https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200&sig=${idx}`);
-
-                        // Refined: Use Unsplash Source for better keyword matching if available, else high-quality fallback
-                        const finalImgUrl = feat.image_keyword
-                            ? `https://source.unsplash.com/featured/800x600?${feat.image_keyword},coaching&sig=${idx}`
-                            : imgUrl;
+                        const keyword = feat.image_keyword || 'coaching';
+                        const uniqueSig = Date.now() + idx;
+                        const finalImgUrl = feat.image_url || `https://loremflickr.com/800/600/${keyword},coaching?lock=${uniqueSig}`;
 
                         const cardHtml = `
-                            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all ${translateClass} animate-fade-in" style="animation-delay: ${idx * 0.1}s">
+                            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all animate-fade-in" style="animation-delay: ${idx * 0.1}s">
                                 <div class="aspect-video rounded-xl overflow-hidden mb-3">
                                     <img src="${finalImgUrl}"
                                         class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                                         alt="${feat.titulo}">
                                 </div>
-                                <h3 class="font-display text-sm md:text-base text-white mb-1 italic">${feat.titulo}</h3>
-                                <p class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">${feat.contenido}</p>
+                                <h3 class="font-display text-sm md:text-base text-white mb-1 italic">${feat.titulo || ''}</h3>
+                                <p class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">${feat.contenido || ''}</p>
                             </div>
                         `;
                         gridEl.insertAdjacentHTML('beforeend', cardHtml);
