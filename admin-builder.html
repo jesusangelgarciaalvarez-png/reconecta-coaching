@@ -53,7 +53,7 @@
             <div class="flex flex-col">
                 <h1 class="font-display italic text-2xl font-bold text-white leading-none">Website Builder</h1>
                 <span class="text-[10px] text-primary uppercase font-bold tracking-widest mt-1">SaaS White-Label
-                    v51.0 GOLDEN EDITION</span>
+                    v52.0 SKY BLUE</span>
             </div>
         </div>
         <div class="flex gap-4">
@@ -229,7 +229,8 @@
                         para este rubro</p>
                 </div>
             </div>
-            <div class="p-8 overflow-y-auto grid grid-cols-2 sm:grid-cols-4 gap-4" id="gallery-grid">
+            <div class="p-4 sm:p-8 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"
+                id="gallery-grid">
                 <!-- Gallery images will be injected here -->
             </div>
             <div class="p-6 border-t border-white/10 text-center">
@@ -607,9 +608,11 @@
 
             SERENITY_GALLERY.forEach(id => {
                 const imgWrap = document.createElement('div');
-                imgWrap.className = 'aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary transition-all group relative';
+                imgWrap.className = 'aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary transition-all group relative bg-white/5 min-h-[100px] shadow-lg';
                 imgWrap.innerHTML = `
-                    <img src="https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover">
+                    <img src="https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=400" 
+                         class="w-full h-full object-cover block" 
+                         loading="lazy">
                     <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 `;
                 imgWrap.onclick = () => selectImage(id);
