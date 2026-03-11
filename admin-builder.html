@@ -249,6 +249,39 @@
     <script type="module">
         import { tenantId } from './src/tenant-resolver.js';
 
+        // --- DATA REPAIR SHIELD (v52.6) ---
+        // Force-clear broken image IDs from existing local drafts
+        (function repairStaleData() {
+            const BROKEN_ID = 'photo-1447752875215-b2761acb3c5d';
+            const STABLE_ID = 'photo-1506744038136-46273834b3fb';
+            const draftKey = `builder_draft_${tenantId}`;
+            const saved = localStorage.getItem(draftKey);
+            if (saved) {
+                try {
+                    let data = JSON.parse(saved);
+                    let changed = false;
+                    
+                    const scrub = (obj) => {
+                        for (let key in obj) {
+                            if (obj[key] === BROKEN_ID) {
+                                obj[key] = STABLE_ID;
+                                changed = true;
+                            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                scrub(obj[key]);
+                            }
+                        }
+                    };
+                    
+                    scrub(data);
+                    if (changed) {
+                        localStorage.setItem(draftKey, JSON.stringify(data));
+                        console.log("[REPAIR SHIELD] Stale broken image ID scrubbed from local draft.");
+                    }
+                } catch(e) { console.error("Repair failed", e); }
+            }
+        })();
+        // ----------------------------------
+
         const container = document.getElementById('sections-container');
         const template = document.getElementById('section-template');
         const tabs = document.querySelectorAll('.section-tab');
