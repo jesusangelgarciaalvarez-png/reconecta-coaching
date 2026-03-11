@@ -96,6 +96,19 @@ function renderComponent(section) {
                 </div>
             `;
 
+        case 'caracteristica_home':
+            const pool = ['photo-1506126613408-eca07ce68773', 'photo-1441974231531-c6227db76b6e', 'photo-1470813740244-df37b8c1edcb', 'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2', 'photo-1528319725582-ddc0b6a22ff7'];
+            const imgId = pool[Math.floor(Math.random() * pool.length)];
+            return `
+                <div class="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:border-primary/50 transition-all flex flex-col gap-4">
+                    <div class="aspect-video rounded-xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-2xl font-display italic text-white">${titulo}</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">${contenido}</p>
+                </div>
+            `;
+
         default:
             return `
                 <section class="py-12 px-6">
