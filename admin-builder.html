@@ -113,8 +113,12 @@
                 data-page="mision">Misión</button>
             <button class="section-tab px-4 py-2 text-sm font-bold uppercase tracking-widest transition-all"
                 data-page="servicios">Servicios</button>
-            <button class="section-tab px-4 py-2 text-sm font-bold uppercase tracking-widest transition-all"
+            <button
+                class="section-tab px-4 py-2 text-sm font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl border border-white/5"
                 data-page="metodo">Método</button>
+            <button
+                class="section-tab px-4 py-2 text-sm font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl border border-white/5"
+                data-page="pie_pagina">Pie de Página</button>
         </div>
 
         <div id="sections-container" class="space-y-8">
@@ -129,8 +133,8 @@
                     <select
                         class="section-type bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-xs text-primary focus:outline-none">
                         <option value="hero">Hero / Principal</option>
-                        <option value="hero_home">Hero Inicio (Título/Subtítulo)</option>
-                        <option value="caracteristica_home">Característica Inicio (3 Máx)</option>
+                        <option value="hero_home">Encabezado (Titulo/Sub/Tag)</option>
+                        <option value="caracteristica_home">Característica (Cuadro)</option>
                         <option value="tarjeta_servicio">Tarjeta de Servicio</option>
                         <option value="paso">Paso del Método</option>
                         <option value="texto_simple">Texto Simple</option>
@@ -229,10 +233,15 @@
         const MAGIC_TEMPLATES = {
             inicio: {
                 secciones: [
-                    { id: 100, tipo: 'hero_home', titulo: 'Conecta contigo.', contenido: 'Acompañamiento personalizado para tu bienestar integral.' },
-                    { id: 101, tipo: 'caracteristica_home', titulo: 'Resiliencia', contenido: 'Herramientas prácticas para navegar los desafíos diarios con fortaleza interna y calma.' },
-                    { id: 102, tipo: 'caracteristica_home', titulo: 'Claridad Mental', contenido: 'Libera el ruido mental y encuentra el enfoque necesario para tomar las mejores decisiones.' },
-                    { id: 103, tipo: 'caracteristica_home', titulo: 'Atención Plena', contenido: 'Prácticas de meditación y presencia para reducir el ruido mental y conectar con el presente.' }
+                    { id: 100, tipo: 'hero_home', titulo: 'Conecta contigo.', contenido: 'Acompañamiento personalizado para tu bienestar integral.', image_keyword: 'transformación' }
+                ]
+            },
+            pie_pagina: {
+                secciones: [
+                    { id: 101, tipo: 'caracteristica_home', titulo: 'Resiliencia', contenido: 'Herramientas prácticas para navegar los desafíos diarios con fortaleza interna y calma.', image_keyword: 'resilience' },
+                    { id: 102, tipo: 'caracteristica_home', titulo: 'Claridad Mental', contenido: 'Libera el ruido mental y encuentra el enfoque necesario para tomar las mejores decisiones.', image_keyword: 'clarity' },
+                    { id: 103, tipo: 'caracteristica_home', titulo: 'Atención Plena', contenido: 'Prácticas de meditación y presencia para reducir el ruido mental y conectar con el presente.', image_keyword: 'meditation' },
+                    { id: 104, tipo: 'caracteristica_home', titulo: 'Autoestima', contenido: 'Un viaje profundo para redescubrir tu valor y hablarte con la compasión que mereces.', image_keyword: 'self-love' }
                 ]
             },
             mision: {
