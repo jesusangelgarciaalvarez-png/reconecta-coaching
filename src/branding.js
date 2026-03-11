@@ -144,9 +144,11 @@ async function applyBranding() {
                         'paz': 'photo-1506126613408-eca07ce68773',
                         'serenidad': 'photo-1506126613408-eca07ce68773',
                         'meditacion': 'photo-1506126613408-eca07ce68773',
-                        'resiliencia': 'photo-1518063319789-7215e6946c1c',
-                        'fuerza': 'photo-1518063319789-7215e6946c1c',
-                        'camino': 'photo-1518063319789-7215e6946c1c',
+                        'resiliencia': 'photo-1552508744-1696d446496b',
+                        'fuerza': 'photo-1552508744-1696d446496b',
+                        'fortaleza': 'photo-1552508744-1696d446496b',
+                        'camino': 'photo-1511497584788-8767fe7d98b1',
+                        'bosque': 'photo-1511497584788-8767fe7d98b1',
                         'claridad': 'photo-1499750310107-5fef28a66643',
                         'mental': 'photo-1499750310107-5fef28a66643',
                         'enfoque': 'photo-1499750310107-5fef28a66643',
@@ -156,8 +158,8 @@ async function applyBranding() {
                     };
 
                     const fallbackPool = [
-                        'photo-1544367567-0f2fcb009e0b',
-                        'photo-1508672019048-805c876b67e2',
+                        'photo-1441974231531-c6227db76b6e',
+                        'photo-1506126613408-eca07ce68773',
                         'photo-1470813740244-df37b8c1edcb'
                     ];
 
@@ -165,7 +167,6 @@ async function applyBranding() {
                         const text = (feat.titulo + ' ' + (feat.image_keyword || '')).toLowerCase();
                         let imgId = fallbackPool[idx % fallbackPool.length];
 
-                        // Match keyword to pool
                         for (const [key, id] of Object.entries(smartPool)) {
                             if (text.includes(key)) {
                                 imgId = id;
@@ -177,8 +178,9 @@ async function applyBranding() {
 
                         const cardHtml = `
                             <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all animate-fade-in" style="animation-delay: ${idx * 0.1}s">
-                                <div class="aspect-video rounded-xl overflow-hidden mb-3">
+                                <div class="aspect-video rounded-xl overflow-hidden mb-3 bg-white/5">
                                     <img src="${finalImgUrl}"
+                                        onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; this.onerror=null;"
                                         class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
                                         alt="${feat.titulo || 'Feature'}">
                                 </div>
