@@ -142,6 +142,7 @@ async function applyBranding() {
 
                     pieSecs.forEach((feat, idx) => {
                         const keyword = feat.image_keyword || 'coaching';
+                        // Force a fresh unique image every time with a timestamp-based lock
                         const uniqueSig = Date.now() + idx;
                         const finalImgUrl = feat.image_url || `https://loremflickr.com/800/600/${keyword},coaching?lock=${uniqueSig}`;
 
@@ -150,7 +151,7 @@ async function applyBranding() {
                                 <div class="aspect-video rounded-xl overflow-hidden mb-3">
                                     <img src="${finalImgUrl}"
                                         class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                                        alt="${feat.titulo}">
+                                        alt="${feat.titulo || 'Feature'}">
                                 </div>
                                 <h3 class="font-display text-sm md:text-base text-white mb-1 italic">${feat.titulo || ''}</h3>
                                 <p class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">${feat.contenido || ''}</p>
