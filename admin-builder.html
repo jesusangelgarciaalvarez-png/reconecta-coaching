@@ -591,15 +591,21 @@
             }
         };
 
-        // --- GALLERY PICKER LOGIC (ARCHITECT v52.2) ---
+        // --- GALLERY PICKER LOGIC (EMERALD SHIELD v52.3) ---
         const SERENITY_GALLERY = [
-            'photo-1506126613408-eca07ce68773', 'photo-1441974231531-c6227db76b6e', 'photo-1472214103451-9374bd1c798e',
-            'photo-1552508744-1696d446496b', 'photo-1501854140801-50d01698950b', 'photo-1447752875215-b2761acb3c5d',
-            'photo-1469474968028-56623f02e42e', 'photo-1519681393784-d120267933ba', 'photo-1470071459604-3b5ec3a7fe05',
-            'photo-1511497584788-8767fe7d98b1', 'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2',
-            'photo-1528319725582-ddc0b6a22ff7', 'photo-1533038590840-1cde6e668a91', 'photo-1526506118085-60cf8714f825',
-            'photo-1517836357463-d25dfeac3438', 'photo-1507525428034-b723cf961d3e', 'photo-1464822759023-fed622ff2c3b',
-            'photo-1470813740244-df37b8c1edcb', 'photo-1470770841072-f978cf4d019e'
+            'photo-1501854140801-50d01698950b', 'photo-1441974231531-c6227db76b6e', 'photo-1506126613408-eca07ce68773',
+            'photo-1470071459604-3b5ec3a7fe05', 'photo-1447752875215-b2761acb3c5d', 'photo-1472214103451-9374bd1c798e',
+            'photo-1518531933037-91b2f5f229cc', 'photo-1469474968028-56623f02e42e', 'photo-1470813740244-df37b8c1edcb',
+            'photo-1508672019048-805c876b67e2', 'photo-1544367567-0f2fcb009e0b', 'photo-1519681393784-d120267933ba',
+            'photo-1500624238317-5e99ca296a5c', 'photo-1439853949127-fa647821eba0', 'photo-1528319725582-ddc0b6a22ff7',
+            'photo-1533038590840-1cde6e668a91', 'photo-1526506118085-60cf8714f825', 'photo-1517836357463-d25dfeac3438',
+            'photo-1507525428034-b723cf961d3e', 'photo-1464822759023-fed622ff2c3b'
+        ];
+
+        const SERENITY_FALLBACKS = [
+            'photo-1470770841072-f978cf4d019e', 'photo-1501183638710-841dd1904471',
+            'photo-1518063319789-7215e6946c1c', 'photo-1497436072909-60f360e1d4b1',
+            'photo-1465146344425-f00d5f5c8f07'
         ];
 
         window.openGallery = () => {
@@ -609,10 +615,10 @@
 
             SERENITY_GALLERY.forEach((id, idx) => {
                 const imgWrap = document.createElement('div');
-                imgWrap.className = 'aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary transition-all group relative bg-dark shadow-lg';
+                imgWrap.className = 'aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary transition-all group relative bg-dark shadow-2xl h-full w-full';
 
-                // Use a diverse fallback pool for EACH thumbnail
-                const fallbackId = SERENITY_GALLERY[(idx + 1) % SERENITY_GALLERY.length];
+                // SHIELD: Use a completely separate pool for fallbacks to avoid neighbors copying each other
+                const fallbackId = SERENITY_FALLBACKS[idx % SERENITY_FALLBACKS.length];
 
                 imgWrap.innerHTML = `
                     <div class="absolute inset-0 bg-white/5 animate-pulse"></div>
