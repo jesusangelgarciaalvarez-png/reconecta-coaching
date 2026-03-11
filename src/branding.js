@@ -116,38 +116,35 @@ async function applyBranding() {
                     }
                 }
 
-                // Dynamic Features from Pie de Página
-                const pieSecs = siteConfig.paginas?.pie_pagina?.secciones || [];
-                const inicioSecs = siteConfig.paginas?.inicio?.secciones || [];
+                // 2. Características (Pie de Página - Dinámico)
+                const gridEl = document.getElementById('features-grid');
+                if (gridEl) {
+                    gridEl.innerHTML = ''; // Clear loading
 
-                // 1. Hero Inicio
-                const heroHome = inicioSecs.find(s => s.tipo === 'hero_home');
-                if (heroHome) {
-                    const heroTitleEl = document.getElementById('hero-title');
-                    const heroSubEl = document.getElementById('hero-subtitle');
-                    const heroTaglineEl = document.getElementById('hero-tagline');
-                    if (heroTitleEl) heroTitleEl.innerHTML = heroHome.titulo.replace(/\n/g, '<br>');
-                    if (heroSubEl) heroSubEl.textContent = heroHome.contenido;
-                    if (heroTaglineEl && heroHome.tagline) heroTaglineEl.textContent = heroHome.tagline;
+                    // Adjust grid columns based on count
+                    const count = pieSecs.length;
+                    gridEl.className = `grid grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
+
+                    pieSecs.forEach((feat, idx) => {
+                        const translateClass = (idx % 2 === 1) ? 'lg:translate-y-4' : '';
+                        const imgUrl = feat.image_keyword
+                            ? `https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200&sig=${feat.image_keyword}`
+                            : (feat.image_url || "/assets/generic-coaching.jpg");
+
+                        const cardHtml = `
+                            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all ${translateClass} animate-fade-in" style="animation-delay: ${idx * 0.1}s">
+                                <div class="aspect-video rounded-xl overflow-hidden mb-3">
+                                    <img src="${imgUrl}"
+                                        class="w-full h-full object-cover grayscale hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                                        alt="${feat.titulo}">
+                                </div>
+                                <h3 class="font-display text-sm md:text-base text-white mb-1 italic">${feat.titulo}</h3>
+                                <p class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">${feat.contenido}</p>
+                            </div>
+                        `;
+                        gridEl.insertAdjacentHTML('beforeend', cardHtml);
+                    });
                 }
-
-                // 2. Características (Pie de Página)
-                pieSecs.forEach((feat, idx) => {
-                    if (idx < 4) {
-                        const titleEl = document.getElementById(`feature-${idx + 1}-title`);
-                        const descEl = document.getElementById(`feature-${idx + 1}-desc`);
-                        const container = document.getElementById(`feature-${idx + 1}-title`)?.closest('.glass-panel');
-                        const imgEl = container?.querySelector('img');
-
-                        if (titleEl) titleEl.textContent = feat.titulo;
-                        if (descEl) descEl.textContent = feat.contenido;
-                        if (imgEl && feat.image_keyword) {
-                            imgEl.src = `https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200&sig=${feat.image_keyword}`;
-                        } else if (imgEl && feat.image_url) {
-                            imgEl.src = feat.image_url;
-                        }
-                    }
-                });
             }
         }
     } catch (e) {
