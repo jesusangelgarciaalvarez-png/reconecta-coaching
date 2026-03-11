@@ -170,20 +170,21 @@ async function applyBranding() {
                         const defaultId = massivePool[idx % massivePool.length];
                         const fallbackId = massivePool[(idx + 10) % massivePool.length];
 
-                        // --- EMERALD SHIELD REPAIR (v52.7) ---
-                        const BROKEN_ID = 'photo-1447752875215-b2761acb3c5d';
-                        const STABLE_ID = 'photo-1506744038136-46273834b3fb';
+                        // --- EMERALD & NUCLEAR SHIELD (v52.9) ---
+                        const STABLE_YOSEMITE = 'photo-1506744038136-46273834b3fb';
 
                         // Priority: 1. Manual selection (Unsplash ID) | 2. Default pool
-                        let imgId = defaultId;
-                        if (feat.image_keyword && feat.image_keyword.startsWith('photo-')) {
-                            imgId = feat.image_keyword;
-                        }
+                        let imgId = feat.image_keyword && feat.image_keyword.startsWith('photo-') 
+                                    ? feat.image_keyword 
+                                    : defaultId;
 
-                        // Surgical repair for the black image ID
-                        if (imgId === BROKEN_ID) {
-                            console.log("[REPAIR] Intercepted broken image ID, swapping for Yosemite stable.");
-                            imgId = STABLE_ID;
+                        // NUCLEAR SHIELD: If imgId is still not a valid Unsplash ID (e.g. raw keywords like 'resilience')
+                        // OR if it's the specific broken ID, force the Yosemite fallback.
+                        const BROKEN_IDs = ['photo-1447752875215-b2761acb3c5d', 'photo-1500624238317-5e99ca296a5c'];
+                        
+                        if (!imgId.startsWith('photo-') || BROKEN_IDs.includes(imgId)) {
+                            console.log("[NUCLEAR SHIELD] Intercepted invalid or broken image ID:", imgId);
+                            imgId = STABLE_YOSEMITE;
                         }
 
                         const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;

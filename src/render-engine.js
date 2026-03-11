@@ -97,22 +97,30 @@ function renderComponent(section) {
             `;
 
         case 'caracteristica_home':
-            const serenityPool = [
-                'photo-1441974231531-c6227db76b6e', 'photo-1506126613408-eca07ce68773', 'photo-1470813740244-df37b8c1edcb',
-                'photo-1552508744-1696d446496b', 'photo-1470770841072-f978cf4d019e', 'photo-1464822759023-fed622ff2c3b'
-            ];
+            const getImageUrl = (kw) => {
+                const serenityPool = [
+                    'photo-1441974231531-c6227db76b6e', 'photo-1506126613408-eca07ce68773', 'photo-1470813740244-df37b8c1edcb',
+                    'photo-1552508744-1696d446496b', 'photo-1470770841072-f978cf4d019e', 'photo-1464822759023-fed622ff2c3b'
+                ];
+                
+                if (!kw) {
+                    const fallbackId = serenityPool[Math.floor(Math.random() * serenityPool.length)];
+                    return `https://images.unsplash.com/${fallbackId}?auto=format&fit=crop&q=80&w=800`;
+                }
+                
+                if (kw.startsWith('photo-')) {
+                    return `https://images.unsplash.com/${kw}?auto=format&fit=crop&q=80&w=800`;
+                }
+                
+                return `https://loremflickr.com/800/600/${kw},coaching?lock=preview`;
+            };
 
-            // Priority: 1. Manual selection ID | 2. Random from pool
-            let imgId = serenityPool[Math.floor(Math.random() * serenityPool.length)];
-
-            if (section.image_keyword && section.image_keyword.startsWith('photo-')) {
-                imgId = section.image_keyword;
-            }
+            const imgSrc = getImageUrl(section.image_keyword);
 
             return `
                 <div class="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:border-primary/50 transition-all flex flex-col gap-4">
                     <div class="aspect-video rounded-xl overflow-hidden mb-4 bg-white/5">
-                        <img src="https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800" 
+                        <img src="${imgSrc}" 
                              onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; this.onerror=null;"
                              class="w-full h-full object-cover">
                     </div>
