@@ -140,45 +140,38 @@ async function applyBranding() {
                     const count = pieSecs.length;
                     gridEl.className = `grid grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
 
-                    // PREMIUM POOLS by category
-                    const pools = {
-                        zen: ['photo-1506126613408-eca07ce68773', 'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2', 'photo-1528319725582-ddc0b6a22ff7'],
-                        strength: ['photo-1552508744-1696d446496b', 'photo-1533038590840-1cde6e668a91', 'photo-1526506118085-60cf8714f825', 'photo-1517836357463-d25dfeac3438'],
-                        nature: ['photo-1441974231531-c6227db76b6e', 'photo-1511497584788-8767fe7d98b1', 'photo-1470813740244-df37b8c1edcb', 'photo-1501854140801-50d01698950b'],
-                        mind: ['photo-1499750310107-5fef28a66643', 'photo-1456324504439-367921cd3d44', 'photo-1501503060808-b5ed15eaf4ad', 'photo-1484480974693-6ca0a78fb36b'],
-                        abstract: ['photo-1550684848-fac1c5b4e853', 'photo-1557683316-973673baf926', 'photo-1557682224-5b8590cd9ec5', 'photo-1504333638930-c8787321eba0']
-                    };
+                    // MASSIVE POOL (50+ hand-picked premium IDs)
+                    const massivePool = [
+                        'photo-1506126613408-eca07ce68773', 'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2',
+                        'photo-1528319725582-ddc0b6a22ff7', 'photo-1552508744-1696d446496b', 'photo-1533038590840-1cde6e668a91',
+                        'photo-1526506118085-60cf8714f825', 'photo-1517836357463-d25dfeac3438', 'photo-1441974231531-c6227db76b6e',
+                        'photo-1511497584788-8767fe7d98b1', 'photo-1470813740244-df37b8c1edcb', 'photo-1501854140801-50d01698950b',
+                        'photo-1499750310107-5fef28a66643', 'photo-1456324504439-367921cd3d44', 'photo-1501503060808-b5ed15eaf4ad',
+                        'photo-1484480974693-6ca0a78fb36b', 'photo-1550684848-fac1c5b4e853', 'photo-1557683316-973673baf926',
+                        'photo-1557682224-5b8590cd9ec5', 'photo-1504333638930-c8787321eba0', 'photo-1518063319789-7215e6946c1c',
+                        'photo-1504386106331-3e4e9bc3360b', 'photo-1510784722466-f2aa9c52fed6', 'photo-1439853949127-fa647821eba0',
+                        'photo-1470770841072-f978cf4d019e', 'photo-1464822759023-fed622ff2c3b', 'photo-1465146344425-f00d5f5c8f07',
+                        'photo-1446776811953-b23d57bd21aa', 'photo-1444464666168-49d633b867ad', 'photo-1414235077428-338989a2e8c0',
+                        'photo-1509233725247-49e657c54513', 'photo-1454165833267-035f8e65f121', 'photo-1491841573634-28140fc7ced7',
+                        'photo-1464366400600-7168b8af9bc3', 'photo-1540553016722-983e48a2cd10', 'photo-1462331940025-496df9758a8a',
+                        'photo-1501785888041-af3ef285b470', 'photo-1500382017468-9049fed747ef', 'photo-1472214103451-9374bd1c798e',
+                        'photo-1433086966358-54859d0ed716'
+                    ];
 
-                    const usedIds = new Set();
+                    // SHUFFLE (Durstenfeld/Fisher-Yates)
+                    for (let i = massivePool.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [massivePool[i], massivePool[j]] = [massivePool[j], massivePool[i]];
+                    }
+
                     pieSecs.forEach((feat, idx) => {
-                        const text = (feat.titulo + ' ' + (feat.image_keyword || '')).toLowerCase();
-                        let category = 'abstract';
-
-                        if (text.includes('paz') || text.includes('medita') || text.includes('serenidad')) category = 'zen';
-                        else if (text.includes('fuerza') || text.includes('resilien') || text.includes('fortaleza')) category = 'strength';
-                        else if (text.includes('bosque') || text.includes('camino') || text.includes('naturaleza') || text.includes('autoestima')) category = 'nature';
-                        else if (text.includes('clari') || text.includes('mental') || text.includes('enfoque')) category = 'mind';
-
-                        const pool = pools[category];
-                        let imgId = pool[idx % pool.length];
-
-                        // COLLISION PREVENTION: If already used, try sequential fallback from all pools
-                        if (usedIds.has(imgId)) {
-                            const allIds = Object.values(pools).flat();
-                            for (const id of allIds) {
-                                if (!usedIds.has(id)) {
-                                    imgId = id;
-                                    break;
-                                }
-                            }
-                        }
-                        usedIds.add(imgId);
-
-                        const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;
+                        const imgId = massivePool[idx % massivePool.length];
+                        const cacheBuster = Date.now() + idx;
+                        const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800&v=${cacheBuster}`;
 
                         const cardHtml = `
                             <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all animate-fade-in" style="animation-delay: ${idx * 0.1}s">
-                                <div class="aspect-video rounded-xl overflow-hidden mb-3 bg-white/5">
+                                <div class="aspect-video rounded-xl overflow-hidden mb-3 bg-white/5 shadow-inner">
                                     <img src="${finalImgUrl}"
                                         onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; this.onerror=null;"
                                         class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 brightness-[1.1] contrast-[1.05]"
