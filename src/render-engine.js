@@ -98,15 +98,17 @@ function renderComponent(section) {
 
         case 'caracteristica_home':
             const serenityPool = [
-                'photo-1441974231531-c6227db76b6e', // Forest Sun
-                'photo-1506126613408-eca07ce68773', // Meditation
-                'photo-1470813740244-df37b8c1edcb', // Calm Night
-                'photo-1552508744-1696d446496b'  // Zen Stones
+                'photo-1441974231531-c6227db76b6e', 'photo-1506126613408-eca07ce68773', 'photo-1470813740244-df37b8c1edcb',
+                'photo-1552508744-1696d446496b', 'photo-1470770841072-f978cf4d019e', 'photo-1464822759023-fed622ff2c3b'
             ];
-            // Use a stable index based on some property if possible, or just a counter. 
-            // For now, let's use a static counter or random from a VERY small fixed pool to avoid duplicates.
-            const idx = Math.floor(Math.random() * serenityPool.length);
-            const imgId = serenityPool[idx];
+
+            // Priority: 1. Manual selection ID | 2. Random from pool
+            let imgId = serenityPool[Math.floor(Math.random() * serenityPool.length)];
+
+            if (section.image_keyword && section.image_keyword.startsWith('photo-')) {
+                imgId = section.image_keyword;
+            }
+
             return `
                 <div class="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:border-primary/50 transition-all flex flex-col gap-4">
                     <div class="aspect-video rounded-xl overflow-hidden mb-4 bg-white/5">

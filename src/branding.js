@@ -167,8 +167,15 @@ async function applyBranding() {
                     const shuffledDeck = shuffle([...massivePool]);
 
                     pieSecs.forEach((feat, idx) => {
-                        const imgId = shuffledDeck[idx % shuffledDeck.length];
-                        const fallbackId = shuffledDeck[(idx + 10) % shuffledDeck.length]; // Unique fallback too!
+                        const defaultId = massivePool[idx % massivePool.length];
+                        const fallbackId = massivePool[(idx + 10) % massivePool.length];
+
+                        // Priority: 1. Manual selection (Unsplash ID) | 2. Default pool
+                        let imgId = defaultId;
+                        if (feat.image_keyword && feat.image_keyword.startsWith('photo-')) {
+                            imgId = feat.image_keyword;
+                        }
+
                         const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;
 
                         const cardHtml = `

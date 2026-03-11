@@ -182,18 +182,25 @@
 
                 <!-- Image Keyword Display (Only for Home Features) -->
                 <div class="keyword-container hidden mt-4 flex items-center gap-4 animate-fade-in">
-                    <div class="w-16 h-16 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex-shrink-0">
+                    <div
+                        class="w-16 h-16 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex-shrink-0 relative group/img">
                         <img class="keyword-preview w-full h-full object-cover opacity-60">
+                        <div
+                            class="absolute inset-0 bg-primary/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                            <span class="material-symbols-outlined text-white text-xs">image</span>
+                        </div>
                     </div>
                     <div class="flex-1">
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-[9px] text-slate-500 uppercase font-black tracking-widest block">Concepto
-                                Visual (IA)</label>
-                            <span class="text-[8px] text-primary/60 font-mono italic">unsplash.com</span>
+                            <label class="text-[9px] text-slate-500 uppercase font-black tracking-widest block">Imagen
+                                del Rubro</label>
+                            <button
+                                class="open-gallery text-[8px] text-primary font-bold uppercase tracking-widest hover:underline">Abrir
+                                Galería Premium</button>
                         </div>
                         <input type="text"
                             class="section-keyword w-full bg-white/5 border border-white/10 rounded-lg py-2 px-4 text-xs focus:outline-none focus:border-primary transition-all"
-                            placeholder="Ej: mountain, calm, path...">
+                            placeholder="Ej: photo-1506126613408-eca07ce68773">
                     </div>
                 </div>
 
@@ -205,6 +212,32 @@
         </div>
         </div>
     </template>
+
+    <!-- GALLERY MODAL -->
+    <div id="gallery-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 sm:p-20">
+        <div class="absolute inset-0 bg-dark/90 backdrop-blur-xl" onclick="closeGallery()"></div>
+        <div
+            class="glass-card w-full max-w-4xl max-h-[80vh] rounded-[3rem] z-10 flex flex-col relative animate-scale-up">
+            <button onclick="closeGallery()"
+                class="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all z-20">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="p-8 border-b border-white/10 flex justify-between items-center">
+                <div>
+                    <h3 class="font-display italic text-2xl text-white">Galería Premium "Serenidad"</h3>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-1">Selecciona una imagen
+                        para este rubro</p>
+                </div>
+            </div>
+            <div class="p-8 overflow-y-auto grid grid-cols-2 sm:grid-cols-4 gap-4" id="gallery-grid">
+                <!-- Gallery images will be injected here -->
+            </div>
+            <div class="p-6 border-t border-white/10 text-center">
+                <p class="text-[9px] text-slate-500 uppercase font-black tracking-widest">Todas las imágenes son de alta
+                    resolución optimizadas para PortalCoach</p>
+            </div>
+        </div>
+    </div>
 
     <div id="toast"
         class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-dark py-4 px-8 rounded-2xl font-bold hidden z-[100] shadow-2xl">
@@ -355,22 +388,32 @@
                 };
                 card.querySelector('.section-content').oninput = (e) => { sec.contenido = e.target.value; saveToLocal(); };
 
-                // --- NEW: Keyword Handling ---
+                // --- NEW: Keyword & Gallery Handling ---
                 const kwContainer = card.querySelector('.keyword-container');
                 if (sec.tipo === 'caracteristica_home') {
                     kwContainer.classList.remove('hidden');
                     const kwInput = card.querySelector('.section-keyword');
                     const kwPreview = card.querySelector('.keyword-preview');
+                    const openGalleryBtn = card.querySelector('.open-gallery');
 
                     kwInput.value = sec.image_keyword || '';
                     if (sec.image_keyword) {
-                        kwPreview.src = `https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=400&sig=${Math.random()}`; // Random signature to avoid cache
+                        kwPreview.src = `https://images.unsplash.com/${sec.image_keyword}?auto=format&fit=crop&q=80&w=400`;
+                    } else {
+                        kwPreview.src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=400'; // Default
                     }
 
                     kwInput.onchange = (e) => {
                         sec.image_keyword = e.target.value;
-                        kwPreview.src = `https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=400&sig=${Math.random()}`;
+                        kwPreview.src = `https://images.unsplash.com/${sec.image_keyword}?auto=format&fit=crop&q=80&w=400`;
                         saveToLocal();
+                    };
+
+                    openGalleryBtn.onclick = () => {
+                        window.currentSectionForGallery = sec;
+                        window.currentKwPreview = kwPreview;
+                        window.currentKwInput = kwInput;
+                        openGallery();
                     };
                 }
 
@@ -545,6 +588,50 @@
                 }, 3000);
             }
         };
+
+        // --- GALLERY PICKER LOGIC ---
+        const SERENITY_GALLERY = [
+            'photo-1441974231531-c6227db76b6e', 'photo-1506126613408-eca07ce68773', 'photo-1470813740244-df37b8c1edcb',
+            'photo-1552508744-1696d446496b', 'photo-1470770841072-f978cf4d019e', 'photo-1464822759023-fed622ff2c3b',
+            'photo-1465146344425-f00d5f5c8f07', 'photo-1446776811953-b23d57bd21aa', 'photo-1444464666168-49d633b867ad',
+            'photo-1414235077428-338989a2e8c0', 'photo-1544367567-0f2fcb009e0b', 'photo-1508672019048-805c876b67e2',
+            'photo-1528319725582-ddc0b6a22ff7', 'photo-1533038590840-1cde6e668a91', 'photo-1526506118085-60cf8714f825',
+            'photo-1517836357463-d25dfeac3438', 'photo-1511497584788-8767fe7d98b1', 'photo-1501854140801-50d01698950b',
+            'photo-1499750310107-5fef28a66643', 'photo-1456324504439-367921cd3d44'
+        ];
+
+        window.openGallery = () => {
+            const modal = document.getElementById('gallery-modal');
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            SERENITY_GALLERY.forEach(id => {
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary transition-all group relative';
+                imgWrap.innerHTML = `
+                    <img src="https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                `;
+                imgWrap.onclick = () => selectImage(id);
+                grid.appendChild(imgWrap);
+            });
+
+            modal.classList.remove('hidden');
+        };
+
+        window.closeGallery = () => {
+            document.getElementById('gallery-modal').classList.add('hidden');
+        };
+
+        function selectImage(id) {
+            if (window.currentSectionForGallery) {
+                window.currentSectionForGallery.image_keyword = id;
+                window.currentKwPreview.src = `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=400`;
+                window.currentKwInput.value = id;
+                saveToLocal();
+            }
+            closeGallery();
+        }
 
         loadInitialData();
         updateFontPreview();
