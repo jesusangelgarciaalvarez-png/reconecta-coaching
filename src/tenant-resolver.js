@@ -18,8 +18,8 @@ export function getTenantId() {
         return 'master';
     }
 
-    // 2. Clean 'www' if present
-    let cleanHost = host.replace(/^www\./i, '');
+    // 2. Clean 'www' if present (anywhere at the start)
+    let cleanHost = host.toLowerCase().replace(/^www\./, '');
 
     // 3. Split parts
     const parts = cleanHost.split('.');

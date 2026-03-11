@@ -134,8 +134,13 @@ async function applyBranding() {
                     if (idx < 3) {
                         const titleEl = document.getElementById(`feature-${idx + 1}-title`);
                         const descEl = document.getElementById(`feature-${idx + 1}-desc`);
+                        const imgEl = document.querySelector(`#feature-${idx + 1}-title`)?.closest('.glass-panel')?.querySelector('img');
+
                         if (titleEl) titleEl.textContent = feat.titulo;
                         if (descEl) descEl.textContent = feat.contenido;
+                        if (imgEl && feat.image_keyword) {
+                            imgEl.src = `https://source.unsplash.com/featured/?${feat.image_keyword}`;
+                        }
                     }
                 });
             }

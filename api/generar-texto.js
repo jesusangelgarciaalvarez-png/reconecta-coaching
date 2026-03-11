@@ -15,11 +15,17 @@ Toma las ideas base del coach y transfórmalas en un texto persuasivo, empático
 REGLAS CRÍTICAS:
 1. Usa un tono que inspire confianza y transformación. No seas genérico.
 2. Devuelve ÚNICAMENTE un objeto JSON válido con las claves:
-   - "titulo": Un título potente de máximo 5 palabras.
+   - "titulo": Un título potente. Si la sección es "caracteristica_home", el título DEBE tener MÁXIMO 3 PALABRAS (Ej: "Paz Interior", "Liderazgo Consciente").
    - "contenido": Un cuerpo de texto impactante de máximo 45 palabras.
+   - "image_keyword": Una sola palabra en inglés que describa el concepto visual (Ej: "mountain", "calm", "path").
 3. Si las ideas previas son escasas, usa tu conocimiento para expandirlas manteniendo la esencia del tipo de sección.`;
 
-    const userPrompt = `Página del sitio: ${pagina} (Orientación: ${pagina === 'mision' ? 'Quién soy y propósito' : pagina === 'servicios' ? 'Qué ofrezco' : 'Cómo trabajo'})
+    const orientation = pagina === 'mision' ? 'Quién soy y propósito' :
+        pagina === 'servicios' ? 'Qué ofrezco' :
+            pagina === 'metodo' ? 'Cómo trabajo' :
+                'Pestaña de inicio / Portada del sitio';
+
+    const userPrompt = `Página del sitio: ${pagina} (Orientación: ${orientation})
 Tipo de bloque UI: ${tipo_seccion}
 Ideas base del coach: "${ideas_previas}"`;
 
