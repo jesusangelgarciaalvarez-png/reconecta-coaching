@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         // Hide Sections
         [tabs.setupSection, tabs.adminSection].forEach(sec => {
-            if (sec) sec.classList.add('hidden');
+            if (sec && sec.classList) sec.classList.add('hidden');
         });
 
         const nav = tabs[`${tabName}Nav`];
@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (tabName === 'admin') {
-            if (mainHeader) mainHeader.classList.add('hidden');
+            if (mainHeader && mainHeader.classList) mainHeader.classList.add('hidden');
         } else {
-            if (mainHeader) mainHeader.classList.remove('hidden');
+            if (mainHeader && mainHeader.classList) mainHeader.classList.remove('hidden');
         }
     }
 
@@ -390,10 +390,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // TIER 1: POLLINATIONS.AI (Fixed & Optimized)
                 const seed = Math.floor(Math.random() * 999999);
-                const aiPrompt = `minimalist hand-drawn sketch, black ink charcoal pencil drawing on white paper, artistic organic rough lines, clean abstract symbol representing ${focusKeywords}, logo for ${coachName}, professional sketch art style, no background, high contrast`;
+                const aiPrompt = `minimalist sketch logo symbol for ${focusKeywords}, charcoal pencil drawing style, white background`;
                 const encodedPrompt = encodeURIComponent(aiPrompt);
                 
-                const aiLogoUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&model=flux&nologo=true&enhance=false&seed=${seed}`;
+                const aiLogoUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&model=flux&nologo=true&seed=${seed}`;
 
                 console.log("[AI LOGO] Generated URL:", aiLogoUrl);
 
@@ -454,9 +454,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 elements.brandingForm.generateLogoBtn.disabled = false;
                 elements.brandingForm.generateLogoBtn.innerHTML = '<span class="material-symbols-outlined font-bold text-sm">auto_awesome</span>';
             }
-            // showToast("Logotipo generado con éxito", "success"); 
         }
-    };
+    }
+}
 
     // --- UI LISTENERS (v43.7) ---
     // 1. Theme Selection
