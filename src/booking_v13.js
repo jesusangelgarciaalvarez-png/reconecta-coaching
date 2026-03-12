@@ -3,7 +3,8 @@ import {
     createAppointment,
     getMonthlyAvailability,
     getOccupiedSlots,
-    getMonthlyPromotion
+    getMonthlyPromotion,
+    getTenantMetadata
 } from './firebase_v13.js';
 import { tenantId } from './tenant-resolver.js';
 
@@ -33,7 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutBase: document.getElementById('checkout-base-price'),
         checkoutTotal: document.getElementById('checkout-total-price'),
         checkoutDiscountRow: document.getElementById('checkout-discount-row'),
-        checkoutDiscountAmount: document.getElementById('checkout-discount-amount')
+        checkoutDiscountAmount: document.getElementById('checkout-discount-amount'),
+        verifyModal: document.getElementById('verify-modal'),
+        verifyConfirmBtn: document.getElementById('confirm-verify-btn'),
+        verifyError: document.getElementById('verify-error'),
+        otpInputs: document.querySelectorAll('.otp-input')
     };
 
     window.closeCheckout = () => {
@@ -69,12 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             monthlyAppointmentsCache[cacheKey] = [];
         }
 
+        // Render non-blocking shell first (UX priority)
         renderCalendarShell();
 
         try {
             const appointments = await getMonthlyAvailability(year, month);
             monthlyAppointmentsCache[cacheKey] = appointments;
-            renderCalendarShell();
+            renderCalendarShell(); // Re-render with dots/data
         } catch (e) {
             console.warn("Background availability engine error:", e);
         }
@@ -274,25 +280,128 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await response.json();
 
-            if (result.success || result.finalPrice !== undefined) {
+            if (response.ok && (result.success || result.finalPrice !== undefined)) {
                 const final = result.finalPrice;
                 elements.checkoutBase.textContent = `$${final}.00`;
                 elements.checkoutTotal.textContent = `$${final}.00`;
                 elements.checkoutModal.classList.remove('hidden');
+            } else {
+                const errorText = result.message || result.error || "No se pudo calcular el precio. Intente más tarde.";
+                elements.errorMsg.textContent = errorText;
+                elements.errorMsg.classList.remove('hidden');
             }
         } catch (err) {
             console.error("Checkout Error:", err);
+            elements.errorMsg.textContent = "Error de conexión. Verifique su internet.";
+            elements.errorMsg.classList.remove('hidden');
         } finally {
             elements.confirmBtn.disabled = false;
             elements.confirmBtn.textContent = 'Confirmar Reserva';
         }
     };
 
-    // FINAL STEP: Execute payment and save
+    const resendBtn = document.getElementById('resend-code-btn');
+    if (resendBtn) {
+        resendBtn.onclick = (e) => {
+            e.preventDefault();
+            showVerification();
+        };
+    }
+
+    let isSandbox = true;
+
+    const showVerification = async () => {
+        const phone = elements.phoneInput.value.replace(/\D/g, '');
+        
+        elements.verifyModal.classList.remove('hidden');
+        elements.verifyError.classList.add('hidden');
+        elements.otpInputs.forEach(input => {
+            input.value = '';
+            input.disabled = true;
+        });
+
+        try {
+            console.log(`[SECURITY] Solicitando OTP para: ${phone}`);
+            elements.verifyError.classList.add('hidden');
+            
+            const res = await fetch('/api/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, tenant_id: tenantId })
+            });
+            const data = await res.json();
+            
+            if (data.alreadyVerified) {
+                console.log("[SECURITY] Usuario ya verificado. Saltando OTP.");
+                elements.verifyModal.classList.add('hidden');
+                await executeFinalBooking();
+                return;
+            }
+
+            if (res.status === 429) {
+                elements.verifyError.textContent = data.message || "Límite de mensajes alcanzado.";
+                elements.verifyError.classList.remove('hidden');
+                return;
+            }
+
+            isSandbox = data.sandbox;
+            
+            // Re-enable inputs
+            elements.otpInputs.forEach(input => input.disabled = false);
+            elements.otpInputs[0].focus();
+
+            if (data.success && isSandbox) {
+                console.log("%c[SECURITY] MODO SANDBOX: El código se envió a la consola del servidor.", "color: #fbbf24; font-weight: bold;");
+            }
+        } catch (err) {
+            console.error("Error al enviar OTP:", err);
+            elements.verifyError.textContent = "Error al enviar el código. Reintente.";
+            elements.verifyError.classList.remove('hidden');
+        }
+    };
+
+    elements.otpInputs.forEach((input, idx) => {
+        input.addEventListener('keyup', (e) => {
+            if (e.key >= 0 && e.key <= 9) {
+                input.value = e.key;
+                if (idx < elements.otpInputs.length - 1) elements.otpInputs[idx + 1].focus();
+            } else if (e.key === 'Backspace') {
+                if (idx > 0) elements.otpInputs[idx - 1].focus();
+            }
+        });
+    });
+
+    elements.verifyConfirmBtn.addEventListener('click', async () => {
+        const enteredOtp = Array.from(elements.otpInputs).map(i => i.value).join('');
+        
+        if (enteredOtp.length < 4) return;
+
+        elements.verifyConfirmBtn.disabled = true;
+        elements.verifyConfirmBtn.textContent = "VERIFICANDO...";
+
+        try {
+            // In a real scenario, we verify this against Firestore in take2 or in /api/save.
+            // For now, to keep it smooth, we pass it to executeFinalBooking
+            await executeFinalBooking(enteredOtp);
+        } catch (err) {
+            elements.verifyError.textContent = "Error de validación.";
+            elements.verifyError.classList.remove('hidden');
+            elements.verifyConfirmBtn.disabled = false;
+            elements.verifyConfirmBtn.textContent = "Verificar y Reservar";
+        }
+    });
+
+    // FINAL STEP: Execute payment trigger
     if (elements.payBtn) {
-        elements.payBtn.onclick = async () => {
-            elements.payBtn.disabled = true;
-            elements.payBtn.innerHTML = 'PROCESANDO...';
+        elements.payBtn.onclick = () => {
+            showVerification();
+        };
+    }
+
+    async function executeFinalBooking(otpCode) {
+        if (!elements.payBtn) return;
+        elements.payBtn.disabled = true;
+        elements.payBtn.innerHTML = 'PROCESANDO...';
 
             const appointmentId = Math.random().toString(36).substring(2, 9).toUpperCase();
             const finalData = {
@@ -302,7 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 email: elements.emailInput.value,
                 phone: elements.phoneInput.value.replace(/\D/g, ''),
                 date: selectedDate,
-                time: selectedTime
+                time: selectedTime,
+                otp: otpCode // Pass OTP for backend verification
             };
 
             try {
@@ -326,13 +436,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     window.location.href = `/success.html?id=${appointmentId}&name=${encodeURIComponent(finalData.name)}&date=${finalData.date}&time=${finalData.time}`;
+                } else {
+                    const result = await response.json();
+                    const errorMsg = result.message || result.error || "Error al procesar la reserva.";
+                    
+                    elements.verifyError.textContent = errorMsg;
+                    elements.verifyError.classList.remove('hidden');
+                    
+                    console.error("Booking failed:", result);
+                    
+                    // Reset button
+                    elements.payBtn.disabled = false;
+                    elements.payBtn.textContent = 'Pagar y Agendar';
                 }
             } catch (err) {
-                alert("Error.");
+                console.error("Execute Booking Error:", err);
+                elements.verifyError.textContent = "Error de comunicación con el servidor.";
+                elements.verifyError.classList.remove('hidden');
+                
                 elements.payBtn.disabled = false;
                 elements.payBtn.textContent = 'Pagar y Agendar';
             }
-        };
     }
 
     if (elements.phoneInput) {

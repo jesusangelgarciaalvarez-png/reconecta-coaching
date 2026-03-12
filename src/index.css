@@ -14,10 +14,11 @@
 
 body {
   @apply text-slate-200 font-sans antialiased;
-  background-color: var(--bg-color-bottom, #030712);
-  background-image: radial-gradient(circle at top right, var(--bg-color-top, #020617), var(--bg-color-bottom, #030712));
+  background-color: #030712; /* Neutral dark background */
+  background-image: radial-gradient(circle at top right, #020617, #030712);
   background-attachment: fixed;
   min-height: 100vh;
+  transition: background 0.8s ease-in-out;
 }
 
 .glass-panel {

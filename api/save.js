@@ -25,6 +25,55 @@ export default async function handler(req, res) {
     const COLL_DAYS = isDemo ? "demo_days" : "days";
     const COLL_USERS = isDemo ? "demo_users" : "users";
 
+    // 0.5 OTP VERIFICATION (Real Identity Shield)
+    let userIsAlreadyVerified = false;
+    const userDocId = `${tenantId}_${data.phone}`;
+    const userUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${COLL_USERS}/${userDocId}?key=${API_KEY}`;
+    
+    try {
+        const userRead = await fetch(userUrl);
+        if (userRead.ok) {
+            const userData = await userRead.json();
+            if (userData.fields && userData.fields.isVerified && userData.fields.isVerified.booleanValue) {
+                userIsAlreadyVerified = true;
+            }
+        }
+    } catch (e) { }
+
+    if (!isDemo && !data.previewOnly && !userIsAlreadyVerified) {
+        if (!data.otp) {
+            return res.status(401).json({ error: "MISSING_OTP", message: "Código de verificación requerido." });
+        }
+        
+        try {
+            const otpDocId = `otp_${data.phone}`;
+            const otpUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/verification_codes/${otpDocId}?key=${API_KEY}`;
+            const otpRes = await fetch(otpUrl);
+            
+            if (!otpRes.ok) {
+                return res.status(401).json({ error: "INVALID_OTP", message: "Código no encontrado o expirado." });
+            }
+            
+            const otpData = await otpRes.json();
+            const validCode = otpData.fields.code.stringValue;
+            const expiresAt = new Date(otpData.fields.expiresAt.timestampValue).getTime();
+            
+            if (data.otp !== validCode) {
+                return res.status(401).json({ error: "WRONG_OTP", message: "Código incorrecto." });
+            }
+            
+            if (Date.now() > expiresAt) {
+                return res.status(401).json({ error: "EXPIRED_OTP", message: "El código ha expirado." });
+            }
+            
+            // Success: Clean up OTP after use
+            await fetch(otpUrl, { method: 'DELETE' });
+        } catch (e) {
+            console.error("OTP_VERIFY_ERROR:", e);
+            return res.status(500).json({ error: "VERIFICATION_FAILURE" });
+        }
+    }
+
     try {
         console.log(`[Coaching-SaaS] Processing ${tenantId} | ${data.id}`);
 
@@ -73,7 +122,7 @@ export default async function handler(req, res) {
             if (totalRes.ok) {
                 const totalData = await totalRes.json();
                 const totalCount = (totalData[0]?.document) ? totalData.length : 0;
-                if (totalCount >= 2 && !data.previewOnly) {
+                if (totalCount >= 2) { // Removed !data.previewOnly to block previews too
                     return res.status(403).json({
                         error: "TRIAL_LIMIT_REACHED",
                         message: "Límite de prueba alcanzado (2 sesiones). Contacte a soporte para activar el plan premium."
@@ -226,6 +275,7 @@ export default async function handler(req, res) {
                     name: { stringValue: String(data.name) },
                     email: { stringValue: String(data.email) },
                     visitCount: { integerValue: String(visitCount) },
+                    isVerified: { booleanValue: true }, // PERSIST VERIFICATION
                     lastActive: { timestampValue: new Date().toISOString() }
                 }
             })

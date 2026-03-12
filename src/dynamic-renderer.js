@@ -1,7 +1,5 @@
-/**
- * PORTALCOACH - DYNAMIC RENDER ENGINE
- * Handles dynamic navigation buttons and SPA-style page content.
- */
+import { tenantId } from "./tenant-resolver.js";
+import { getTenantMetadata } from "./firebase_v13.js";
 
 const DYNAMIC_CONFIG = {
     fixedButtons: [
@@ -26,14 +24,7 @@ async function initDynamicRenderer() {
 
     if (!navGrid) return;
 
-    // 1. Resolve Subdomain (Tenant)
-    const hostname = window.location.hostname;
-    const parts = hostname.split('.');
-    let subdomain = parts[0];
-
-    if (subdomain === 'www' || subdomain === 'portalcoach' || subdomain === 'localhost') {
-        subdomain = 'test'; // Fallback for local testing if needed
-    }
+    const subdomain = tenantId;
 
     try {
         const res = await fetch(`/api/sitios?subdominio=${subdomain}`);
@@ -54,32 +45,44 @@ function renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitl
     navGrid.innerHTML = '';
     const paginas = config.paginas || {};
 
-    // 1. Conócenos (Fixed - Points to Misión content by default)
-    addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
-
-    // 2. Misión (Dynamic - Only if has rich content)
-    if (paginas.mision?.secciones?.length > 1) { // If more than 1 section, show separate Mission
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[0], () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
+    // 1. Dynamic "Conócenos" / "Misión"
+    const misionPage = paginas.mision;
+    if (misionPage && misionPage.secciones?.length > 0) {
+        addBtn(navGrid, {
+            id: 'mision',
+            label: misionPage.buttonLabel || 'Conócenos',
+            icon: misionPage.buttonIcon || 'visibility'
+        }, () => showDynamicPage('mision', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
     }
 
-    // 3. Servicios (Dynamic)
-    if (paginas.servicios?.secciones?.length > 0) {
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[1], () => showDynamicPage('servicios', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
+    // 2. Dynamic "Servicios"
+    const serviciosPage = paginas.servicios;
+    if (serviciosPage && serviciosPage.secciones?.length > 0) {
+        addBtn(navGrid, {
+            id: 'servicios',
+            label: serviciosPage.buttonLabel || 'Servicios',
+            icon: serviciosPage.buttonIcon || 'hub'
+        }, () => showDynamicPage('servicios', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
     }
 
-    // 4. Método (Dynamic)
-    if (paginas.metodo?.secciones?.length > 0) {
-        addLink(navGrid, DYNAMIC_CONFIG.dynamicButtons[2], () => showDynamicPage('metodo', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
+    // 3. Dynamic "Método"
+    const metodoPage = paginas.metodo;
+    if (metodoPage && metodoPage.secciones?.length > 0) {
+        addBtn(navGrid, {
+            id: 'metodo',
+            label: metodoPage.buttonLabel || 'Nuestro Método',
+            icon: metodoPage.buttonIcon || 'spa'
+        }, () => showDynamicPage('metodo', config, navGrid, subpageContainer, heroTitle, heroSubtitle, coachPhoto));
     }
 
-    // 5. Reservar Cita (Fixed)
-    addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[1], null, DYNAMIC_CONFIG.fixedButtons[1].url);
+    // 4. Fixed "Reservar Cita"
+    addBtn(navGrid, DYNAMIC_CONFIG.fixedButtons[1], null, DYNAMIC_CONFIG.fixedButtons[1].url);
 
-    // 6. Cancelar Cita (Fixed)
-    addLink(navGrid, DYNAMIC_CONFIG.fixedButtons[2], null, DYNAMIC_CONFIG.fixedButtons[2].url);
+    // 5. Fixed "Cancelar Cita"
+    addBtn(navGrid, DYNAMIC_CONFIG.fixedButtons[2], null, DYNAMIC_CONFIG.fixedButtons[2].url);
 }
 
-function addLink(container, btn, onClick, url = null) {
+function addBtn(container, btn, onClick, url = null) {
     const el = document.createElement(url ? 'a' : 'button');
     if (url) el.href = url;
     el.className = `glass-panel group p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.05] active:scale-95 no-underline flex flex-col items-center text-center w-full`;

@@ -46,7 +46,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             photoIcon: document.getElementById('profile-preview-icon'),
             themeSelector: document.getElementById('theme-selector'),
             saveBtn: document.getElementById('save-branding-btn'),
-            previewPortalBtn: document.getElementById('preview-portal-btn')
+            previewPortalBtn: document.getElementById('preview-portal-btn'),
+            logoInput: document.getElementById('logo-upload'),
+            logoPreview: document.getElementById('logo-preview-img'),
+            logoIcon: document.getElementById('logo-preview-icon'),
+            generateLogoBtn: document.getElementById('generate-logo-ia-btn')
         }
     };
 
@@ -117,8 +121,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const authKey = `pc_auth_${tenantId}`;
         const pinOverlay = document.getElementById('pin-overlay');
         const pinInputs = document.querySelectorAll('.pin-input');
-        if (metadata.pin && sessionStorage.getItem(authKey) !== 'true') {
-            pinOverlay.classList.remove('hidden');
+        if (metadata.pin && pinOverlay && pinInputs.length > 0 && sessionStorage.getItem(authKey) !== 'true') {
+            if (pinOverlay) pinOverlay.classList.remove('hidden');
             pinInputs.forEach((input, index) => {
                 input.oninput = (e) => {
                     if (e.target.value && index < pinInputs.length - 1) pinInputs[index + 1].focus();
@@ -127,10 +131,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                         if (enteredPin === metadata.pin) {
                             sessionStorage.setItem(authKey, 'true');
                             window.establishBridge();
-                            pinOverlay.style.opacity = '0';
-                            setTimeout(() => pinOverlay.classList.add('hidden'), 500);
+                            if (pinOverlay) {
+                                pinOverlay.style.opacity = '0';
+                                setTimeout(() => pinOverlay.classList.add('hidden'), 500);
+                            }
                         } else {
-                            document.getElementById('pin-error').classList.remove('hidden');
+                            const errorEl = document.getElementById('pin-error');
+                            if (errorEl) errorEl.classList.remove('hidden');
                             pinInputs.forEach(i => i.value = '');
                             pinInputs[0].focus();
                         }
@@ -171,6 +178,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             elements.brandingForm.photoPreview.src = metadata.coachPhoto;
             elements.brandingForm.photoPreview.classList.remove('hidden');
             elements.brandingForm.photoIcon.classList.add('hidden');
+        }
+
+        if (metadata.logoUrl) {
+            elements.brandingForm.logoPreview.src = metadata.logoUrl;
+            elements.brandingForm.logoPreview.classList.remove('hidden');
+            elements.brandingForm.logoIcon.classList.add('hidden');
         }
 
         const currentTheme = metadata.theme || 'nature';
@@ -224,9 +237,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateThemeUI(theme) {
         document.querySelectorAll('.theme-option').forEach(opt => {
+            if (!opt) return;
             if (opt.dataset.theme === theme) {
                 opt.classList.add('selected');
-                // Instant Feedback in Dashboard
                 const colors = {
                     'nature': '#10b981',
                     'premium': '#fbbf24',
@@ -254,7 +267,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             state: elements.brandingForm.state.value,
             zip: elements.brandingForm.zip.value,
             theme: window.selectedTheme || 'nature',
-            coachPhoto: elements.brandingForm.photoPreview.src
+            coachPhoto: elements.brandingForm.photoPreview.src,
+            logoUrl: elements.brandingForm.logoPreview.src
         };
         localStorage.setItem(`pc_draft_${tenantId}`, JSON.stringify(d));
         console.log("[DASHBOARD] Local draft updated.");
@@ -317,6 +331,133 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (input) input.addEventListener('input', saveDraft);
     });
 
+    // Logo Management
+    elements.brandingForm.logoInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            elements.brandingForm.saveBtn.disabled = true;
+            try {
+                const compressedBase64 = await compressImage(file, 400, 400, 0.8);
+                if (elements.brandingForm.logoPreview) {
+                    elements.brandingForm.logoPreview.src = compressedBase64;
+                    elements.brandingForm.logoPreview.classList.remove('hidden');
+                }
+                if (elements.brandingForm.logoIcon) {
+                    elements.brandingForm.logoIcon.classList.add('hidden');
+                }
+                saveDraft();
+            } catch (err) { alert("Error al procesar logo."); }
+            if (elements.brandingForm.saveBtn) elements.brandingForm.saveBtn.disabled = false;
+        }
+    };
+
+    if (elements.brandingForm.generateLogoBtn) {
+        elements.brandingForm.generateLogoBtn.onclick = async () => {
+            const taglineValue = elements.brandingForm.tagline?.value || "paz serenidad coaching";
+            const focusKeywords = taglineValue.toLowerCase();
+            const coachName = elements.welcomeMsg?.textContent?.split(',')[1]?.trim() || "Coach";
+
+            // 1. UI Loading State
+            elements.brandingForm.generateLogoBtn.disabled = true;
+            elements.brandingForm.generateLogoBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span>';
+            
+            // Show placeholder in preview while generating
+            if (elements.brandingForm.logoIcon) elements.brandingForm.logoIcon.classList.add('hidden');
+            if (elements.brandingForm.logoPreview) {
+                elements.brandingForm.logoPreview.classList.remove('hidden');
+                elements.brandingForm.logoPreview.style.filter = 'blur(4px) grayscale(100%)';
+                elements.brandingForm.logoPreview.style.opacity = '0.5';
+            }
+
+            // IA LOGO STRATEGY: Try Premium Tier first (Proxy), Fallback to Free Tier (Pollinations)
+            try {
+                // TIER 2: PREMIUM (fal.ai Proxy via local API)
+                const premiumPrompt = `HAND-DRAWN SKETCH LOGO, charcoal pencil drawing on white paper, minimalist organic rough lines, artistic symbol for ${focusKeywords}, logo for ${coachName}, professional sketch art style, high contrast, clean white background`;
+                
+                const response = await fetch('/api/generate-logo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: premiumPrompt })
+                });
+
+                const data = await response.json();
+                if (data.success && data.url) {
+                    finalizeLogo(data.url);
+                    return;
+                }
+
+                console.warn("[AI LOGO] Premium failed or not configured, using Tier 1 (Free).");
+
+                // TIER 1: POLLINATIONS.AI (Fixed & Optimized)
+                const seed = Math.floor(Math.random() * 999999);
+                const aiPrompt = `minimalist hand-drawn sketch, black ink charcoal pencil drawing on white paper, artistic organic rough lines, clean abstract symbol representing ${focusKeywords}, logo for ${coachName}, professional sketch art style, no background, high contrast`;
+                const encodedPrompt = encodeURIComponent(aiPrompt);
+                
+                const aiLogoUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&model=flux&nologo=true&enhance=false&seed=${seed}`;
+
+                console.log("[AI LOGO] Generated URL:", aiLogoUrl);
+
+                // Verify image load before applying
+                const imgCheck = new Image();
+                
+                const timeoutId = setTimeout(() => {
+                    console.warn("[AI LOGO] Timeout reached, using fallback.");
+                    imgCheck.src = ""; // Stop loading
+                    useFallback();
+                }, 8000);
+
+                imgCheck.onload = () => {
+                    clearTimeout(timeoutId);
+                    finalizeLogo(aiLogoUrl);
+                };
+
+                imgCheck.onerror = () => {
+                    clearTimeout(timeoutId);
+                    console.error("[AI LOGO] URL failed to load, using fallback.");
+                    useFallback();
+                };
+
+                imgCheck.src = aiLogoUrl;
+
+            } catch (e) {
+                console.error("AI Generation Critical Failure:", e);
+                useFallback();
+            }
+
+        function useFallback() {
+            const taglineValue = elements.brandingForm.tagline?.value || "";
+            const keywords = taglineValue.toLowerCase();
+            let pool = logoPools.default;
+            if (keywords.includes('paz') || keywords.includes('serenidad') || keywords.includes('zen') || keywords.includes('bienestar') || keywords.includes('salud') || keywords.includes('wellness')) {
+                pool = logoPools.wellness;
+            } else if (keywords.includes('negocios') || keywords.includes('liderazgo') || keywords.includes('business')) {
+                pool = logoPools.business;
+            }
+            const randomLogo = pool[Math.floor(Math.random() * pool.length)];
+            const logoUrl = `https://images.unsplash.com/${randomLogo}?auto=format&fit=crop&q=80&w=400`;
+            finalizeLogo(logoUrl);
+        }
+
+        function finalizeLogo(url) {
+            if (elements.brandingForm.logoPreview) {
+                elements.brandingForm.logoPreview.src = url;
+                elements.brandingForm.logoPreview.classList.remove('hidden');
+                elements.brandingForm.logoPreview.style.filter = 'none';
+                elements.brandingForm.logoPreview.style.opacity = '1';
+            }
+            if (elements.brandingForm.logoIcon) {
+                elements.brandingForm.logoIcon.classList.add('hidden');
+            }
+            saveDraft();
+            
+            if (elements.brandingForm.generateLogoBtn) {
+                elements.brandingForm.generateLogoBtn.disabled = false;
+                elements.brandingForm.generateLogoBtn.innerHTML = '<span class="material-symbols-outlined font-bold text-sm">auto_awesome</span>';
+            }
+            // showToast("Logotipo generado con éxito", "success"); 
+        }
+    };
+
     // --- UI LISTENERS (v43.7) ---
     // 1. Theme Selection
     const themeOptions = document.querySelectorAll('.theme-option');
@@ -352,6 +493,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 elements.brandingForm.photoPreview.classList.remove('hidden');
                 elements.brandingForm.photoIcon.classList.add('hidden');
             }
+            if (d.logoUrl) {
+                elements.brandingForm.logoPreview.src = d.logoUrl;
+                elements.brandingForm.logoPreview.classList.remove('hidden');
+                elements.brandingForm.logoIcon.classList.add('hidden');
+            }
         }
     };
     restoreDraft();
@@ -372,7 +518,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             state: elements.brandingForm.state.value,
             zipCode: elements.brandingForm.zip.value,
             theme: window.selectedTheme || 'nature',
-            coachPhoto: elements.brandingForm.photoPreview.src
+            coachPhoto: elements.brandingForm.photoPreview.src,
+            logoUrl: elements.brandingForm.logoPreview.src
         };
 
         try {

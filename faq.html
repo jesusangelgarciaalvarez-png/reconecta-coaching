@@ -15,8 +15,8 @@
     <div id="app">
         <!-- Hero Section with Faded Background -->
         <div class="relative min-h-screen flex flex-col pt-20">
-            <div class="absolute inset-0 z-0 bg-cover bg-center opacity-40 faded-bg pointer-events-none hero-zoom-crop"
-                style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560'); -webkit-user-select: none; user-select: none;">
+            <div class="absolute inset-0 z-0 bg-cover bg-center opacity-40 faded-bg pointer-events-none hero-zoom-crop hero-bg-neutral"
+                style="-webkit-user-select: none; user-select: none;">
             </div>
             <!-- Header -->
             <header
@@ -33,21 +33,19 @@
 
             <!-- Navigation Menu Overlay -->
             <div id="nav-menu" class="backdrop-blur-3xl bg-black/60">
-                <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop"
-                    style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560'); -webkit-user-select: none; user-select: none;">
+                <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 pointer-events-none hero-zoom-crop hero-bg-neutral"
+                    style="-webkit-user-select: none; user-select: none;">
                 </div>
                 <div class="relative z-10 h-full flex flex-col p-8">
                     <header class="flex justify-between items-center mb-16">
                         <div class="flex items-center gap-4">
-                            <img src="/assets/logo.jpg" alt="Logo Reconecta"
+                            <img src="/assets/logo.jpg" alt="Logo" id="menu-logo"
                                 class="w-16 h-16 rounded-full object-cover border border-white/10 shadow-inner">
                             <div class="flex flex-col text-left">
-                                <span
-                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Reconecta
-                                    Coaching</span>
-                                <span
-                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Transforma
-                                    tu interior, lidera tu vida.</span>
+                                <span id="menu-name"
+                                    class="font-display italic text-xl md:text-2xl font-bold tracking-tight text-white leading-none">Cargando...</span>
+                                <span id="menu-tagline"
+                                    class="text-[9px] md:text-[10px] text-primary uppercase font-bold tracking-widest mt-2 opacity-80">Cargando...</span>
                             </div>
                         </div>
                         <button id="close-menu"

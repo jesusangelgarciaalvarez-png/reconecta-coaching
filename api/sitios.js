@@ -68,6 +68,8 @@ function buildFirestoreFields(obj) {
     for (const [key, value] of Object.entries(obj)) {
         if (typeof value === 'string') {
             fields[key] = { stringValue: value };
+        } else if (typeof value === 'number') {
+            fields[key] = { doubleValue: value };
         } else if (typeof value === 'object' && value !== null) {
             if (Array.isArray(value)) {
                 fields[key] = {
@@ -90,11 +92,14 @@ function buildFirestoreFields(obj) {
 // Helper to simplify Firestore Typed Fields back to JSON
 function simplifyFirestore(fields) {
     const obj = {};
-    for (const [key, value] of Object.entries(fields)) {
+    for (const [key, value] of Object.entries(fields || {})) {
         if (value.stringValue !== undefined) obj[key] = value.stringValue;
+        else if (value.doubleValue !== undefined) obj[key] = value.doubleValue;
+        else if (value.integerValue !== undefined) obj[key] = parseInt(value.integerValue);
         else if (value.mapValue !== undefined) obj[key] = simplifyFirestore(value.mapValue.fields);
         else if (value.arrayValue !== undefined) {
-            obj[key] = value.arrayValue.values.map(v => simplifyFirestore(v.mapValue.fields));
+            const vals = value.arrayValue.values || [];
+            obj[key] = vals.map(v => simplifyFirestore(v.mapValue ? v.mapValue.fields : {}));
         }
     }
     return obj;

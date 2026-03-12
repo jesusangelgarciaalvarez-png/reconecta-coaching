@@ -124,6 +124,31 @@
         <div id="sections-container" class="space-y-8">
             <!-- Sections will be injected here -->
         </div>
+
+        <!-- Dynamic Button Config (Float bottom) -->
+        <div id="button-config" class="mt-12 p-8 glass-card rounded-[2.5rem] border-primary/20 bg-primary/5 hidden animate-fade-in">
+            <h3 class="text-xs text-primary font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">settings_input_component</span>
+                Personalizar Botón de Navegación
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="text-[9px] text-slate-500 uppercase font-black tracking-widest mb-2 block">Texto del Botón</label>
+                    <input type="text" id="page-btn-label" placeholder="Ej: Conócenos" 
+                        class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-primary transition-all">
+                </div>
+                <div>
+                    <label class="text-[9px] text-slate-500 uppercase font-black tracking-widest mb-2 block">Icono (Material Symbol)</label>
+                    <div class="flex gap-3">
+                        <input type="text" id="page-btn-icon" placeholder="Ej: visibility" 
+                            class="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-primary transition-all">
+                        <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center">
+                            <span id="page-btn-icon-preview" class="material-symbols-outlined text-primary">visibility</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <template id="section-template">
@@ -566,8 +591,35 @@
                 tab.classList.add('active');
                 activePage = tab.dataset.page;
                 renderSections();
+                updateButtonConfigUI();
             };
         });
+
+        function updateButtonConfigUI() {
+            const configDiv = document.getElementById('button-config');
+            const labelInput = document.getElementById('page-btn-label');
+            const iconInput = document.getElementById('page-btn-icon');
+            const iconPreview = document.getElementById('page-btn-icon-preview');
+
+            // Only show for dynamic pages
+            if (['mision', 'servicios', 'metodo'].includes(activePage)) {
+                configDiv.classList.remove('hidden');
+                
+                const page = currentState[activePage];
+                labelInput.value = page.buttonLabel || '';
+                iconInput.value = page.buttonIcon || '';
+                iconPreview.textContent = page.buttonIcon || (activePage === 'mision' ? 'visibility' : activePage === 'servicios' ? 'hub' : 'spa');
+
+                labelInput.oninput = (e) => { page.buttonLabel = e.target.value; saveToLocal(); };
+                iconInput.oninput = (e) => { 
+                    page.buttonIcon = e.target.value; 
+                    iconPreview.textContent = e.target.value || 'help';
+                    saveToLocal(); 
+                };
+            } else {
+                configDiv.classList.add('hidden');
+            }
+        }
 
         document.getElementById('save-all').onclick = async () => {
             const btn = document.getElementById('save-all');

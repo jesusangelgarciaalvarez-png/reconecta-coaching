@@ -10,7 +10,20 @@ export function getTenantId() {
     const urlParams = new URLSearchParams(window.location.search);
     const tenantOverride = urlParams.get('tenant');
     if (tenantOverride) {
-        return tenantOverride.toLowerCase();
+        const tid = tenantOverride.toLowerCase();
+        localStorage.setItem('pc_current_tenant', tid);
+        return tid;
+    }
+
+    // 0.1 Force Master for Dashboard
+    if (window.location.pathname.includes('/master-dashboard')) {
+        return 'master';
+    }
+
+    // 0.2 Session Persistence (For navigation on same domain)
+    const savedTenant = localStorage.getItem('pc_current_tenant');
+    if (savedTenant) {
+        return savedTenant;
     }
 
     // 1. Development / Localhost
@@ -24,15 +37,19 @@ export function getTenantId() {
     // 3. Split parts
     const parts = cleanHost.split('.');
 
-    // 4. Root domain or Vercel base domain case
-    if (parts.length <= 2 || host.endsWith('.vercel.app')) {
+    // 4. Root domain case (master)
+    if (parts.length <= 2 && !host.endsWith('.vercel.app')) {
         return 'master';
     }
 
     // 5. Tenant identification (first part of subdomain)
     // Example: coach-maria.portalcoach.com -> coach-maria
-    const tenant = parts[0].toLowerCase();
-    return tenant.replace(/[^a-z0-9-]/g, '');
+    // We filter out common base domains to find the true tenant
+    const baseDomains = ['portalcoach', 'vercel', 'app'];
+    const tenant = parts.find(p => !baseDomains.includes(p) && p !== 'www');
+    
+    if (!tenant) return 'master';
+    return tenant.toLowerCase().replace(/[^a-z0-9-]/g, '');
 }
 
 export const tenantId = getTenantId();

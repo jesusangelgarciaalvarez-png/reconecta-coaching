@@ -105,7 +105,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         docs.forEach(doc => {
             const fields = doc.fields;
             const name = fields.name?.stringValue || "Sin Nombre";
-            const id = fields.id?.stringValue || "unknown";
+            
+            // SHIELD: Extract ID from the document name path if missing in fields
+            // Format: projects/.../databases/(default)/documents/tenants/{tenantId}
+            const id = doc.name.split('/').pop();
+            
             const status = fields.status?.stringValue || "active";
             const fee = fields.platformFeePercent?.doubleValue || 10.0;
             const ref = fields.referredBy?.stringValue || "Directo";

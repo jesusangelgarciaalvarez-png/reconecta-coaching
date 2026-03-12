@@ -51,6 +51,12 @@ const THEMES = {
 };
 
 export async function initBranding() {
+    console.log(`[SUBSYSTEM] Branding Initializing for Tenant: ${tenantId}`);
+    // Debug: Inject tenantId into the version banner for verification
+    const banner = document.getElementById('rebuild-banner') || document.querySelector('div[style*="position: fixed; top: 0"]');
+    if (banner) {
+        banner.textContent += ` | TID: ${tenantId}`;
+    }
     await applyBranding();
 }
 
@@ -96,8 +102,9 @@ async function applyBranding() {
 
     // 1.1 Fetch Site Config for Typography (Website Builder)
     try {
-        const subdomain = window.location.hostname.split('.')[0];
-        if (subdomain !== 'www' && subdomain !== 'localhost') {
+        const hostParts = window.location.hostname.split('.');
+        if (hostParts.length > 2 && !hostParts[0].includes('portalcoach') && hostParts[0] !== 'localhost') {
+            const subdomain = hostParts[0];
             const siteRes = await fetch(`/api/sitios?subdominio=${subdomain}`);
             if (siteRes.ok) {
                 const siteConfig = await siteRes.json();
@@ -211,29 +218,45 @@ async function applyBranding() {
     }
 
     // Update Backgrounds
-    const heroBgs = document.querySelectorAll('.hero-zoom-crop, .faded-bg');
+    const heroBgs = document.querySelectorAll('.hero-zoom-crop, .faded-bg, .hero-bg-neutral');
     heroBgs.forEach(bg => {
         const bgUrl = metadata.customBg || theme.bg;
         if (bg.tagName === 'IMG') {
             bg.src = bgUrl;
+            bg.style.opacity = '0.4';
         } else {
             bg.style.backgroundImage = `url('${bgUrl}')`;
+            bg.style.backgroundSize = 'cover';
+            bg.style.backgroundPosition = 'center';
+            bg.style.opacity = '1';
         }
     });
 
-    // 2. Toggle Overrides
+    // Body transition - Apply to all pages consistently
+    document.body.style.backgroundColor = theme.gradientBottom;
+    document.body.style.backgroundImage = `radial-gradient(circle at top right, ${theme.gradientTop}, ${theme.gradientBottom})`;
+    document.body.style.minHeight = '100vh';
+    document.body.style.backgroundAttachment = 'fixed';
+
+    // 2. Toggle Overrides - Null safe
+    const servicesGrid = document.getElementById('services-grid');
+    const servicesContent = document.getElementById('coach-services-content');
     if (metadata.coachServices) {
-        const grid = document.getElementById('services-grid');
-        const content = document.getElementById('coach-services-content');
-        if (grid) grid.classList.add('hidden');
-        if (content) content.classList.remove('hidden');
+        if (servicesGrid) servicesGrid.classList.add('hidden');
+        if (servicesContent) {
+            servicesContent.classList.remove('hidden');
+            servicesContent.textContent = metadata.coachServices;
+        }
     }
 
+    const methodGrid = document.getElementById('method-steps');
+    const methodContent = document.getElementById('coach-method-content');
     if (metadata.coachMethod) {
-        const grid = document.getElementById('method-steps');
-        const content = document.getElementById('coach-method-content');
-        if (grid) grid.classList.add('hidden');
-        if (content) content.classList.remove('hidden');
+        if (methodGrid) methodGrid.classList.add('hidden');
+        if (methodContent) {
+            methodContent.classList.remove('hidden');
+            methodContent.textContent = metadata.coachMethod;
+        }
     }
 
     // 3. Apply Professional Text Content
@@ -246,8 +269,6 @@ async function applyBranding() {
         '#coach-greeting': metadata.coachGreeting || (metadata.name ? `Soy ${metadata.name}` : defaults.coachGreeting),
         '#coach-bio': metadata.coachBio || defaults.coachBio,
         '#coach-mission': metadata.coachMission || defaults.coachMission,
-        '#coach-services-content': metadata.coachServices,
-        '#coach-method-content': metadata.coachMethod,
         '#contact-location': metadata.location || defaults.location,
         '#contact-phone': metadata.phone || defaults.phone,
         '#contact-whatsapp': metadata.whatsapp || metadata.phone || defaults.phone,
@@ -284,7 +305,7 @@ async function applyBranding() {
         heroTitle.innerHTML = titleText.replace(/\n/g, '<br>');
     }
 
-    // 4. Photos & Videos
+    // 4. Photos & Logos
     const photoElements = document.querySelectorAll('#coach-photo, #home-coach-photo, #checkout-coach-photo, #brand-logo, #menu-logo');
     photoElements.forEach(img => {
         const id = img.id;
