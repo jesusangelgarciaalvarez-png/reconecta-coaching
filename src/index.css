@@ -23,6 +23,7 @@ body {
 
 .glass-panel {
   @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl;
+  -webkit-backdrop-filter: blur(24px); /* Safari/iOS support */
   transition: all 0.3s ease;
 }
 
@@ -52,8 +53,8 @@ body {
 
 @media (max-width: 640px) {
   .hero-zoom-crop {
-    background-size: 180% !important;
-    background-position: center 5% !important;
+    background-size: 150% !important; /* Reduced from 180% to avoid extreme pixelation on mobile */
+    background-position: center 10% !important;
   }
 }
 
@@ -61,6 +62,7 @@ body {
 #nav-menu {
   @apply fixed inset-0 z-[100] transition-all duration-500 ease-in-out;
   clip-path: circle(0% at 100% 0%);
+  -webkit-backdrop-filter: blur(40px); /* Enhanced Safari/iOS blur */
   pointer-events: none;
 }
 

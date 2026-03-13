@@ -85,7 +85,7 @@ function renderButtons(config, navGrid, subpageContainer, heroTitle, heroSubtitl
 function addBtn(container, btn, onClick, url = null) {
     const el = document.createElement(url ? 'a' : 'button');
     if (url) el.href = url;
-    el.className = `glass-panel group p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.05] active:scale-95 no-underline flex flex-col items-center text-center w-full`;
+    el.className = `glass-panel group p-5 md:p-6 rounded-[2rem] border-white/10 hover:border-primary/50 transition-all duration-500 hover:scale-[1.03] active:scale-95 no-underline flex flex-col items-center text-center w-full min-h-[140px] justify-center`;
 
     const colorClass = btn.colorClass || 'group-hover:bg-primary group-hover:text-[#0a1f1f]';
     const bgClass = btn.id === 'reservar' ? 'bg-primary/20' : 'bg-white/5';

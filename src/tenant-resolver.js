@@ -4,9 +4,9 @@
  */
 
 export function getTenantId() {
-    const host = window.location.hostname;
+    const host = window.location.hostname.toLowerCase();
 
-    // 0. Parameter Override (For Preview Mode)
+    // 0. Parameter Override (For Preview Mode) - HIGHEST PRIORITY
     const urlParams = new URLSearchParams(window.location.search);
     const tenantOverride = urlParams.get('tenant');
     if (tenantOverride) {
@@ -20,36 +20,31 @@ export function getTenantId() {
         return 'master';
     }
 
-    // 0.2 Session Persistence (For navigation on same domain)
-    const savedTenant = localStorage.getItem('pc_current_tenant');
-    if (savedTenant) {
-        return savedTenant;
-    }
-
-    // 1. Development / Localhost
-    if (host === 'localhost' || host === '127.0.0.1' || host.includes('.local')) {
-        return 'master';
-    }
-
-    // 2. Clean 'www' if present (anywhere at the start)
-    let cleanHost = host.toLowerCase().replace(/^www\./, '');
-
-    // 3. Split parts
+    // 1. Resolve from Hostname (TRUTH SOURCE)
+    let cleanHost = host.replace(/^www\./, '');
     const parts = cleanHost.split('.');
 
-    // 4. Root domain case (master)
-    if (parts.length <= 2 && !host.endsWith('.vercel.app')) {
-        return 'master';
+    // 1.1 Support for custom domains or vercel deployments
+    const baseDomains = ['portalcoach', 'vercel', 'app'];
+    const tenantFromHost = parts.find(p => !baseDomains.includes(p) && p !== 'www');
+
+    // 2. Validate Session Persistence
+    const savedTenant = localStorage.getItem('pc_current_tenant');
+
+    if (tenantFromHost) {
+        const resolved = tenantFromHost.toLowerCase().replace(/[^a-z0-9-]/g, '');
+        // If resolved tenant from host differs from saved, host wins (prevents cross-tenant leak)
+        if (resolved !== savedTenant) {
+            localStorage.setItem('pc_current_tenant', resolved);
+        }
+        return resolved;
     }
 
-    // 5. Tenant identification (first part of subdomain)
-    // Example: coach-maria.portalcoach.com -> coach-maria
-    // We filter out common base domains to find the true tenant
-    const baseDomains = ['portalcoach', 'vercel', 'app'];
-    const tenant = parts.find(p => !baseDomains.includes(p) && p !== 'www');
-    
-    if (!tenant) return 'master';
-    return tenant.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    // 3. Fallbacks
+    if (savedTenant) return savedTenant;
+    if (host === 'localhost' || host === '127.0.0.1' || host.includes('.local')) return 'master';
+
+    return 'master';
 }
 
 export const tenantId = getTenantId();

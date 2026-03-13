@@ -58,6 +58,8 @@ export async function initBranding() {
         banner.textContent += ` | TID: ${tenantId}`;
     }
     await applyBranding();
+    // Re-verify after a short delay to catch any late-loading dynamic injected elements
+    setTimeout(applyBranding, 1500);
 }
 
 async function applyBranding() {
@@ -143,9 +145,9 @@ async function applyBranding() {
                 if (gridEl) {
                     gridEl.innerHTML = ''; // Clear loading
 
-                    // Adjust grid columns based on count
+                    // Adjust grid columns based on count - Mobile-first approach
                     const count = pieSecs.length;
-                    gridEl.className = `grid grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
+                    gridEl.className = `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${count > 4 ? 4 : count} gap-3 md:gap-4 transition-all duration-700`;
 
                     // MASSIVE POOL (Hand-picked premium UNIQUE IDs)
                     const massivePool = [
@@ -197,15 +199,15 @@ async function applyBranding() {
                         const finalImgUrl = feat.image_url || `https://images.unsplash.com/${imgId}?auto=format&fit=crop&q=80&w=800`;
 
                         const cardHtml = `
-                            <div class="glass-panel p-3 md:p-4 rounded-[1.5rem] group hover:bg-white/5 transition-all animate-fade-in" style="animation-delay: ${idx * 0.1}s">
-                                <div class="aspect-video rounded-xl overflow-hidden mb-3 bg-white/5 shadow-inner">
+                            <div class="glass-panel p-4 md:p-5 rounded-[1.5rem] group hover:bg-white/5 transition-all animate-fade-in" style="animation-delay: ${idx * 0.1}s">
+                                <div class="aspect-video rounded-xl overflow-hidden mb-4 bg-white/5 shadow-inner">
                                     <img src="${finalImgUrl}"
                                         onerror="this.src='https://images.unsplash.com/${fallbackId}?auto=format&fit=crop&q=80&w=800'; this.onerror=null;"
                                         class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 brightness-[1.1] contrast-[1.05]"
                                         alt="${feat.titulo || 'Feature'}">
                                 </div>
-                                <h3 class="font-display text-sm md:text-base text-white mb-1 italic">${feat.titulo || ''}</h3>
-                                <p class="text-slate-400 text-[10px] md:text-xs leading-tight line-clamp-2">${feat.contenido || ''}</p>
+                                <h3 class="font-display text-base md:text-lg text-white mb-2 italic">${feat.titulo || ''}</h3>
+                                <p class="text-slate-400 text-xs md:text-sm leading-tight line-clamp-3">${feat.contenido || ''}</p>
                             </div>
                         `;
                         gridEl.insertAdjacentHTML('beforeend', cardHtml);
@@ -309,12 +311,20 @@ async function applyBranding() {
     const photoElements = document.querySelectorAll('#coach-photo, #home-coach-photo, #checkout-coach-photo, #brand-logo, #menu-logo');
     photoElements.forEach(img => {
         const id = img.id;
+        const metadataPhoto = metadata.coachPhoto || metadata.photoUrl || metadata.foto_perfil; // Support multiple naming conventions
+        
         if (id === 'coach-photo' || id === 'home-coach-photo' || id === 'checkout-coach-photo') {
-            img.src = metadata.coachPhoto || defaults.coachPhotoPlaceholder;
+            img.src = metadataPhoto || defaults.coachPhotoPlaceholder;
+            img.classList.remove('opacity-0'); // Ensure it's visible
         } else if (id === 'brand-logo' || id === 'menu-logo') {
-            img.src = metadata.logoUrl || "/assets/logo.jpg";
+            img.src = metadata.logoUrl || metadata.logo || "/assets/logo.jpg";
         }
     });
+
+    // Special mobile-only background reset to ensure sync
+    if (window.innerWidth < 768) {
+        document.body.style.backgroundAttachment = 'scroll'; // Better for mobile performance and sync
+    }
 
     // Video vs Image Fallback
     const videoContainer = document.querySelector('#coach-video-container');
