@@ -203,7 +203,7 @@ async function applyBranding() {
                                 <div class="aspect-video rounded-xl overflow-hidden mb-4 bg-white/5 shadow-inner">
                                     <img src="${finalImgUrl}"
                                         onerror="this.src='https://images.unsplash.com/${fallbackId}?auto=format&fit=crop&q=80&w=800'; this.onerror=null;"
-                                        class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 brightness-[1.1] contrast-[1.05]"
+                                        class="w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-700 brightness-[1.1] contrast-[1.05]"
                                         alt="${feat.titulo || 'Feature'}">
                                 </div>
                                 <h3 class="font-display text-base md:text-lg text-white mb-2 italic">${feat.titulo || ''}</h3>
